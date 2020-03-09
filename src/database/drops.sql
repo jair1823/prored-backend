@@ -30,3 +30,4 @@ DROP TYPE public.role;
 DROP TYPE public.degree;
 DROP TYPE public.network_type;
 DROP TYPE public.profile;
+DROP TYPE public.nationality;
