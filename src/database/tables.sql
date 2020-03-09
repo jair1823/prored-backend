@@ -20,8 +20,8 @@ create table public.canton(
     name varchar(50)
 );
 
-create table public.distric(
-    id_distric SERIAL PRIMARY KEY,
+create table public.district(
+    id_district SERIAL PRIMARY KEY,
     id_canton integer REFERENCES public.canton(id_canton),
     name varchar(50)
 );
@@ -147,8 +147,8 @@ create table public.associated_career(
     name varchar(50)
 );
 
-create table public.lenguage(
-    id_lenguage SERIAL PRIMARY KEY,
+create table public.language(
+    id_language SERIAL PRIMARY KEY,
     name varchar(50)
 );
 
@@ -168,7 +168,7 @@ CREATE TYPE public.nationality AS ENUM (
 
 create table public.student(
     dni varchar(50) PRIMARY KEY REFERENCES public.person(dni),
-    id_distric integer REFERENCES public.distric(id_distric),
+    id_district integer REFERENCES public.district(id_district),
     id_marital_status integer REFERENCES public.marital_status(id_marital_status),
     campus_code varchar(30) REFERENCES public.campus(campus_code),
     profile public.profile,
@@ -181,10 +181,10 @@ create table public.person_x_career(
     career_code integer REFERENCES public.career(career_code),
     PRIMARY KEY(dni, career_code)
 );
-create table public.person_x_lenguage(
+create table public.person_x_language(
     dni varchar(50) REFERENCES public.student(dni),
-    id_lenguage integer REFERENCES public.lenguage(id_lenguage),
-    PRIMARY KEY(dni, id_lenguage)
+    id_language integer REFERENCES public.language(id_language),
+    PRIMARY KEY(dni, id_language)
 );
 create table public.person_x_associated_career(
     dni varchar(50) REFERENCES public.student(dni),
