@@ -1,5 +1,5 @@
 DROP TABLE public.person_x_network;
-DROP TABLE public.person_x_lenguage;
+DROP TABLE public.person_x_language;
 DROP TABLE public.person_x_career;
 DROP TABLE public.person_x_associated_career;
 DROP TABLE public.student;
