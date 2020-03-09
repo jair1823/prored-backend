@@ -1,4 +1,4 @@
-create database prored;
+--create database prored;
 
 create table public.person(
     dni varchar(50) PRIMARY KEY,
@@ -31,7 +31,6 @@ create table public.marital_status(
     name varchar(50)
 );
 
-
 create table public.academic_unit(
     id_academic_unit SERIAL PRIMARY KEY,
     name varchar(50)
@@ -50,7 +49,7 @@ create table public.professor(
 
 create table public.project(
     id_project SERIAL PRIMARY KEY,
-    id_inv_unit integer REFERENCES public.investigation_unit(id_inv_unit)
+    id_inv_unit integer REFERENCES public.investigation_unit(id_inv_unit),
     name varchar(50),
     code_manage varchar(50)
 );
@@ -60,7 +59,8 @@ CREATE TYPE public.role AS ENUM ('Estudiante Vinculado', 'Asistente Vinculado', 
 create table public.person_x_project(
     dni varchar(50) REFERENCES public.person(dni),
     id_project integer REFERENCES public.project(id_project),
-    role public.role
+    role public.role,
+    PRIMARY KEY(dni, id_project)
 );
 
 create table public.workshop(
@@ -85,14 +85,16 @@ create table public.endoresement(
 
 create table public.project_form(
     id_document integer REFERENCES public.document(id_document),
+    version varchar(20)
 );
 
 create table public.list_of_assitance(
     id_document integer REFERENCES public.document(id_document),
+    date date
 );
 
 create table public.presentation(
-    id_document integer REFERENCES public.document(id_document),
+    id_document integer REFERENCES public.document(id_document)
 );
 
 create table public.article(
@@ -157,30 +159,42 @@ CREATE TYPE public.profile AS ENUM (
     'Invitado'
 );
 
+CREATE TYPE public.nationality AS ENUM (
+    'N1',
+    'N2',
+    'N3', 
+    'N4'
+);
+
 create table public.student(
     dni varchar(50) PRIMARY KEY REFERENCES public.person(dni),
     id_distric integer REFERENCES public.distric(id_distric),
     id_marital_status integer REFERENCES public.marital_status(id_marital_status),
     campus_code varchar(30) REFERENCES public.campus(campus_code),
     profile public.profile,
-    address text
+    address text,
+    nationality nationality
 );
 
 create table public.person_x_career(
-    dni varchar(50) PRIMARY KEY REFERENCES public.student(dni),
-    career_code integer PRIMARY KEY REFERENCES public.career(career_code)
+    dni varchar(50) REFERENCES public.student(dni),
+    career_code integer REFERENCES public.career(career_code),
+    PRIMARY KEY(dni, career_code)
 );
 create table public.person_x_lenguage(
-    dni varchar(50) PRIMARY KEY REFERENCES public.student(dni),
-    id_lenguage integer PRIMARY KEY REFERENCES public.lenguage(id_lenguage)
+    dni varchar(50) REFERENCES public.student(dni),
+    id_lenguage integer REFERENCES public.lenguage(id_lenguage),
+    PRIMARY KEY(dni, id_lenguage)
 );
 create table public.person_x_associated_career(
-    dni varchar(50) PRIMARY KEY REFERENCES public.student(dni),
-    id_associated_career integer PRIMARY KEY REFERENCES public.associated_career(id_associated_career)
+    dni varchar(50) REFERENCES public.student(dni),
+    id_associated_career integer REFERENCES public.associated_career(id_associated_career),
+    PRIMARY KEY(dni, id_associated_career)
 );
 
 create table public.person_x_network(
-    dni varchar(50) PRIMARY KEY REFERENCES public.student(dni),
-    id_network integer PRIMARY KEY REFERENCES public.network(id_network)
+    dni varchar(50) REFERENCES public.student(dni),
+    id_network integer REFERENCES public.network(id_network),
+    PRIMARY KEY(dni, id_network)
 );
 
