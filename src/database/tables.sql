@@ -31,3 +31,29 @@ create table public.marital_status(
     name varchar(50)
 );
 
+
+
+CREATE TYPE public.degree AS ENUM (
+    'Diplomado',
+    'Bachillerato',
+    'Licenciatura',
+    'Maestría',
+    'Doctorado'
+);
+
+
+create table public.career(
+    career_code integer PRIMARY KEY,
+    name varchar(100),
+    degree public.degree
+);
+
+create table public.
+
+
+
+
+create table public.student(
+    dni varchar(50) PRIMARY KEY REFERENCES public.person(dni),
+
+);
