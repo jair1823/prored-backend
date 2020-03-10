@@ -26,11 +26,6 @@ create table public.district(
     name varchar(50)
 );
 
-create table public.marital_status(
-    id_marital_status SERIAL PRIMARY KEY,
-    name varchar(50)
-);
-
 create table public.academic_unit(
     id_academic_unit SERIAL PRIMARY KEY,
     name varchar(50)
@@ -166,10 +161,17 @@ CREATE TYPE public.nationality AS ENUM (
     'N4'
 );
 
+CREATE TYPE public.marital_status AS ENUM (
+    'Soltero',
+    'Casado',
+    'Divorciado', 
+    'viudo'
+);
+
 create table public.student(
     dni varchar(50) PRIMARY KEY REFERENCES public.person(dni),
     id_district integer REFERENCES public.district(id_district),
-    id_marital_status integer REFERENCES public.marital_status(id_marital_status),
+    marital_status marital_status,
     campus_code varchar(30) REFERENCES public.campus(campus_code),
     profile public.profile,
     address text,
