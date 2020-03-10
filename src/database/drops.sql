@@ -10,7 +10,7 @@ DROP TABLE public.network;
 DROP TABLE public.campus;
 DROP TABLE public.career;
 DROP TABLE public.article;
-DROP TABLE public.photos;
+DROP TABLE public.photo;
 DROP TABLE public.presentation;
 DROP TABLE public.list_of_assitance;
 DROP TABLE public.project_form;
