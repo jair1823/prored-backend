@@ -4,6 +4,7 @@ import Investigation_Unit from './investigation_unit.routes';
 import Center from './center.routes'
 import AssoCareer from './associated_career.routes'
 import Career from './career.routes'
+import Campus from './campus.routes'
 export const addRoutes = (app: any) => {
     app.use(Network);
     app.use(Center);
@@ -11,4 +12,5 @@ export const addRoutes = (app: any) => {
     app.use(Academic_Unit);
     app.use(Investigation_Unit);
     app.use(Career);
+    app.use(Campus);
 }
