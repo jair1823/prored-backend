@@ -92,6 +92,12 @@ create table public.presentation(
     id_document integer REFERENCES public.document(id_document)
 );
 
+create table public.photo(
+    id_document integer REFERENCES public.document(id_document),
+    date date,
+    comment text
+);
+
 create table public.article(
     id_document integer REFERENCES public.document(id_document),
     key_words varchar(50),
