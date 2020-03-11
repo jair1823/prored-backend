@@ -4,7 +4,8 @@ import Investigation_Unit from './investigation_unit.routes';
 import Center from './center.routes';
 import AssoCareer from './associated_career.routes';
 import Career from './career.routes';
-import Language from './language.routes'
+import Language from './language.routes';
+import Directions from './directions.routes'
 export const addRoutes = (app: any) => {
     app.use(Network);
     app.use(Center);
@@ -13,4 +14,5 @@ export const addRoutes = (app: any) => {
     app.use(Investigation_Unit);
     app.use(Career);
     app.use(Language);
+    app.use(Directions);
 }
