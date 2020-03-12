@@ -76,14 +76,14 @@ export const getStudentByDni = async (req: Request, res: Response): Promise<Resp
         const associated_careers: QueryResult = await pool.query(associated_careersSQL, [dni]);
         return res.json(
             {
-                'student': student.rows[0], 
+                'student': student.rows[0],
                 'careers': careers.rows,
                 'networks': networks.rows,
                 'languages': languages.rows,
                 'associated_careers': associated_careers.rows
             }
-                
-            
+
+
         );
     } catch (error) {
         console.log(error);
@@ -150,6 +150,204 @@ export const createStudent = async (req: Request, res: Response): Promise<Respon
 
         client.release();
         return res.json([result1.rows, result2.rows]);
+    } catch (error) {
+        console.log(error);
+        await client.query('ROLLBACK');
+        client.release();
+        return res.send('Hello world, error');
+    }
+}
+
+export const updateStudent = async (req: Request, res: Response): Promise<Response> => {
+
+    const person = `
+        UPDATE public.person
+            SET name=$2, lastname1=$3, lastname2=$4, born_dates=$5
+        WHERE dni = $1;
+    `;
+    const student = `
+        UPDATE public.student
+            SET id_district=$2, marital_status=$3, campus_code=$4, profile=$5, address=$6, nationality=$7
+        WHERE dni = $1;
+    `;
+    const client = await pool.connect();
+    try {
+        const personValues = [req.params.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates];
+        const studentValues = [
+            req.params.dni, req.body.id_district, req.body.marital_status,
+            req.body.campus_code, req.body.profile, req.body.address, req.body.nationality
+        ];
+        await client.query('BEGIN');
+        const result1: QueryResult = await client.query(person, personValues);
+        const result2: QueryResult = await client.query(student, studentValues);
+        await client.query('COMMIT');
+        client.release();
+        return res.json([result1.rows, result2.rows]);
+    } catch (error) {
+        console.log(error);
+        await client.query('ROLLBACK');
+        client.release();
+        return res.send('Hello world, error');
+    }
+}
+
+export const addCareer = async (req: Request, res: Response): Promise<Response> => {
+    const studentXcareer = `
+    INSERT INTO public.person_x_career(dni, career_code)
+        VALUES ($1, $2);
+    `;
+    try {
+        const dni = req.params.dni;
+        const career_code = req.body.career_code;
+        const result: QueryResult = await pool.query(studentXcareer, [dni, career_code]);
+        return res.status(500).json(result.rows);
+    } catch (error) {
+        return res.status(500).send('Internal server error');
+    }
+}
+
+export const addLanguage = async (req: Request, res: Response): Promise<Response> => {
+    const studentXlanguage = `
+        INSERT INTO public.person_x_language(dni, id_language)
+            VALUES ($1, $2);
+    `;
+    try {
+        const dni = req.params.dni;
+        const id_language = req.body.id_language;
+        const result: QueryResult = await pool.query(studentXlanguage, [dni, id_language]);
+        return res.status(500).json(result.rows);
+    } catch (error) {
+        return res.status(500).send('Internal server error');
+    }
+}
+
+export const addNetwork = async (req: Request, res: Response): Promise<Response> => {
+    const studentXnetworks = `
+        INSERT INTO public.person_x_network(dni, id_network)
+            VALUES ($1, $2);
+    `;
+    try {
+        const dni = req.params.dni;
+        const id_network = req.body.id_network;
+        const result: QueryResult = await pool.query(studentXnetworks, [dni, id_network]);
+        return res.status(500).json(result.rows);
+    } catch (error) {
+        return res.status(500).send('Internal server error');
+    }
+
+}
+
+export const addAssociatedCareer = async (req: Request, res: Response): Promise<Response> => {
+    const studentXassociated_career = `
+        INSERT INTO public.person_x_associated_career(dni, id_associated_career)
+            VALUES ($1, $2);
+    `;
+    try {
+        const dni = req.params.dni;
+        const id_associated_career = req.body.id_associated_career;
+        const result: QueryResult = await pool.query(studentXassociated_career, [dni, id_associated_career]);
+        return res.status(500).json(result.rows);
+    } catch (error) {
+        return res.status(500).send('Internal server error');
+    }
+}
+
+export const removeCareer = async (req: Request, res: Response): Promise<Response> => {
+    const studentXcareer = `
+        DELETE FROM public.person_x_career
+	        WHERE dni = $1 and career_code = $2;
+    `;
+    try {
+        const dni = req.params.dni;
+        const career_code = req.body.career_code;
+        const result: QueryResult = await pool.query(studentXcareer, [dni, career_code]);
+        return res.status(500).json(result.rows);
+    } catch (error) {
+        return res.status(500).send('Internal server error');
+    }
+}
+
+export const removeLanguage = async (req: Request, res: Response): Promise<Response> => {
+    const studentXlanguage = `
+        DELETE FROM public.person_x_language
+            WHERE dni = $1 and id_language = $2;
+    `;
+    try {
+        const dni = req.params.dni;
+        const id_language = req.body.id_language;
+        const result: QueryResult = await pool.query(studentXlanguage, [dni, id_language]);
+        return res.status(500).json(result.rows);
+    } catch (error) {
+        return res.status(500).send('Internal server error');
+    }
+}
+
+export const removeNetwork = async (req: Request, res: Response): Promise<Response> => {
+    const studentXnetworks = `
+        DELETE FROM public.person_x_network
+            WHERE dni = $1 and id_network = $2;
+    `;
+    try {
+        const dni = req.params.dni;
+        const id_network = req.body.id_network;
+        const result: QueryResult = await pool.query(studentXnetworks, [dni, id_network]);
+        return res.status(500).json(result.rows);
+    } catch (error) {
+        return res.status(500).send('Internal server error');
+    }
+}
+
+export const removeAssociatedCareer = async (req: Request, res: Response): Promise<Response> => {
+    const studentXassociated_career = `
+        DELETE FROM public.person_x_associated_career
+            WHERE dni = $1 and id_associated_career = $2;
+    `;
+    try {
+        const dni = req.params.dni;
+        const id_associated_career = req.body.id_associated_career;
+        const result: QueryResult = await pool.query(studentXassociated_career, [dni, id_associated_career]);
+        return res.status(500).json(result.rows);
+    } catch (error) {
+        return res.status(500).send('Internal server error');
+    }
+}
+
+export const disableStudent = async (req: Request, res: Response): Promise<Response> => {
+    const person = `
+        UPDATE public.person
+            SET status=false
+        WHERE dni = $1;
+    `;
+    const client = await pool.connect();
+    try {
+        const personValues = [req.params.dni];
+        await client.query('BEGIN');
+        const result1: QueryResult = await client.query(person, personValues);
+        await client.query('COMMIT');
+        client.release();
+        return res.json([result1.rows]);
+    } catch (error) {
+        console.log(error);
+        await client.query('ROLLBACK');
+        client.release();
+        return res.send('Hello world, error');
+    }
+}
+
+export const enableStudent = async (req: Request, res: Response): Promise<Response> => {
+    const person = `
+        UPDATE public.person
+            SET status=true
+        WHERE dni = $1;
+    `;
+    const client = await pool.connect();
+    try {
+        const personValues = [req.params.dni];
+        await client.query('BEGIN');
+        const result1: QueryResult = await client.query(person, personValues);
+        await client.query('COMMIT');
+        client.release();
+        return res.json([result1.rows]);
     } catch (error) {
         console.log(error);
         await client.query('ROLLBACK');
