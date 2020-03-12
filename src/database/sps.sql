@@ -1,4 +1,5 @@
--- Get Students 
+----------------------------------------------------------------------------------------------------------------- 
+-- Get Students Manual
 
 -- DROP FUNCTION getstudents();
 
@@ -37,4 +38,30 @@ LANGUAGE 'plpgsql';
 
 SELECT * FROM getstudents();
 
--- 
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get Students con Cursor
+
+DROP FUNCTION getstudents2;
+
+
+CREATE OR REPLACE FUNCTION getstudents2(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR select 
+p.dni, p.name, p.lastname1, p.lastname2,
+p.born_dates, d.id_district ,d.name as district, 
+c.campus_code, c.name as campus,
+s.marital_status, s.profile, s.address, s.nationality
+
+from public.person p
+inner join public.student s on s.dni = p.dni
+inner join public.district d on d.id_district = s.id_district
+inner join public.campus c on c.campus_code = s.campus_code
+where p.status = true;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+
+SELECT getstudents2('tabla');
+FETCH ALL IN "tabla";
