@@ -4,7 +4,9 @@
   "description": "Proyecto ProRed Api",
   "scripts": {
     "start": "concurrently \"tsc --watch\" \"nodemon dist/index.js\"",
-    "build": "tsc"
+    "build": "tsc",
+    "seeds": "node dist/seeds/index.js",
+    "migrate": "node dist/migrations/index.js"
   },
   "repository": {
     "type": "git",

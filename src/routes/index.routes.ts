@@ -7,6 +7,7 @@ import Career from './career.routes';
 import Language from './language.routes';
 import Directions from './directions.routes'
 import Campus from './campus.routes';
+import Student from './student.routes'
 export const addRoutes = (app: any) => {
     app.use(Network);
     app.use(Center);
@@ -17,6 +18,5 @@ export const addRoutes = (app: any) => {
     app.use(Campus);
     app.use(Language);
     app.use(Directions);
-
-  
+    app.use(Student);
 }
