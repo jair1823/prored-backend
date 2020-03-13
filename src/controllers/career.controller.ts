@@ -33,7 +33,7 @@ export const getCareerbyId = async (req: Request, res: Response): Promise<Respon
 export const createCareer = async (req: Request, res: Response): Promise<Response> => {
     try {
         const { career_code, name, degree } = req.body;
-        const sql = 'INSERT INTO public.career(career_code, name, degree) values ($1,$2,$3);';
+        const sql = 'SELECT createcareer($1,$2,$3);';
         const center: QueryResult = await pool.query(sql, [career_code, name, degree]);
         return res.status(200).json(center.rows);
     } catch (error) {
@@ -49,7 +49,7 @@ export const updateCareer = async (req: Request, res: Response): Promise<Respons
     try {
         const id = req.params.id;
         const { name, degree } = req.body;
-        const sql = 'UPDATE public.career SET name = $1, degree = $2 WHERE career_code = $3;';
+        const sql = 'SELECT updatecareer($1,$2,$3);';
         const center: QueryResult = await pool.query(sql, [name, degree, id]);
         return res.status(200).json(center.rows);
     } catch (error) {
@@ -64,7 +64,7 @@ export const updateCareer = async (req: Request, res: Response): Promise<Respons
 export const deleteCareer = async (req: Request, res: Response): Promise<Response> => {
     try {
         const id = req.params.id;
-        const sql = 'DELETE FROM public.career WHERE career_code = $1;';
+        const sql = 'SELECT deletecareer($1);';
         const center: QueryResult = await pool.query(sql, [id]);
         return res.status(200).json(center.rows);
     } catch (error) {
