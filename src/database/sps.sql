@@ -36,14 +36,9 @@ END; $$
  
 LANGUAGE 'plpgsql';
 
-SELECT * FROM getstudents();
-
 ----------------------------------------------------------------------------------------------------------------- 
 
 -- Get Students con Cursor
-
-DROP FUNCTION getstudents2;
-
 
 CREATE OR REPLACE FUNCTION getstudents2(ref refcursor) RETURNS refcursor AS $$
 BEGIN
