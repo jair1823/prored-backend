@@ -21,6 +21,15 @@ DROP FUNCTION IF EXISTS deletecareer;
 DROP FUNCTION IF EXISTS createcenter;
 DROP FUNCTION IF EXISTS updatecenter;
 DROP FUNCTION IF EXISTS deletecenter;
+DROP FUNCTION IF EXISTS getnetworks;
+DROP FUNCTION IF EXISTS getnetworksbyid;
+DROP FUNCTION IF EXISTS getcenters;
+DROP FUNCTION IF EXISTS getcenterbyid;
+DROP FUNCTION IF EXISTS getcampuses;
+DROP FUNCTION IF EXISTS getcampusesbyid;
+DROP FUNCTION IF EXISTS getlanguage;
+
+
 
 DROP TABLE IF EXISTS public.person_x_network;
 DROP TABLE IF EXISTS public.person_x_language;

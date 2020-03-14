@@ -193,3 +193,87 @@ BEGIN
   DELETE FROM public.center WHERE id_center = idc;
 END;
 $$ LANGUAGE plpgsql;
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get Networks con Cursor
+
+CREATE OR REPLACE FUNCTION getnetworks(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM network;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get Networks by ID con Cursor
+
+CREATE OR REPLACE FUNCTION getnetworksbyid(pid INTEGER, ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM network WHERE id_network = pid;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get centers con Cursor
+
+CREATE OR REPLACE FUNCTION getcenters(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM center;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get Center by ID con Cursor
+
+CREATE OR REPLACE FUNCTION getcenterbyid(pid INTEGER, ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM center where id_center = $1;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get centers con Cursor
+
+CREATE OR REPLACE FUNCTION getcampuses(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM campus;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get Center by ID con Cursor
+
+CREATE OR REPLACE FUNCTION getcampusesbyid(pid INTEGER, ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM campus WHERE campus_code = pid;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get language con Cursor
+
+CREATE OR REPLACE FUNCTION getlanguage(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM public.language;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
