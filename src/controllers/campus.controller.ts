@@ -26,7 +26,7 @@ export const getCampusbyId = async (req: Request, res:Response): Promise<Respons
 export const createCampus = async (req: Request, res:Response): Promise<Response> => {
     const { code, name } = req.body
     console.log(code, name)
-    const response: QueryResult = await pool.query('INSERT INTO public.campus (campus_code, name) VALUES ($1,$2)', [code, name])
+    const response: QueryResult = await pool.query('SELECT createcampus($1,$2)', [code, name])
     return res.json({
         message: "Campus created Succesfully",
         body: {
@@ -40,7 +40,7 @@ export const updateCampus = async (req: Request, res:Response): Promise<Response
     try {
         const id = parseInt(req.params.id);
         const { code, name } = req.body;
-        const response: QueryResult = await pool.query('UPDATE public.campus SET campus_code = $1, name = $2 WHERE campus_code = $3', [code,name, id]);
+        const response: QueryResult = await pool.query('SELECT updatecampus($1,$2,$3)', [code,name, id]);
         return res.json(`Campus ${id} modified succesfully`)
     } catch (error) {
         console.log(error);0
@@ -51,7 +51,7 @@ export const updateCampus = async (req: Request, res:Response): Promise<Response
 export const deleteCampus = async (req: Request, res:Response): Promise<Response> => {
     try {
         const id = parseInt(req.params.id)
-        const response: QueryResult = await pool.query('DELETE FROM public.campus WHERE campus_code = $1', [id]);
+        const response: QueryResult = await pool.query('SELECT deletecampus($1)', [id]);
         return res.json(`Campus ${id} deleted succesfuly`)
     } catch (error) {
         console.log(error);0
