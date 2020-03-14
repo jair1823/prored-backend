@@ -57,10 +57,6 @@ where p.status = true;
 END;
 $$ LANGUAGE plpgsql;
 
-
-SELECT getstudents2('tabla');
-FETCH ALL IN "tabla";
-
 ----------------------------------------------------------------------------------------------------------------- 
 
 CREATE OR REPLACE FUNCTION createnetwork(n VARCHAR(70), nt network_type) 
