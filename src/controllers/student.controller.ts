@@ -4,25 +4,18 @@ import { pool } from '../database/connection';
 
 export const getStudents = async (req: Request, res: Response): Promise<Response> => {
     try {
+        const client = await pool.connect();
         const sql =
-            `
-        select 
-            p.dni, p.name, p.lastname1, p.lastname2,
-            p.born_dates, d.id_district ,d.name as district, 
-            c.campus_code, c.name as campus,
-            s.marital_status, s.profile, s.address, s.nationality
-	
-        from public.person p
-        inner join public.student s on s.dni = p.dni
-        inner join public.district d on d.id_district = s.id_district
-        inner join public.campus c on c.campus_code = s.campus_code
-        where p.status = true;
+        `
+        select getstudents2('cursor');
+        FETCH ALL IN "cursor";
         `;
-        const students: QueryResult = await pool.query(sql)
-        return res.json(students.rows);
+        const students: any = await client.query(sql);
+        client.release();
+        return res.json(students[1].rows);
     } catch (error) {
         console.log(error);
-        return res.send('Hello world, error');
+        return res.send('Internal Server Error');
     }
 }
 
