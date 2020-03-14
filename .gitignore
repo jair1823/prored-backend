@@ -2,4 +2,3 @@
 .env
 /dist
 /src/seeds
-/src/migrations
