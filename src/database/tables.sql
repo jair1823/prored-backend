@@ -1,4 +1,4 @@
-create database prored;
+--create database prored;
 
 create table public.person(
     dni varchar(50) PRIMARY KEY,
