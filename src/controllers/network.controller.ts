@@ -26,7 +26,7 @@ export const getNetworkbyId = async (req: Request, res:Response): Promise<Respon
 export const createNetwork = async (req: Request, res:Response): Promise<Response> => {
     const { name, type} = req.body
     console.log(name,type)
-    const response: QueryResult = await pool.query('INSERT INTO public.network (name, network_type) VALUES ($1,$2)', [name,type])
+    const response: QueryResult = await pool.query('SELECT createnetwork($1,$2)', [name,type])
     return res.json({
         message: "Network created Succesfully",
         body: {
@@ -40,7 +40,7 @@ export const updateNetwork = async (req: Request, res:Response): Promise<Respons
     try {
         const id = parseInt(req.params.id);
         const { name, type } = req.body;
-        const response: QueryResult = await pool.query('UPDATE network SET name = $1, network_type = $2 WHERE id_network = $3', [name, type, id]);
+        const response: QueryResult = await pool.query('SELECT updatenetwork($1,$2,$3)', [name, type, id]);
         return res.json(`Network ${id} modified succesfully`)
     } catch (error) {
         console.log(error);0
@@ -51,7 +51,7 @@ export const updateNetwork = async (req: Request, res:Response): Promise<Respons
 export const deleteNetwork = async (req: Request, res:Response): Promise<Response> => {
     try {
         const id = parseInt(req.params.id)
-        const response: QueryResult = await pool.query('DELETE FROM network WHERE id_network = $1', [id]);
+        const response: QueryResult = await pool.query('SELECT deletenetwork($1)', [id]);
         return res.json(`Network ${id} deleted succesfuly`)
     } catch (error) {
         console.log(error);0
