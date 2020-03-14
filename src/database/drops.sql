@@ -1,3 +1,27 @@
+DROP FUNCTION getstudents;
+DROP FUNCTION getstudents2;
+DROP FUNCTION createnetwork;
+DROP FUNCTION updatenetwork;
+DROP FUNCTION deletenetwork;
+DROP FUNCTION createinvestigation_unit;
+DROP FUNCTION updateinvestigation_unit;
+DROP FUNCTION deleteinvestigation_unit;
+DROP FUNCTION createacademic_unit;
+DROP FUNCTION updateacademic_unit;
+DROP FUNCTION deleteacademic_unit;
+DROP FUNCTION createassociated_career;
+DROP FUNCTION updateassociated_career;
+DROP FUNCTION deleteassociated_career;
+DROP FUNCTION createcampus;
+DROP FUNCTION updatecampus;
+DROP FUNCTION deletecampus;
+DROP FUNCTION createcareer;
+DROP FUNCTION updatecareer;
+DROP FUNCTION deletecareer;
+DROP FUNCTION createcenter;
+DROP FUNCTION updatecenter;
+DROP FUNCTION deletecenter;
+
 DROP TABLE public.person_x_network;
 DROP TABLE public.person_x_language;
 DROP TABLE public.person_x_career;
