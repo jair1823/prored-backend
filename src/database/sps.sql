@@ -1,46 +1,8 @@
 ----------------------------------------------------------------------------------------------------------------- 
--- Get Students Manual
-
--- DROP FUNCTION getstudents();
-
-CREATE OR REPLACE FUNCTION getstudents () 
-   RETURNS TABLE (
-      dni VARCHAR,
-      name VARCHAR,
-	  lastname1 VARCHAR,
-	  lastname2 VARCHAR,
-	  born_dates DATE,
-   	  id_district INT,
-	  district VARCHAR,
-	  campus_code VARCHAR,
-	  campus VARCHAR,
-	  marital_status marital_status,
-	  profile profile,
-	  address TEXT,
-	  nationality nationality
-   )
-AS $$
-BEGIN
-   RETURN QUERY select 
-p.dni, p.name, p.lastname1, p.lastname2,
-p.born_dates, d.id_district ,d.name as district, 
-c.campus_code, c.name as campus,
-s.marital_status, s.profile, s.address, s.nationality
-
-from public.person p
-inner join public.student s on s.dni = p.dni
-inner join public.district d on d.id_district = s.id_district
-inner join public.campus c on c.campus_code = s.campus_code
-where p.status = true;
-END; $$ 
- 
-LANGUAGE 'plpgsql';
-
------------------------------------------------------------------------------------------------------------------ 
 
 -- Get Students con Cursor
 
-CREATE OR REPLACE FUNCTION getstudents2(ref refcursor) RETURNS refcursor AS $$
+CREATE OR REPLACE FUNCTION getstudents(ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR select 
 p.dni, p.name, p.lastname1, p.lastname2,
@@ -229,5 +191,89 @@ CREATE OR REPLACE FUNCTION deletecenter(idc integer)
 RETURNS void AS $$
 BEGIN
   DELETE FROM public.center WHERE id_center = idc;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get Networks con Cursor
+
+CREATE OR REPLACE FUNCTION getnetworks(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM network;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get Networks by ID con Cursor
+
+CREATE OR REPLACE FUNCTION getnetworksbyid(pid INTEGER, ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM network WHERE id_network = pid;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get centers con Cursor
+
+CREATE OR REPLACE FUNCTION getcenters(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM center;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get Center by ID con Cursor
+
+CREATE OR REPLACE FUNCTION getcenterbyid(pid INTEGER, ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM center where id_center = $1;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get centers con Cursor
+
+CREATE OR REPLACE FUNCTION getcampuses(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM campus;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get Center by ID con Cursor
+
+CREATE OR REPLACE FUNCTION getcampusesbyid(pid INTEGER, ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM campus WHERE campus_code = pid;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get language con Cursor
+
+CREATE OR REPLACE FUNCTION getlanguage(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM public.language;
+  RETURN ref;
 END;
 $$ LANGUAGE plpgsql;

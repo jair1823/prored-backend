@@ -7,7 +7,7 @@ export const getStudents = async (req: Request, res: Response): Promise<Response
         const client = await pool.connect();
         const sql =
         `
-        select getstudents2('cursor');
+        select getstudents('cursor');
         FETCH ALL IN "cursor";
         `;
         const students: any = await client.query(sql);
