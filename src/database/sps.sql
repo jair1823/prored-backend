@@ -277,3 +277,88 @@ BEGIN
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get Province con Cursor
+
+CREATE OR REPLACE FUNCTION getprovinces(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM public.province;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get Cantones con Cursor
+
+CREATE OR REPLACE FUNCTION getcantones(pid INTEGER, ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM public.canton where id_province = pid;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get Districts con Cursor
+
+CREATE OR REPLACE FUNCTION getdistricts(pid INTEGER, ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM public.district where id_canton = pid;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get Career con Cursor
+
+CREATE OR REPLACE FUNCTION getcareer(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM public.career;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get Careers con Cursor
+
+CREATE OR REPLACE FUNCTION getcareers(pid INTEGER, ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM public.career where career_code = pid;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get Career con Cursor
+
+CREATE OR REPLACE FUNCTION getasocareer(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM public.associated_career;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get Careers con Cursor
+
+CREATE OR REPLACE FUNCTION getasocareers(pid INTEGER, ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM public.associated_career where id_associated_career = $1;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;

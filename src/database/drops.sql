@@ -28,7 +28,13 @@ DROP FUNCTION IF EXISTS getcenterbyid;
 DROP FUNCTION IF EXISTS getcampuses;
 DROP FUNCTION IF EXISTS getcampusesbyid;
 DROP FUNCTION IF EXISTS getlanguage;
-
+DROP FUNCTION IF EXISTS getprovinces;
+DROP FUNCTION IF EXISTS getcantones;
+DROP FUNCTION IF EXISTS getdistricts;
+DROP FUNCTION IF EXISTS getcareer;
+DROP FUNCTION IF EXISTS getcareers;
+DROP FUNCTION IF EXISTS getasocareer;
+DROP FUNCTION IF EXISTS getasocareers;
 
 
 DROP TABLE IF EXISTS public.person_x_network;
