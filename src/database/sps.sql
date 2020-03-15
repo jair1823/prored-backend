@@ -362,3 +362,27 @@ BEGIN
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
+
+
+----------------------------------------------------------------------------------------------------------------- 
+
+-- Get Associated career + center con Cursor
+
+
+CREATE OR REPLACE FUNCTION public.getasocareercenter(
+	ref refcursor)
+    RETURNS refcursor
+    LANGUAGE 'plpgsql'
+
+    COST 100
+    VOLATILE 
+    
+AS $BODY$
+BEGIN
+  OPEN ref FOR select 
+a.id_associated_career, a.name, s.id_center, s.name
+from public.associated_career a
+inner join public.center s on s.id_center = a.id_center;
+  RETURN ref;
+END;
+$BODY$;
