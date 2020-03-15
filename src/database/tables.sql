@@ -127,7 +127,7 @@ CREATE TYPE public.network_type AS ENUM (
     'Municipalidad',
     'ONG',
     'Asociaciones',
-    'Grupo Artisitico'
+    'Grupo Artístico'
 );
 
 create table public.network(
