@@ -35,6 +35,7 @@ DROP FUNCTION IF EXISTS getcareer;
 DROP FUNCTION IF EXISTS getcareers;
 DROP FUNCTION IF EXISTS getasocareer;
 DROP FUNCTION IF EXISTS getasocareers;
+DROP FUNCTION IF EXISTS getasocareercenter;
 
 
 DROP TABLE IF EXISTS public.person_x_network;

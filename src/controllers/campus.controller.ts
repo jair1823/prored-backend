@@ -3,22 +3,50 @@ import {QueryResult} from 'pg'
 import { pool } from '../database/connection'
 
 export const getCampuses = async (req: Request, res:Response): Promise<Response> => {
+    const query = `select getcampuses('campusesCursor'); `;
+    const fetch = `FETCH ALL IN "campusesCursor";`;
+    const client = await pool.connect();
     try {
-        const response: QueryResult = await pool.query('SELECT * FROM campus');
+        await client.query('BEGIN');
+
+        await client.query(query);
+        const response: QueryResult = await client.query(fetch);
+        
+        await client.query('ROLLBACK');
+        client.release();
+
         return res.status(200).json(response.rows);
     } catch (error) {
-        console.log(error);0
+
+        await client.query('ROLLBACK');
+        client.release();
+        console.log(error);
+
         return res.status(500).json('Internal Server Error');
     }
 }
 
 export const getCampusbyId = async (req: Request, res:Response): Promise<Response> => {
+    const query = `select getcampusesbyid($1,'campusesCursor'); `;
+    const fetch = `FETCH ALL IN "campusesCursor";`;
+    const client = await pool.connect();
     try {
-        const id = parseInt(req.params.id)
-        const response: QueryResult = await pool.query('SELECT * FROM campus WHERE campus_code = $1', [id]);
+        const id = req.params.id;
+        await client.query('BEGIN');
+
+        await client.query(query,[id]);
+        const response: QueryResult = await client.query(fetch);
+
+        await client.query('ROLLBACK');
+        client.release();
+
         return res.status(200).json(response.rows);
     } catch (error) {
-        console.log(error);0
+
+        await client.query('ROLLBACK');
+        client.release();
+        console.log(error);
+
         return res.status(500).json('Internal Server Error');
     }
 }

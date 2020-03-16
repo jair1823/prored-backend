@@ -232,7 +232,7 @@ $$ LANGUAGE plpgsql;
 --###########################################################################
 
 CREATE OR REPLACE FUNCTION disablestudent(pdni varchar(50))
-    RETURNS refcursor AS $$
+    RETURNS void AS $$
     BEGIN
     UPDATE public.person
         SET status=false
@@ -243,7 +243,7 @@ $$ LANGUAGE plpgsql;
 --###########################################################################
 
 CREATE OR REPLACE FUNCTION enablestudent(pdni varchar(50))
-    RETURNS refcursor AS $$
+    RETURNS void AS $$
     BEGIN
     UPDATE public.person
         SET status=true

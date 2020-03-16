@@ -3,10 +3,24 @@ import { QueryResult } from 'pg'
 import { pool } from '../database/connection'
 
 export const getCenter = async (req: Request, res: Response): Promise<Response> => {
+    const query = `select getcenters('centersCursor'); `;
+    const fetch = `FETCH ALL IN "centersCursor";`;
+    const client = await pool.connect();
     try {
-        const centers: QueryResult = await pool.query('SELECT * FROM center;');
+
+        await client.query('BEGIN');
+        
+        await client.query(query);
+        const centers: QueryResult = await client.query(fetch);
+        
+        await client.query('ROLLBACK');
+        client.release();
+
         return res.status(200).json(centers.rows);
     } catch (error) {
+        console.log(error);
+        await client.query('ROLLBACK');
+        client.release();
         return res.status(500).json(
             {
                 msg: 'Internal server error'
@@ -16,12 +30,23 @@ export const getCenter = async (req: Request, res: Response): Promise<Response> 
 }
 
 export const getCenterbyId = async (req: Request, res: Response): Promise<Response> => {
+    const query = `select getcenterbyid($1, 'centersCursor'); `;
+    const fetch = `FETCH ALL IN "centersCursor";`;
+    const client = await pool.connect();
     try {
         const id = req.params.id;
-        const sql = 'SELECT * FROM center where id_center = $1;';
-        const center: QueryResult = await pool.query(sql, [id]);
+        await client.query('BEGIN');
+
+        await client.query(query, [id]);
+        const center: QueryResult = await client.query(fetch);
+
+        await client.query('ROLLBACK');
+        client.release();
         return res.status(200).json(center.rows);
     } catch (error) {
+        console.log(error);
+        await client.query('ROLLBACK');
+        client.release();
         return res.status(500).json(
             {
                 msg: 'Internal server error'

@@ -43,4 +43,6 @@ INSERT INTO public.associated_career(id_center, name)
         (2, 'Admi');
 
 INSERT INTO public.network(name, network_type)
-	VALUES ('Municipalidad Heredia', 'Municipalidad');
+	VALUES 
+        ('Municipalidad Heredia', 'Municipalidad'),
+        ('Municipalidad Santa Ana', 'Municipalidad');

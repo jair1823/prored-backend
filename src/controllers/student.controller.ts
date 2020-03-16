@@ -3,16 +3,20 @@ import { QueryResult } from 'pg';
 import { pool } from '../database/connection';
 
 export const getStudents = async (req: Request, res: Response): Promise<Response> => {
+    const query = `select getstudents('studentsCursor');`;
+    const fetch = `FETCH ALL IN "studentsCursor";`;
+    const client = await pool.connect();
     try {
-        const client = await pool.connect();
-        const sql =
-        `
-        select getstudents('cursor');
-        FETCH ALL IN "cursor";
-        `;
-        const students: any = await client.query(sql);
+
+        await client.query('BEGIN');
+
+        await client.query(query)
+        const students: QueryResult = await client.query(fetch);
+
+        await client.query('ROLLBACK');
         client.release();
-        return res.json(students[1].rows);
+
+        return res.json(students.rows);
     } catch (error) {
         console.log(error);
         return res.send('Internal Server Error');
@@ -20,53 +24,44 @@ export const getStudents = async (req: Request, res: Response): Promise<Response
 }
 
 export const getStudentByDni = async (req: Request, res: Response): Promise<Response> => {
-    const getSQL =
-        `
-        select 
-            p.dni, p.name, p.lastname1, p.lastname2,
-            p.born_dates, d.id_district ,d.name as district, 
-            c.campus_code, c.name as campus,
-            s.marital_status, s.profile, s.address, s.nationality
-        from public.person p
-        inner join public.student s on s.dni = p.dni
-        inner join public.district d on d.id_district = s.id_district
-        inner join public.campus c on c.campus_code = s.campus_code
-        where p.status = true and p.dni = $1;
-        `;
-    const careersSQL = `
-        select c.career_code, c.name, c.degree
-            from public.career c
-        inner join public.person_x_career pxc on c.career_code = pxc.career_code
-        where dni = $1;
-    `;
-    const networkSQL = `
-        select n.id_network, n.name, n.network_type
-            from public.network n
-        inner join public.person_x_network pxn on n.id_network = pxn.id_network
-        where dni = $1;
-    `;
-    const languageSQL = `
-        select l.id_language, l.name
-            from public.language l
-        inner join public.person_x_language pxl on l.id_language = pxl.id_language
-        where dni = $1;
-    `;
-    const associated_careersSQL = `
-        select ac.id_associated_career, ac.name as associated_career,
-                c.id_center, c.name as center
-            from public.associated_career ac
-        inner join public.person_x_associated_career pxa on ac.id_associated_career = pxa.id_associated_career
-        inner join public.center c on c.id_center = ac.id_center
-        where dni = $1;
-    `;
+    const getStudent = `select getstudentbydni($1,'studentCursor');`;
+    const fetchStudent = `FETCH ALL IN "studentCursor";`;
+
+    const getCarees = `select getcareersbydni($1,'careersCursor');`;
+    const fetchCarees = `FETCH ALL IN "careersCursor";`;
+
+    const getNetworks = `select getnetworksbydni($1,'networksCursor');`;
+    const fetchNetworks = `FETCH ALL IN "networksCursor";`;
+
+    const getLanguages = `select getlanguagesbydni($1,'languagesCursor');`;
+    const fetchLanguages = `FETCH ALL IN "languagesCursor";`;
+
+    const getAssoCareer = `select getassociatedcareersbydni($1,'assoCareerCursor');`;
+    const fetchAssoCareer = `FETCH ALL IN "assoCareerCursor";`;
+
+    const client = await pool.connect();
     try {
         const dni = req.params.dni;
+        await client.query('BEGIN');
 
-        const student: QueryResult = await pool.query(getSQL, [dni]);
-        const careers: QueryResult = await pool.query(careersSQL, [dni]);
-        const networks: QueryResult = await pool.query(networkSQL, [dni]);
-        const languages: QueryResult = await pool.query(languageSQL, [dni]);
-        const associated_careers: QueryResult = await pool.query(associated_careersSQL, [dni]);
+        await client.query(getStudent, [dni]);
+        const student: QueryResult = await client.query(fetchStudent);
+
+        await client.query(getCarees, [dni]);
+        const careers: QueryResult = await client.query(fetchCarees);
+
+        await client.query(getNetworks, [dni]);
+        const networks: QueryResult = await client.query(fetchNetworks);
+
+        await client.query(getLanguages, [dni]);
+        const languages: QueryResult = await client.query(fetchLanguages);
+
+        await client.query(getAssoCareer, [dni]);
+        const associated_careers: QueryResult = await client.query(fetchAssoCareer);
+
+        await client.query('ROLLBACK');
+        client.release();
+
         return res.json(
             {
                 'student': student.rows[0],
@@ -79,47 +74,34 @@ export const getStudentByDni = async (req: Request, res: Response): Promise<Resp
 
         );
     } catch (error) {
+
+        await client.query('ROLLBACK');
+        client.release();
         console.log(error);
+
         return res.send('Hello world, error');
     }
 }
 
 export const createStudent = async (req: Request, res: Response): Promise<Response> => {
     const client = await pool.connect();
-    const person = `
-        INSERT INTO public.person( dni, name, lastname1, lastname2, born_dates, status)
-            VALUES ($1, $2, $3, $4, $5, true) RETURNING dni;
-        `;
-    const student = `
-        INSERT INTO public.student(dni, id_district, marital_status, campus_code, profile, address, nationality)
-            VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING dni;
-    `;
-    const studentXcareer = `
-        INSERT INTO public.person_x_career(dni, career_code)
-            VALUES ($1, $2);
-    `;
-    const studentXlanguage = `
-        INSERT INTO public.person_x_language(dni, id_language)
-            VALUES ($1, $2);
-    `;
-    const studentXassociated_career = `
-        INSERT INTO public.person_x_associated_career(dni, id_associated_career)
-            VALUES ($1, $2);
-    `;
-    const studentXnetworks = `
-        INSERT INTO public.person_x_network(dni, id_network)
-            VALUES ($1, $2);
-    `;
+    const createPerson = `SELECT createperson($1,$2,$3,$4,$5);`;
+    const createStudent = `SELECT createstudent($1,$2,$3,$4,$5,$6,$7);`;
+    const createStudentXcareer = `SELECT createstudentxcareer($1,$2);`;
+    const createStudentXlanguage = `SELECT createstudentxlanguage($1,$2);`;
+    const createStudentXassociated_career = `SELECT createstudentxassociatedcareer($1,$2);`;
+    const createStudentXnetworks = `SELECT createstudentxnetwork($1,$2);`;
     try {
 
         const personValues = [req.body.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates];
-        const studentValues = [
-            req.body.dni, req.body.id_district, req.body.marital_status,
-            req.body.campus_code, req.body.profile, req.body.address, req.body.nationality
+        const studentValues = [req.body.dni, req.body.id_district, req.body.marital_status,
+        req.body.campus_code, req.body.profile, req.body.address, req.body.nationality
         ];
         await client.query('BEGIN');
-        const result1: QueryResult = await client.query(person, personValues);
-        const result2: QueryResult = await client.query(student, studentValues);
+
+        await client.query(createPerson, personValues);
+        await client.query(createStudent, studentValues);
+
         await client.query('COMMIT');
 
         const careers: [] = req.body.careers;
@@ -128,21 +110,25 @@ export const createStudent = async (req: Request, res: Response): Promise<Respon
         const associated_careers: [] = req.body.associated_careers;
 
         careers.map(async (c) => {
-            await client.query(studentXcareer, [personValues[0], c]);
+            await client.query(createStudentXcareer, [personValues[0], c]);
         });
 
         languages.map(async (l) => {
-            await client.query(studentXlanguage, [personValues[0], l])
+            await client.query(createStudentXlanguage, [personValues[0], l])
         });
         networks.map(async (n) => {
-            await client.query(studentXnetworks, [personValues[0], n])
+            await client.query(createStudentXnetworks, [personValues[0], n])
         });
         associated_careers.map(async (a) => {
-            await client.query(studentXassociated_career, [personValues[0], a])
+            await client.query(createStudentXassociated_career, [personValues[0], a])
         });
 
         client.release();
-        return res.json([result1.rows, result2.rows]);
+        return res.json(
+            {
+                msg: 'Student created'
+            }
+        );
     } catch (error) {
         console.log(error);
         await client.query('ROLLBACK');
@@ -153,29 +139,23 @@ export const createStudent = async (req: Request, res: Response): Promise<Respon
 
 export const updateStudent = async (req: Request, res: Response): Promise<Response> => {
 
-    const person = `
-        UPDATE public.person
-            SET name=$2, lastname1=$3, lastname2=$4, born_dates=$5
-        WHERE dni = $1;
-    `;
-    const student = `
-        UPDATE public.student
-            SET id_district=$2, marital_status=$3, campus_code=$4, profile=$5, address=$6, nationality=$7
-        WHERE dni = $1;
-    `;
+    const updateStudent = `SELECT updatestudent($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11);`;
     const client = await pool.connect();
     try {
-        const personValues = [req.params.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates];
-        const studentValues = [
-            req.params.dni, req.body.id_district, req.body.marital_status,
-            req.body.campus_code, req.body.profile, req.body.address, req.body.nationality
+        const values = [
+            req.params.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates,
+            req.body.id_district, req.body.marital_status, req.body.campus_code,
+            req.body.profile, req.body.address, req.body.nationality
         ];
         await client.query('BEGIN');
-        const result1: QueryResult = await client.query(person, personValues);
-        const result2: QueryResult = await client.query(student, studentValues);
+        await client.query(updateStudent, values);
         await client.query('COMMIT');
         client.release();
-        return res.json([result1.rows, result2.rows]);
+        return res.json(
+            {
+                msg: 'Student updated'
+            }
+        );
     } catch (error) {
         console.log(error);
         await client.query('ROLLBACK');
@@ -185,162 +165,162 @@ export const updateStudent = async (req: Request, res: Response): Promise<Respon
 }
 
 export const addCareer = async (req: Request, res: Response): Promise<Response> => {
-    const studentXcareer = `
-    INSERT INTO public.person_x_career(dni, career_code)
-        VALUES ($1, $2);
-    `;
+    const createStudentXcareer = `SELECT createstudentxcareer($1,$2);`;
     try {
-        const dni = req.params.dni;
-        const career_code = req.body.career_code;
-        const result: QueryResult = await pool.query(studentXcareer, [dni, career_code]);
-        return res.status(500).json(result.rows);
+        const values = [req.params.dni, req.body.career_code];
+        await pool.query(createStudentXcareer, values);
+        return res.status(500).json(
+            {
+                msg: 'Career added'
+            }
+        );
     } catch (error) {
+        console.log(error);
         return res.status(500).send('Internal server error');
     }
 }
 
 export const addLanguage = async (req: Request, res: Response): Promise<Response> => {
-    const studentXlanguage = `
-        INSERT INTO public.person_x_language(dni, id_language)
-            VALUES ($1, $2);
-    `;
+    const createStudentXlanguage = `SELECT createstudentxlanguage($1,$2);`;
     try {
-        const dni = req.params.dni;
-        const id_language = req.body.id_language;
-        const result: QueryResult = await pool.query(studentXlanguage, [dni, id_language]);
-        return res.status(500).json(result.rows);
+        const values = [req.params.dni, req.body.id_language];
+        await pool.query(createStudentXlanguage, values);
+        return res.status(500).json(
+            {
+                msg: 'Language added'
+            }
+        );
     } catch (error) {
+        console.log(error);
         return res.status(500).send('Internal server error');
     }
 }
 
 export const addNetwork = async (req: Request, res: Response): Promise<Response> => {
-    const studentXnetworks = `
-        INSERT INTO public.person_x_network(dni, id_network)
-            VALUES ($1, $2);
-    `;
+    const createStudentXnetworks = `SELECT createstudentxnetwork($1,$2);`;
     try {
-        const dni = req.params.dni;
-        const id_network = req.body.id_network;
-        const result: QueryResult = await pool.query(studentXnetworks, [dni, id_network]);
-        return res.status(500).json(result.rows);
+        const values = [req.params.dni, req.body.id_network];
+        await pool.query(createStudentXnetworks, values);
+        return res.status(500).json(
+            {
+                msg: 'Network added'
+            }
+        );
     } catch (error) {
+        console.log(error);
         return res.status(500).send('Internal server error');
     }
 
 }
 
 export const addAssociatedCareer = async (req: Request, res: Response): Promise<Response> => {
-    const studentXassociated_career = `
-        INSERT INTO public.person_x_associated_career(dni, id_associated_career)
-            VALUES ($1, $2);
-    `;
+    const createStudentXassociated_career = `SELECT createstudentxassociatedcareer($1,$2);`;
     try {
-        const dni = req.params.dni;
-        const id_associated_career = req.body.id_associated_career;
-        const result: QueryResult = await pool.query(studentXassociated_career, [dni, id_associated_career]);
-        return res.status(500).json(result.rows);
+        const values = [req.params.dni, req.body.id_associated_career];
+        await pool.query(createStudentXassociated_career, values);
+        return res.status(500).json(
+            {
+                msg: 'Associated Career added'
+            }
+        );
     } catch (error) {
+        console.log(error);
         return res.status(500).send('Internal server error');
     }
 }
 
 export const removeCareer = async (req: Request, res: Response): Promise<Response> => {
-    const studentXcareer = `
-        DELETE FROM public.person_x_career
-	        WHERE dni = $1 and career_code = $2;
-    `;
+    const deleteStudentXcareer = `SELECT deletestudentxcareer($1, $2);`;
     try {
-        const dni = req.params.dni;
-        const career_code = req.body.career_code;
-        const result: QueryResult = await pool.query(studentXcareer, [dni, career_code]);
-        return res.status(500).json(result.rows);
+        const values = [req.params.dni, req.body.career_code];
+        await pool.query(deleteStudentXcareer, values);
+        return res.status(500).json(
+            {
+                msg: 'Career removed'
+            }
+        );
     } catch (error) {
+        console.log(error);
         return res.status(500).send('Internal server error');
     }
 }
 
 export const removeLanguage = async (req: Request, res: Response): Promise<Response> => {
-    const studentXlanguage = `
-        DELETE FROM public.person_x_language
-            WHERE dni = $1 and id_language = $2;
-    `;
+    const deleteStudentXlanguage = `SELECT deletestudentxlanguage($1,$2);`;
     try {
-        const dni = req.params.dni;
-        const id_language = req.body.id_language;
-        const result: QueryResult = await pool.query(studentXlanguage, [dni, id_language]);
-        return res.status(500).json(result.rows);
+        const values = [req.params.dni, req.body.id_language];
+        await pool.query(deleteStudentXlanguage, values);
+        return res.status(500).json(
+            {
+                msg: 'Language removed'
+            }
+        );
     } catch (error) {
+        console.log(error);
         return res.status(500).send('Internal server error');
     }
 }
 
 export const removeNetwork = async (req: Request, res: Response): Promise<Response> => {
-    const studentXnetworks = `
-        DELETE FROM public.person_x_network
-            WHERE dni = $1 and id_network = $2;
-    `;
+    const deleteStudentXnetwork = `SELECT deletestudentxnetwork($1,$2);`;
     try {
-        const dni = req.params.dni;
-        const id_network = req.body.id_network;
-        const result: QueryResult = await pool.query(studentXnetworks, [dni, id_network]);
-        return res.status(500).json(result.rows);
+        const values = [req.params.dni, req.body.id_network];
+        await pool.query(deleteStudentXnetwork, values);
+        return res.status(500).json({
+            msg: 'Network removed'
+        });
     } catch (error) {
+        console.log(error);
         return res.status(500).send('Internal server error');
     }
 }
 
 export const removeAssociatedCareer = async (req: Request, res: Response): Promise<Response> => {
-    const studentXassociated_career = `
-        DELETE FROM public.person_x_associated_career
-            WHERE dni = $1 and id_associated_career = $2;
-    `;
+    const deleteStudentXassoCareer = `SELECT deletestudentxassociatedcareer($1, $2);`;
     try {
-        const dni = req.params.dni;
-        const id_associated_career = req.body.id_associated_career;
-        const result: QueryResult = await pool.query(studentXassociated_career, [dni, id_associated_career]);
-        return res.status(500).json(result.rows);
+        const values = [req.params.dni, req.body.id_associated_career]
+        await pool.query(deleteStudentXassoCareer, values);
+        return res.status(500).json({
+            msg: 'Associated Career removed'
+        });
     } catch (error) {
+        console.log(error);
         return res.status(500).send('Internal server error');
     }
 }
 
 export const disableStudent = async (req: Request, res: Response): Promise<Response> => {
-    const person = `
-        UPDATE public.person
-            SET status=false
-        WHERE dni = $1;
-    `;
+    const disable = `SELECT disablestudent($1);`;
     const client = await pool.connect();
     try {
         const personValues = [req.params.dni];
         await client.query('BEGIN');
-        const result1: QueryResult = await client.query(person, personValues);
+        await client.query(disable, personValues);
         await client.query('COMMIT');
         client.release();
-        return res.json([result1.rows]);
+        return res.json({
+            msg: 'Studend disable'
+        });
     } catch (error) {
         console.log(error);
         await client.query('ROLLBACK');
         client.release();
-        return res.send('Hello world, error');
+        return res.send('Hello world, er');
     }
 }
 
 export const enableStudent = async (req: Request, res: Response): Promise<Response> => {
-    const person = `
-        UPDATE public.person
-            SET status=true
-        WHERE dni = $1;
-    `;
+    const enable = `SELECT enablestudent($1);`;
     const client = await pool.connect();
     try {
         const personValues = [req.params.dni];
         await client.query('BEGIN');
-        const result1: QueryResult = await client.query(person, personValues);
+        await client.query(enable, personValues);
         await client.query('COMMIT');
         client.release();
-        return res.json([result1.rows]);
+        return res.json({
+            msg: 'Studend enable'
+        });
     } catch (error) {
         console.log(error);
         await client.query('ROLLBACK');

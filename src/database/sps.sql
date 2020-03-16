@@ -258,7 +258,7 @@ $$ LANGUAGE plpgsql;
 
 -- Get Center by ID con Cursor
 
-CREATE OR REPLACE FUNCTION getcampusesbyid(pid INTEGER, ref refcursor) RETURNS refcursor AS $$
+CREATE OR REPLACE FUNCTION getcampusesbyid(pid VARCHAR(30), ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
     SELECT * FROM campus WHERE campus_code = pid;
