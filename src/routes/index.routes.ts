@@ -8,6 +8,7 @@ import Language from './language.routes';
 import Directions from './directions.routes'
 import Campus from './campus.routes';
 import Student from './student.routes'
+import Consultas from './consultas.routes'
 export const addRoutes = (app: any) => {
     app.use(Network);
     app.use(Center);
@@ -19,4 +20,5 @@ export const addRoutes = (app: any) => {
     app.use(Language);
     app.use(Directions);
     app.use(Student);
+    app.use(Consultas);
 }
