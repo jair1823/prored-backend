@@ -237,7 +237,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION getcenterbyid(pid INTEGER, ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
-    SELECT * FROM center where id_center = $1;
+    SELECT * FROM center where id_center = pid;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
@@ -358,7 +358,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION getasocareers(pid INTEGER, ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
-    SELECT * FROM public.associated_career where id_associated_career = $1;
+    SELECT * FROM public.associated_career where id_associated_career = pid;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
