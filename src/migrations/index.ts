@@ -9,8 +9,8 @@ const spsStuden = readFileSync('src/database/spsStudent.sql').toString();
 
 const drops = async () => {
     try {
-        await pool.query(dropAll);
         await pool.query(dropSpsStudent);
+        await pool.query(dropAll);
         await pool.query(tables);
         await pool.query(spsSQL);
         await pool.query(spsStuden);

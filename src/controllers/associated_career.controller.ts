@@ -3,10 +3,25 @@ import { QueryResult } from 'pg'
 import { pool } from '../database/connection'
 
 export const getAssoCareer = async (req: Request, res: Response): Promise<Response> => {
+    const query = `select getasocareer('asocareersCursor'); `;
+    const fetch = `FETCH ALL IN "asocareersCursor";`;
+    const client = await pool.connect();
     try {
-        const centers: QueryResult = await pool.query('SELECT * FROM public.associated_career;');
-        return res.status(200).json(centers.rows);
+        await client.query('BEGIN');
+
+        await client.query(query);
+        const asocareers: QueryResult = await client.query(fetch);
+
+        await client.query('ROLLBACK');
+        client.release();
+
+        return res.status(200).json(asocareers.rows);
     } catch (error) {
+
+        await client.query('ROLLBACK');
+        client.release();
+        console.log(error);
+
         return res.status(500).json(
             {
                 msg: 'Internal server error'
@@ -16,12 +31,26 @@ export const getAssoCareer = async (req: Request, res: Response): Promise<Respon
 }
 
 export const getAssoCareerbyId = async (req: Request, res: Response): Promise<Response> => {
+    const query = `select getasocareers($1,'asocareersCursor'); `;
+    const fetch = `FETCH ALL IN "asocareersCursor";`;
+    const client = await pool.connect();
     try {
         const id = req.params.id;
-        const sql = 'SELECT * FROM public.associated_career where id_associated_career = $1;';
-        const center: QueryResult = await pool.query(sql, [id]);
+        await client.query('BEGIN');
+
+        await client.query(query, [id]);
+        const center: QueryResult = await client.query(fetch);
+
+        await client.query('ROLLBACK');
+        client.release();
+
         return res.status(200).json(center.rows);
     } catch (error) {
+
+        await client.query('ROLLBACK');
+        client.release();
+        console.log(error);
+
         return res.status(500).json(
             {
                 msg: 'Internal server error'
@@ -68,6 +97,34 @@ export const deleteAssoCareer = async (req: Request, res: Response): Promise<Res
         const center: QueryResult = await pool.query(sql, [id]);
         return res.status(200).json(center.rows);
     } catch (error) {
+        return res.status(500).json(
+            {
+                msg: 'Internal server error'
+            }
+        );
+    }
+}
+
+export const getAssoCareerWithCenter = async (req: Request, res: Response): Promise<Response> => {
+    const query = `select getasocareercenter('asocareerscenterCursor'); `;
+    const fetch = `FETCH ALL IN "asocareerscenterCursor";`;
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+
+        await client.query(query);
+        const asocareers: QueryResult = await client.query(fetch);
+
+        await client.query('ROLLBACK');
+        client.release();
+
+        return res.status(200).json(asocareers.rows);
+    } catch (error) {
+
+        await client.query('ROLLBACK');
+        client.release();
+        console.log(error);
+
         return res.status(500).json(
             {
                 msg: 'Internal server error'
