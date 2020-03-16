@@ -160,13 +160,6 @@ CREATE TYPE public.profile AS ENUM (
     'Invitado'
 );
 
-CREATE TYPE public.nationality AS ENUM (
-    'N1',
-    'N2',
-    'N3', 
-    'N4'
-);
-
 CREATE TYPE public.marital_status AS ENUM (
     'Soltero',
     'Casado',
