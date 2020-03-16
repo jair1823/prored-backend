@@ -380,7 +380,7 @@ CREATE OR REPLACE FUNCTION public.getasocareercenter(
 AS $BODY$
 BEGIN
   OPEN ref FOR select 
-a.id_associated_career, a.name, s.id_center, s.name
+a.id_associated_career, a.name as associated_career_name , s.id_center, s.name as center_name
 from public.associated_career a
 inner join public.center s on s.id_center = a.id_center;
   RETURN ref;
