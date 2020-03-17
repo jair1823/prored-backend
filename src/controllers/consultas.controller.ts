@@ -3,13 +3,14 @@ import {QueryResult} from 'pg'
 import { pool } from '../database/connection'
 
 export const getAsoCareerFromCenter = async (req: Request, res:Response): Promise<Response> => {
-    const query = `select getasocareerfromcenter(1,'cur');`;
+    const query = `select getasocareerfromcenter($1,'cur');`;
     const fetch = `fetch all in "cur"`;
     const client = await pool.connect();
     try {
+        const id = parseInt(req.params.id);
         await client.query('BEGIN');
 
-        await client.query(query);
+        await client.query(query, [id]);
         const response: QueryResult = await client.query(fetch);
         
         await client.query('ROLLBACK');
