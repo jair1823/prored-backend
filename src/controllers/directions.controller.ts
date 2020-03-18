@@ -1,7 +1,12 @@
-import { Request, Response } from 'express'
-import { QueryResult } from 'pg'
-import { pool } from '../database/connection'
+import { Request, Response } from 'express';
+import { QueryResult } from 'pg';
+import { pool } from '../database/connection';
 
+/**
+ * Get all province.
+ * path: /province
+ * method: get
+ */
 export const getProvinces = async (req: Request, res: Response): Promise<Response> => {
     const query = `select getprovinces('provincesCursor'); `;
     const fetch = `FETCH ALL IN "provincesCursor";`;
@@ -15,7 +20,7 @@ export const getProvinces = async (req: Request, res: Response): Promise<Respons
 
         await client.query('ROLLBACK');
         client.release();
-    
+
         return res.status(200).json(centers.rows);
     } catch (error) {
         await client.query('ROLLBACK');
@@ -29,6 +34,11 @@ export const getProvinces = async (req: Request, res: Response): Promise<Respons
     }
 }
 
+/**
+ * Get all cantons by province.
+ * path: /province/:id/canton
+ * method: get
+ */
 export const getCantones = async (req: Request, res: Response): Promise<Response> => {
     const query = `select getcantones($1,'cantonesCursor');`;
     const fetch = `FETCH ALL IN "cantonesCursor";`;
@@ -37,12 +47,12 @@ export const getCantones = async (req: Request, res: Response): Promise<Response
         const id = req.params.id;
         await client.query('BEGIN');
 
-        await client.query(query,[id]);
+        await client.query(query, [id]);
         const center: QueryResult = await client.query(fetch);
-        
+
         await client.query('ROLLBACK');
         client.release();
-        
+
         return res.status(200).json(center.rows);
     } catch (error) {
 
@@ -58,6 +68,11 @@ export const getCantones = async (req: Request, res: Response): Promise<Response
     }
 }
 
+/**
+ * Get all district by canton.
+ * path: /canton/:id/district
+ * method: get
+ */
 export const getDistrics = async (req: Request, res: Response): Promise<Response> => {
     const query = `select getdistricts($1,'districtsCursor');`;
     const fetch = `FETCH ALL IN "districtsCursor";`;
@@ -66,10 +81,10 @@ export const getDistrics = async (req: Request, res: Response): Promise<Response
         const id = req.params.id;
         await client.query('BEGIN');
 
-        await client.query(query,[id]);
+        await client.query(query, [id]);
 
         const center: QueryResult = await client.query(fetch);
-        
+
         await client.query('ROLLBACK');
         client.release();
 

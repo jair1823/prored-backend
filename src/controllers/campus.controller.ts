@@ -1,8 +1,13 @@
-import {Request,Response} from 'express'
-import {QueryResult} from 'pg'
-import { pool } from '../database/connection'
+import { Request, Response } from 'express';
+import { QueryResult } from 'pg';
+import { pool } from '../database/connection';
 
-export const getCampuses = async (req: Request, res:Response): Promise<Response> => {
+/**
+ * Get all campus.
+ * path: /campus/
+ * method: get
+ */
+export const getCampuses = async (req: Request, res: Response): Promise<Response> => {
     const query = `select getcampuses('campusesCursor'); `;
     const fetch = `FETCH ALL IN "campusesCursor";`;
     const client = await pool.connect();
@@ -11,7 +16,7 @@ export const getCampuses = async (req: Request, res:Response): Promise<Response>
 
         await client.query(query);
         const response: QueryResult = await client.query(fetch);
-        
+
         await client.query('ROLLBACK');
         client.release();
 
@@ -22,11 +27,18 @@ export const getCampuses = async (req: Request, res:Response): Promise<Response>
         client.release();
         console.log(error);
 
-        return res.status(500).json('Internal Server Error');
+        return res.status(500).json({
+            msg: 'Internal Server Error'
+        });
     }
 }
 
-export const getCampusbyId = async (req: Request, res:Response): Promise<Response> => {
+/**
+ * Get specific campus.
+ * path: /campus/:id
+ * method: get
+ */
+export const getCampusbyId = async (req: Request, res: Response): Promise<Response> => {
     const query = `select getcampusesbyid($1,'campusesCursor'); `;
     const fetch = `FETCH ALL IN "campusesCursor";`;
     const client = await pool.connect();
@@ -34,7 +46,7 @@ export const getCampusbyId = async (req: Request, res:Response): Promise<Respons
         const id = req.params.id;
         await client.query('BEGIN');
 
-        await client.query(query,[id]);
+        await client.query(query, [id]);
         const response: QueryResult = await client.query(fetch);
 
         await client.query('ROLLBACK');
@@ -47,42 +59,101 @@ export const getCampusbyId = async (req: Request, res:Response): Promise<Respons
         client.release();
         console.log(error);
 
-        return res.status(500).json('Internal Server Error');
+        return res.status(500).json({
+            msg: 'Internal Server Error'
+        });
     }
 }
 
-export const createCampus = async (req: Request, res:Response): Promise<Response> => {
-    const { code, name } = req.body
-    console.log(code, name)
-    const response: QueryResult = await pool.query('SELECT createcampus($1,$2)', [code, name])
-    return res.json({
-        message: "Campus created Succesfully",
-        body: {
-            code,
-            name
-        }
-    })
-}
-
-export const updateCampus = async (req: Request, res:Response): Promise<Response> => {
+/**
+ * Create campus.
+ * path: /campus/
+ * method: post
+ */
+export const createCampus = async (req: Request, res: Response): Promise<Response> => {
+    const query = `SELECT createcampus($1,$2)`;
+    const client = await pool.connect();
     try {
-        const id = parseInt(req.params.id);
-        const { code, name } = req.body;
-        const response: QueryResult = await pool.query('SELECT updatecampus($1,$2,$3)', [code,name, id]);
-        return res.json(`Campus ${id} modified succesfully`)
+        const values = [req.body.code, req.body.name];
+
+        await client.query('BEGIN');
+        await client.query(query, values);
+        await client.query('COMMIT');
+
+        client.release();
+
+        return res.json({
+            msg: "Campus created Succesfully"
+        });
     } catch (error) {
-        console.log(error);0
-        return res.status(500).json('Internal Server Error');
+
+        await client.query('ROLLBACK');
+        client.release();
+        console.log(error);
+
+        return res.status(500).json({
+            msg: 'Internal Server Error'
+        });
+    }
+
+}
+
+/**
+ * Update specific campus.
+ * path: /campus/:id
+ * method: put
+ */
+export const updateCampus = async (req: Request, res: Response): Promise<Response> => {
+    const query = `SELECT updatecampus($1,$2,$3)`;
+    const client = await pool.connect();
+    try {
+        const values = [req.body.code, req.body.name, parseInt(req.params.id)];
+
+        await client.query('BEGIN');
+        await client.query(query, values);
+        await client.query('COMMIT');
+
+        client.release();
+        return res.json({
+            msg: `Campus modified succesfully`
+        });
+    } catch (error) {
+
+        await client.query('ROLLBACK');
+        client.release();
+        console.log(error);
+
+        return res.status(500).json({
+            msg: 'Internal Server Error'
+        });
     }
 }
 
-export const deleteCampus = async (req: Request, res:Response): Promise<Response> => {
+/**
+ * Delete specific campus.
+ * path: /campus/:id
+ * method: delete
+ */
+export const deleteCampus = async (req: Request, res: Response): Promise<Response> => {
+    const query = `SELECT deletecampus($1)`;
+    const client = await pool.connect();
     try {
         const id = parseInt(req.params.id)
-        const response: QueryResult = await pool.query('SELECT deletecampus($1)', [id]);
-        return res.json(`Campus ${id} deleted succesfuly`)
+        await client.query('BEGIN');
+        await client.query(query, [id]);
+        await client.query('COMMIT');
+
+        client.release();
+
+        return res.json({
+            msg: `Campus deleted succesfuly`
+        })
     } catch (error) {
-        console.log(error);0
-        return res.status(500).json('Internal Server Error');
+        await client.query('ROLLBACK');
+        client.release();
+        console.log(error);
+        return res.status(500).json({
+            msg: 'Internal Server Error'
+        });
     }
 }

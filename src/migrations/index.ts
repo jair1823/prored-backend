@@ -1,5 +1,5 @@
 import { pool } from '../database/connection';
-import {readFileSync} from 'fs';
+import { readFileSync } from 'fs';
 
 const dropAll = readFileSync('src/database/drops.sql').toString();
 const dropSpsStudent = readFileSync('src/database/spsStudentDrops.sql').toString();
@@ -9,7 +9,11 @@ const spsSQL = readFileSync('src/database/sps.sql').toString();
 const spsStuden = readFileSync('src/database/spsStudent.sql').toString();
 const consultas = readFileSync('src/database/consultas.sql').toString();
 
-const drops = async () => {
+/**
+ * Secuencia en la que se ejecutan los drops de toda la base 
+ *  y luego la creacion de cada tabla enum y sp
+ */
+async function drops() {
     try {
         await pool.query(dropSpsStudent);
         await pool.query(dropAll);

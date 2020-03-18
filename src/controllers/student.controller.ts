@@ -2,6 +2,11 @@ import { Request, Response } from 'express';
 import { QueryResult } from 'pg';
 import { pool } from '../database/connection';
 
+/**
+ * Get all enable students.
+ * path: /student/
+ * method: get
+ */
 export const getStudents = async (req: Request, res: Response): Promise<Response> => {
     const query = `select getstudents('studentsCursor');`;
     const fetch = `FETCH ALL IN "studentsCursor";`;
@@ -19,10 +24,17 @@ export const getStudents = async (req: Request, res: Response): Promise<Response
         return res.json(students.rows);
     } catch (error) {
         console.log(error);
-        return res.send('Internal Server Error');
+        return res.send({
+            msg: 'Internal Server Error'
+        });
     }
 }
 
+/**
+ * Get specific enable student.
+ * path: /student/:dni
+ * method: get
+ */
 export const getStudentByDni = async (req: Request, res: Response): Promise<Response> => {
     const getStudent = `select getstudentbydni($1,'studentCursor');`;
     const fetchStudent = `FETCH ALL IN "studentCursor";`;
@@ -79,10 +91,17 @@ export const getStudentByDni = async (req: Request, res: Response): Promise<Resp
         client.release();
         console.log(error);
 
-        return res.send('Hello world, error');
+        return res.send({
+            msg: 'Internal Server Error'
+        });
     }
 }
 
+/**
+ * Create new student.
+ * path: /student/
+ * method: post
+ */
 export const createStudent = async (req: Request, res: Response): Promise<Response> => {
     const client = await pool.connect();
     const createPerson = `SELECT createperson($1,$2,$3,$4,$5);`;
@@ -133,12 +152,18 @@ export const createStudent = async (req: Request, res: Response): Promise<Respon
         console.log(error);
         await client.query('ROLLBACK');
         client.release();
-        return res.send('Hello world, error');
+        return res.send({
+            msg: 'Internal Server Error'
+        });
     }
 }
 
+/**
+ * Update specific student.
+ * path: /student/:dni
+ * method: put
+ */
 export const updateStudent = async (req: Request, res: Response): Promise<Response> => {
-
     const updateStudent = `SELECT updatestudent($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11);`;
     const client = await pool.connect();
     try {
@@ -150,7 +175,9 @@ export const updateStudent = async (req: Request, res: Response): Promise<Respon
         await client.query('BEGIN');
         await client.query(updateStudent, values);
         await client.query('COMMIT');
+
         client.release();
+
         return res.json(
             {
                 msg: 'Student updated'
@@ -160,135 +187,282 @@ export const updateStudent = async (req: Request, res: Response): Promise<Respon
         console.log(error);
         await client.query('ROLLBACK');
         client.release();
-        return res.send('Hello world, error');
+        return res.send({
+            msg: 'Internal Server Error'
+        });
     }
 }
 
+/**
+ * Create student x career.
+ * path: /student/:dni/career
+ * method: post
+ */
 export const addCareer = async (req: Request, res: Response): Promise<Response> => {
     const createStudentXcareer = `SELECT createstudentxcareer($1,$2);`;
+    const client = await pool.connect();
     try {
         const values = [req.params.dni, req.body.career_code];
-        await pool.query(createStudentXcareer, values);
+
+        await client.query('BEGIN');
+        await client.query(createStudentXcareer, values);
+        await client.query('COMMIT');
+
+        client.release();
+
         return res.status(500).json(
             {
                 msg: 'Career added'
             }
         );
     } catch (error) {
+
+        await client.query('ROLLBACK');
+        client.release();
         console.log(error);
-        return res.status(500).send('Internal server error');
+
+        return res.send({
+            msg: 'Internal Server Error'
+        });
     }
 }
 
+/**
+ * Create student x language.
+ * path: /student/:dni/language
+ * method: post
+ */
 export const addLanguage = async (req: Request, res: Response): Promise<Response> => {
     const createStudentXlanguage = `SELECT createstudentxlanguage($1,$2);`;
+    const client = await pool.connect();
     try {
         const values = [req.params.dni, req.body.id_language];
-        await pool.query(createStudentXlanguage, values);
+
+        await client.query('BEGIN');
+        await client.query(createStudentXlanguage, values);
+        await client.query('COMMIT');
+
+        client.release();
+
         return res.status(500).json(
             {
                 msg: 'Language added'
             }
         );
     } catch (error) {
+
+        await client.query('ROLLBACK');
+        client.release();
         console.log(error);
-        return res.status(500).send('Internal server error');
+
+        return res.send({
+            msg: 'Internal Server Error'
+        });
     }
 }
 
+/**
+ * Create student x network.
+ * path: /student/:dni/network
+ * method: post
+ */
 export const addNetwork = async (req: Request, res: Response): Promise<Response> => {
     const createStudentXnetworks = `SELECT createstudentxnetwork($1,$2);`;
+    const client = await pool.connect();
     try {
         const values = [req.params.dni, req.body.id_network];
-        await pool.query(createStudentXnetworks, values);
+    
+        await client.query('BEGIN');
+        await client.query(createStudentXnetworks, values);
+        await client.query('COMMIT');
+
+        client.release();
+
         return res.status(500).json(
             {
                 msg: 'Network added'
             }
         );
     } catch (error) {
+
+        await client.query('ROLLBACK');
+        client.release();
         console.log(error);
-        return res.status(500).send('Internal server error');
+
+        return res.send({
+            msg: 'Internal Server Error'
+        });
     }
 
 }
 
+/**
+ * Create student x associated career.
+ * path: /student/:dni/associated_career
+ * method: post
+ */
 export const addAssociatedCareer = async (req: Request, res: Response): Promise<Response> => {
     const createStudentXassociated_career = `SELECT createstudentxassociatedcareer($1,$2);`;
+    const client = await pool.connect();
     try {
         const values = [req.params.dni, req.body.id_associated_career];
-        await pool.query(createStudentXassociated_career, values);
+        
+        await client.query('BEGIN');
+        await client.query(createStudentXassociated_career, values);
+        await client.query('COMMIT');
+
+        client.release();
+
         return res.status(500).json(
             {
                 msg: 'Associated Career added'
             }
         );
     } catch (error) {
+
+        await client.query('ROLLBACK');
+        client.release();
         console.log(error);
-        return res.status(500).send('Internal server error');
+
+        return res.send({
+            msg: 'Internal Server Error'
+        });
     }
 }
 
+/**
+ * Delete student x career.
+ * path: /student/:dni/career
+ * method: delete
+ */
 export const removeCareer = async (req: Request, res: Response): Promise<Response> => {
     const deleteStudentXcareer = `SELECT deletestudentxcareer($1, $2);`;
+    const client = await pool.connect();
     try {
         const values = [req.params.dni, req.body.career_code];
-        await pool.query(deleteStudentXcareer, values);
+        
+        await client.query('BEGIN');
+        await client.query(deleteStudentXcareer, values);
+        await client.query('COMMIT');
+
+        client.release();
         return res.status(500).json(
             {
                 msg: 'Career removed'
             }
         );
     } catch (error) {
+
+        await client.query('ROLLBACK');
+        client.release();
         console.log(error);
-        return res.status(500).send('Internal server error');
+
+        return res.send({
+            msg: 'Internal Server Error'
+        });
     }
 }
 
+/**
+ * Delete student x language.
+ * path: /student/:dni/language
+ * method: delete
+ */
 export const removeLanguage = async (req: Request, res: Response): Promise<Response> => {
     const deleteStudentXlanguage = `SELECT deletestudentxlanguage($1,$2);`;
+    const client = await pool.connect();
     try {
         const values = [req.params.dni, req.body.id_language];
-        await pool.query(deleteStudentXlanguage, values);
+        
+        await client.query('BEGIN');
+        await client.query(deleteStudentXlanguage, values);
+        await client.query('COMMIT');
+
+        client.release();
         return res.status(500).json(
             {
                 msg: 'Language removed'
             }
         );
     } catch (error) {
+
+        await client.query('ROLLBACK');
+        client.release();
         console.log(error);
-        return res.status(500).send('Internal server error');
+
+        return res.send({
+            msg: 'Internal Server Error'
+        });
     }
 }
 
+/**
+ * Delete student x network.
+ * path: /student/:dni/network
+ * method: delete
+ */
 export const removeNetwork = async (req: Request, res: Response): Promise<Response> => {
     const deleteStudentXnetwork = `SELECT deletestudentxnetwork($1,$2);`;
+    const client = await pool.connect();
     try {
         const values = [req.params.dni, req.body.id_network];
-        await pool.query(deleteStudentXnetwork, values);
+        
+        await client.query('BEGIN');
+        await client.query(deleteStudentXnetwork, values);
+        await client.query('COMMIT');
+
+        client.release();
         return res.status(500).json({
             msg: 'Network removed'
         });
     } catch (error) {
+
+        await client.query('ROLLBACK');
+        client.release();
         console.log(error);
-        return res.status(500).send('Internal server error');
+
+        return res.send({
+            msg: 'Internal Server Error'
+        });
     }
 }
 
+/**
+ * Delete student x associated career.
+ * path: /student/:dni/associated_career
+ * method: delete
+ */
 export const removeAssociatedCareer = async (req: Request, res: Response): Promise<Response> => {
     const deleteStudentXassoCareer = `SELECT deletestudentxassociatedcareer($1, $2);`;
+    const client = await pool.connect();
     try {
         const values = [req.params.dni, req.body.id_associated_career]
-        await pool.query(deleteStudentXassoCareer, values);
+        
+        await client.query('BEGIN');
+        await client.query(deleteStudentXassoCareer, values);
+        await client.query('COMMIT');
+
+        client.release();
         return res.status(500).json({
             msg: 'Associated Career removed'
         });
     } catch (error) {
+
+        await client.query('ROLLBACK');
+        client.release();
         console.log(error);
-        return res.status(500).send('Internal server error');
+
+        return res.send({
+            msg: 'Internal Server Error'
+        });
     }
 }
 
+/**
+ * Disable specific student.
+ * path: /student/:dni/disable
+ * method: put
+ */
 export const disableStudent = async (req: Request, res: Response): Promise<Response> => {
     const disable = `SELECT disablestudent($1);`;
     const client = await pool.connect();
@@ -305,10 +479,17 @@ export const disableStudent = async (req: Request, res: Response): Promise<Respo
         console.log(error);
         await client.query('ROLLBACK');
         client.release();
-        return res.send('Hello world, er');
+        return res.send({
+            msg: 'Internal Server Error'
+        });
     }
 }
 
+/**
+ * Enable specific student student.
+ * path: /student/:dni/enable
+ * method: put
+ */
 export const enableStudent = async (req: Request, res: Response): Promise<Response> => {
     const enable = `SELECT enablestudent($1);`;
     const client = await pool.connect();
@@ -325,6 +506,8 @@ export const enableStudent = async (req: Request, res: Response): Promise<Respon
         console.log(error);
         await client.query('ROLLBACK');
         client.release();
-        return res.send('Hello world, error');
+        return res.send({
+            msg: 'Internal Server Error'
+        });
     }
 }

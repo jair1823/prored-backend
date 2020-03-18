@@ -4,13 +4,15 @@ import { readFileSync } from 'fs';
 const insert = readFileSync('src/database/inserts.sql').toString();
 
 
-const execute = async () => {
+/**
+ * se ejecutan los insert que estan el el archivo src/database/inserts.sql
+ */
+async function execute() {
     try {
         await pool.query(insert);
     } catch (error) {
         console.log(error);
     }
-};
-
+}
 
 execute();
