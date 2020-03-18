@@ -1,7 +1,11 @@
-import { Router } from 'express'
+import { Router } from 'express';
 const router = Router();
 
-import { getProvinces, getCantones, getDistrics } from '../controllers/directions.controller'
+import {
+    getProvinces,
+    getCantones,
+    getDistrics
+} from '../controllers/directions.controller';
 
 router.get('/province', getProvinces);
 router.get('/province/:id/canton', getCantones);

@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { Router } from 'express';
 import {
     getStudents,
     getStudentByDni,
@@ -14,7 +14,7 @@ import {
     updateStudent,
     disableStudent,
     enableStudent
-} from '../controllers/student.controller'
+} from '../controllers/student.controller';
 const router = Router();
 
 router.get('/student', getStudents);

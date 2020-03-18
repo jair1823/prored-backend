@@ -1,7 +1,13 @@
 import { Router } from 'express';
 const router = Router();
 
-import { getCenter, getCenterbyId, createCenter, updateCenter, deleteCenter } from '../controllers/center.controller';
+import {
+    getCenter,
+    getCenterbyId,
+    createCenter,
+    updateCenter,
+    deleteCenter
+} from '../controllers/center.controller';
 
 router.get('/center', getCenter);
 router.get('/center/:id', getCenterbyId);

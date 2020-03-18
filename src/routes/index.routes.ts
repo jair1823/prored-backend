@@ -7,8 +7,15 @@ import Career from './career.routes';
 import Language from './language.routes';
 import Directions from './directions.routes'
 import Campus from './campus.routes';
-import Student from './student.routes'
-export const addRoutes = (app: any) => {
+import Student from './student.routes';
+
+/**
+ * 
+ * @param app variable que contiene la aplicacion de express
+ * 
+ * funcion que agrega todas las rutas a la app de express
+ */
+export function addRoutes(app: any) {
     app.use(Network);
     app.use(Center);
     app.use(AssoCareer);
