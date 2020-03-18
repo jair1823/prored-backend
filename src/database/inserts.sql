@@ -1,16 +1,16 @@
-INSERT INTO public.province (id_province,name) 
+INSERT INTO public.province (name) 
     VALUES 
-        (1,'San Jose'),
-        (2,'Heredia');
+        ('San Jose'),
+        ('Heredia');
 
-INSERT INTO public.canton (id_canton, id_province,name) 
+INSERT INTO public.canton (id_province,name) 
     VALUES 
-        (1,1,'Santa Ana'),
-        (2,2,'Santa Bárbara');
-INSERT INTO public.district (id_district,id_canton,name) 
+        (1,'Santa Ana'),
+        (2,'Santa Bárbara');
+INSERT INTO public.district (id_canton,name) 
     VALUES
-        (1,1,'Piedades'),
-        (2,2,'Puraba');
+        (1,'Piedades'),
+        (2,'Puraba');
 
 INSERT INTO public.campus (campus_code,name) 
     VALUES 
@@ -24,18 +24,16 @@ INSERT INTO public.career(
         (2, 'Career 1', 'Licenciatura');
 
 
-INSERT INTO public.language(
-	id_language, name)
+INSERT INTO public.language(name)
 	VALUES 
-        (1, 'Language 1'),
-        (2, 'Language 2'),
-        (3, 'Language 3');
+        ('Language 1'),
+        ('Language 2'),
+        ('Language 3');
 
-INSERT INTO public.center(
-	id_center, name)
+INSERT INTO public.center(name)
 	VALUES
-        (1, 'Center 1'),
-        (2, 'Center 2');
+        ('Center 1'),
+        ('Center 2');
 
 INSERT INTO public.associated_career(id_center, name)
 	VALUES 
