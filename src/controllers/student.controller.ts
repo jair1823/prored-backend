@@ -51,6 +51,9 @@ export const getStudentByDni = async (req: Request, res: Response): Promise<Resp
     const getAssoCareer = `select getassociatedcareersbydni($1,'assoCareerCursor');`;
     const fetchAssoCareer = `FETCH ALL IN "assoCareerCursor";`;
 
+    const getDirection = `select getdirectionbydni($1,'directionCursor');`;
+    const fetchDirection = `FETCH ALL IN "directionCursor";`;
+
     const client = await pool.connect();
     try {
         const dni = req.params.dni;
@@ -71,6 +74,9 @@ export const getStudentByDni = async (req: Request, res: Response): Promise<Resp
         await client.query(getAssoCareer, [dni]);
         const associated_careers: QueryResult = await client.query(fetchAssoCareer);
 
+        await client.query(getDirection, [dni]);
+        const direction: QueryResult = await client.query(fetchDirection);
+
         await client.query('ROLLBACK');
         client.release();
 
@@ -80,7 +86,8 @@ export const getStudentByDni = async (req: Request, res: Response): Promise<Resp
                 'careers': careers.rows,
                 'networks': networks.rows,
                 'languages': languages.rows,
-                'associated_careers': associated_careers.rows
+                'associated_careers': associated_careers.rows,
+                'direction': direction.rows
             }
 
 
