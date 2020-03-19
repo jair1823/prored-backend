@@ -271,7 +271,7 @@ export const addNetwork = async (req: Request, res: Response): Promise<Response>
     const client = await pool.connect();
     try {
         const values = [req.params.dni, req.body.id_network];
-    
+
         await client.query('BEGIN');
         await client.query(createStudentXnetworks, values);
         await client.query('COMMIT');
@@ -306,7 +306,7 @@ export const addAssociatedCareer = async (req: Request, res: Response): Promise<
     const client = await pool.connect();
     try {
         const values = [req.params.dni, req.body.id_associated_career];
-        
+
         await client.query('BEGIN');
         await client.query(createStudentXassociated_career, values);
         await client.query('COMMIT');
@@ -340,7 +340,7 @@ export const removeCareer = async (req: Request, res: Response): Promise<Respons
     const client = await pool.connect();
     try {
         const values = [req.params.dni, req.body.career_code];
-        
+
         await client.query('BEGIN');
         await client.query(deleteStudentXcareer, values);
         await client.query('COMMIT');
@@ -373,7 +373,7 @@ export const removeLanguage = async (req: Request, res: Response): Promise<Respo
     const client = await pool.connect();
     try {
         const values = [req.params.dni, req.body.id_language];
-        
+
         await client.query('BEGIN');
         await client.query(deleteStudentXlanguage, values);
         await client.query('COMMIT');
@@ -406,7 +406,7 @@ export const removeNetwork = async (req: Request, res: Response): Promise<Respon
     const client = await pool.connect();
     try {
         const values = [req.params.dni, req.body.id_network];
-        
+
         await client.query('BEGIN');
         await client.query(deleteStudentXnetwork, values);
         await client.query('COMMIT');
@@ -437,7 +437,7 @@ export const removeAssociatedCareer = async (req: Request, res: Response): Promi
     const client = await pool.connect();
     try {
         const values = [req.params.dni, req.body.id_associated_career]
-        
+
         await client.query('BEGIN');
         await client.query(deleteStudentXassoCareer, values);
         await client.query('COMMIT');
@@ -502,6 +502,37 @@ export const enableStudent = async (req: Request, res: Response): Promise<Respon
         return res.json({
             msg: 'Studend enable'
         });
+    } catch (error) {
+        console.log(error);
+        await client.query('ROLLBACK');
+        client.release();
+        return res.send({
+            msg: 'Internal Server Error'
+        });
+    }
+}
+
+/**
+ * Get student by specific profile
+ * path: /student/profile/:profile
+ * method: get
+ */
+export const getstudentbyprofile = async (req: Request, res: Response): Promise<Response> => {
+    const getStudent = `select getstudentbyprofile($1,'studentCursor');`;
+    const fetchStudent = `FETCH ALL IN "studentCursor";`;
+
+    const client = await pool.connect();
+    try {
+        const personValues = [req.params.profile];
+
+        await client.query('BEGIN');
+        await client.query(getStudent, personValues);
+        const student: QueryResult = await client.query(fetchStudent);
+        await client.query('ROLLBACK');
+
+        client.release();
+
+        return res.json(student.rows);
     } catch (error) {
         console.log(error);
         await client.query('ROLLBACK');

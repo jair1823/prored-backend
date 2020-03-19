@@ -250,3 +250,25 @@ CREATE OR REPLACE FUNCTION enablestudent(pdni varchar(50))
     WHERE dni = pdni;
     END;
 $$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getstudentbyprofile(pprofile profile, ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+
+    OPEN ref FOR select 
+        p.dni, p.name, p.lastname1, p.lastname2,
+        p.born_dates, d.id_district ,d.name as district, 
+        c.campus_code, c.name as campus,
+        s.marital_status, s.profile, s.address, s.nationality
+    from public.person p
+    inner join public.student s on s.dni = p.dni
+    inner join public.district d on d.id_district = s.id_district
+    inner join public.campus c on c.campus_code = s.campus_code
+    where p.status = true and S.profile = pprofile;
+
+    RETURN ref;
+
+    END;
+$$ LANGUAGE plpgsql;

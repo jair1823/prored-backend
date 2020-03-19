@@ -9,8 +9,7 @@ import Directions from './directions.routes'
 import Campus from './campus.routes';
 
 import Student from './student.routes';
-import Consultas from './consultas.routes'
-import Person from './studentAgregate.routes'
+import Consultas from './consultas.routes';
 /**
  * 
  * @param app variable que contiene la aplicacion de express
@@ -29,5 +28,4 @@ export function addRoutes(app: any) {
     app.use(Directions);
     app.use(Student);
     app.use(Consultas);
-    app.use(Person);
 }
