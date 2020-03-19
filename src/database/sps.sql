@@ -129,10 +129,10 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION updatecampus(ccoden VARCHAR(30), n VARCHAR(50),ccodeo VARCHAR(30)) 
+CREATE OR REPLACE FUNCTION updatecampus(n VARCHAR(50),ccodeo VARCHAR(30)) 
 RETURNS void AS $$
 BEGIN
-  UPDATE public.campus SET campus_code = ccoden, name = n WHERE campus_code = ccodeo;
+  UPDATE public.campus SET name = n WHERE campus_code = ccodeo;
 END;
 $$ LANGUAGE plpgsql;
 

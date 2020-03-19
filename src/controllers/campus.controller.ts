@@ -104,10 +104,10 @@ export const createCampus = async (req: Request, res: Response): Promise<Respons
  * method: put
  */
 export const updateCampus = async (req: Request, res: Response): Promise<Response> => {
-    const query = `SELECT updatecampus($1,$2,$3)`;
+    const query = `SELECT updatecampus($1,$2)`;
     const client = await pool.connect();
     try {
-        const values = [req.body.code, req.body.name, parseInt(req.params.id)];
+        const values = [req.body.name, req.params.id];
 
         await client.query('BEGIN');
         await client.query(query, values);
