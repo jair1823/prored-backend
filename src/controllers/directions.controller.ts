@@ -102,3 +102,36 @@ export const getDistrics = async (req: Request, res: Response): Promise<Response
         );
     }
 }
+
+/**
+ * Get province, canton, district by dni - student
+ * path: /direction/:dni
+ * method: get
+ */
+export const getDirectionsByDni = async (req: Request, res: Response): Promise<Response> => {
+    const query = `select getdirectionbydni($1,'districtsCursor');`;
+    const fetch = `FETCH ALL IN "districtsCursor";`;
+    const client = await pool.connect();
+    try {
+        const id = req.params.dni;
+
+        await client.query('BEGIN');
+        await client.query(query, [id]);
+        const center: QueryResult = await client.query(fetch);
+        await client.query('ROLLBACK');
+        client.release();
+
+        return res.status(200).json(center.rows);
+    } catch (error) {
+
+        await client.query('ROLLBACK');
+        client.release();
+        console.log(error);
+
+        return res.status(500).json(
+            {
+                msg: 'Internal server error'
+            }
+        );
+    }
+}

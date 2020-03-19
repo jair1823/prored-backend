@@ -250,3 +250,46 @@ CREATE OR REPLACE FUNCTION enablestudent(pdni varchar(50))
     WHERE dni = pdni;
     END;
 $$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getstudentbyprofile(pprofile profile, ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+
+    OPEN ref FOR select 
+        p.dni, p.name, p.lastname1, p.lastname2,
+        p.born_dates, d.id_district ,d.name as district, 
+        c.campus_code, c.name as campus,
+        s.marital_status, s.profile, s.address, s.nationality
+    from public.person p
+    inner join public.student s on s.dni = p.dni
+    inner join public.district d on d.id_district = s.id_district
+    inner join public.campus c on c.campus_code = s.campus_code
+    where p.status = true and S.profile = pprofile;
+
+    RETURN ref;
+
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getdirectionbydni(pdni varchar(50), ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+
+    OPEN ref FOR select  
+        d.id_district,d.name as district_name, 
+        c.id_canton, c.name as canton_name,
+        p.id_province, p.name
+    from public.district d
+    inner join public.student s on s.id_district = d.id_district
+    inner join public.canton c on c.id_canton = d.id_canton
+    inner join public.province p on p.id_province = c.id_province
+    where s.dni = pdni;
+
+    RETURN ref;
+
+    END;
+$$ LANGUAGE plpgsql;

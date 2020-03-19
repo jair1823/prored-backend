@@ -13,7 +13,8 @@ import {
     removeAssociatedCareer,
     updateStudent,
     disableStudent,
-    enableStudent
+    enableStudent,
+    getstudentbyprofile
 } from '../controllers/student.controller';
 const router = Router();
 
@@ -36,4 +37,6 @@ router.delete('/student/:dni/network', removeNetwork);
 
 router.post('/student/:dni/associated_career', addAssociatedCareer);
 router.delete('/student/:dni/associated_career', removeAssociatedCareer);
+
+router.get('/student/profile/:profile', getstudentbyprofile);
 export default router;
