@@ -272,3 +272,24 @@ CREATE OR REPLACE FUNCTION getstudentbyprofile(pprofile profile, ref refcursor)
 
     END;
 $$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getdirectionbydni(pdni varchar(50), ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+
+    OPEN ref FOR select  
+        d.id_district,d.name as district_name, 
+        c.id_canton, c.name as canton_name,
+        p.id_province, p.name
+    from public.district d
+    inner join public.student s on s.id_district = d.id_district
+    inner join public.canton c on c.id_canton = d.id_canton
+    inner join public.province p on p.id_province = c.id_province
+    where s.dni = pdni;
+
+    RETURN ref;
+
+    END;
+$$ LANGUAGE plpgsql;

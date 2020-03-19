@@ -17,3 +17,4 @@ DROP FUNCTION IF EXISTS deletestudentxnetwork;
 DROP FUNCTION IF EXISTS disablestudent;
 DROP FUNCTION IF EXISTS enablestudent;
 DROP FUNCTION IF EXISTS getstudentbyprofile;
+DROP FUNCTION IF EXISTS getdirectionbydni;
