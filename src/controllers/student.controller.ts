@@ -87,7 +87,7 @@ export const getStudentByDni = async (req: Request, res: Response): Promise<Resp
                 'networks': networks.rows,
                 'languages': languages.rows,
                 'associated_careers': associated_careers.rows,
-                'direction': direction.rows
+                'direction': direction.rows[0]
             }
 
 

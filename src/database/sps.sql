@@ -285,7 +285,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION getprovinces(ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
-    SELECT * FROM public.province;
+    SELECT * FROM public.province WHERE id_province <> 0;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
