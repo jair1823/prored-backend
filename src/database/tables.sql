@@ -164,7 +164,7 @@ CREATE TYPE public.marital_status AS ENUM (
     'Soltero',
     'Casado',
     'Divorciado', 
-    'viudo'
+    'Viudo'
 );
 
 create table public.student(
