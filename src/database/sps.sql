@@ -21,7 +21,7 @@ $$ LANGUAGE plpgsql;
 
 ----------------------------------------------------------------------------------------------------------------- 
 
-CREATE OR REPLACE FUNCTION createnetwork(n VARCHAR(70), nt network_type) 
+CREATE OR REPLACE FUNCTION createnetwork(n VARCHAR(50), nt network_type) 
 RETURNS void AS $$
 BEGIN
   INSERT INTO public.network (name,network_type) VALUES (n, nt);
@@ -29,7 +29,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION updatenetwork(n VARCHAR(70), nt network_type,idn integer) 
+CREATE OR REPLACE FUNCTION updatenetwork(n VARCHAR(50), nt network_type,idn integer) 
 RETURNS void AS $$
 BEGIN
   UPDATE public.network SET name = n, network_type = nt WHERE id_network = idn;
@@ -46,7 +46,7 @@ $$ LANGUAGE plpgsql;
 
 ------------------------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION createinvestigation_unit(n VARCHAR(70)) 
+CREATE OR REPLACE FUNCTION createinvestigation_unit(n VARCHAR(50)) 
 RETURNS void AS $$
 BEGIN
   INSERT INTO public.investigation_unit (name) VALUES (n);
@@ -54,7 +54,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION updateinvestigation_unit(n VARCHAR(70),idi integer) 
+CREATE OR REPLACE FUNCTION updateinvestigation_unit(n VARCHAR(50),idi integer) 
 RETURNS void AS $$
 BEGIN
 	UPDATE public.investigation_unit SET name = n WHERE id_inv_unit = idi;
@@ -71,7 +71,7 @@ $$ LANGUAGE plpgsql;
 
 ------------------------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION createacademic_unit(n VARCHAR(70)) 
+CREATE OR REPLACE FUNCTION createacademic_unit(n VARCHAR(50)) 
 RETURNS void AS $$
 BEGIN
   INSERT INTO public.academic_unit (name) VALUES (n);
@@ -79,7 +79,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION updateacademic_unit(n VARCHAR(70),ida integer) 
+CREATE OR REPLACE FUNCTION updateacademic_unit(n VARCHAR(50),ida integer) 
 RETURNS void AS $$
 BEGIN
 	UPDATE public.academic_unit SET name = n WHERE id_academic_unit = ida;
@@ -96,7 +96,7 @@ $$ LANGUAGE plpgsql;
 
 --------------------------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION createassociated_career(n VARCHAR(70), idc integer) 
+CREATE OR REPLACE FUNCTION createassociated_career(n VARCHAR(50), idc integer) 
 RETURNS void AS $$
 BEGIN
   INSERT INTO public.associated_career(name,id_center) values(n,idc);
@@ -104,7 +104,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION updateassociated_career(n VARCHAR(70), idac integer) 
+CREATE OR REPLACE FUNCTION updateassociated_career(n VARCHAR(50), idac integer) 
 RETURNS void AS $$
 BEGIN
   UPDATE public.associated_career SET name = n WHERE id_associated_career = idac;
