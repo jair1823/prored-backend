@@ -16,7 +16,8 @@ import {
     enableStudent,
     getstudentbyprofile,
     getStudentByDniAll,
-    getStudentsAll
+    getStudentsAll,
+    getStudentStatus
 } from '../controllers/student.controller';
 const router = Router();
 
@@ -45,4 +46,5 @@ router.post('/student/:dni/associated_career', addAssociatedCareer);
 router.delete('/student/:dni/associated_career', removeAssociatedCareer);
 
 router.get('/student/profile/:profile', getstudentbyprofile);
+router.get('/student/:dni/status', getStudentStatus);
 export default router;

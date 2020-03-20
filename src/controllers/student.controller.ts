@@ -568,6 +568,34 @@ export const removeAssociatedCareer = async (req: Request, res: Response): Promi
 }
 
 /**
+ * Get specific student status.
+ * path: /student/:dni/status
+ * method: get
+ */
+export const getStudentStatus = async (req: Request, res: Response): Promise<Response> => {
+    const query = `select getstudentstatus($1,'studentCursor');`;
+    const fetch = `FETCH ALL IN "studentCursor";`;
+    const client = await pool.connect();
+    try {
+        const dni = req.params.dni;
+        await client.query('BEGIN');
+
+        await client.query(query, [dni]);
+        const students: QueryResult = await client.query(fetch);
+
+        await client.query('ROLLBACK');
+        client.release();
+
+        return res.json(students.rows[0]);
+    } catch (error) {
+        console.log(error);
+        return res.send({
+            msg: 'Internal Server Error'
+        });
+    }
+}
+
+/**
  * Disable specific student.
  * path: /student/:dni/disable
  * method: put

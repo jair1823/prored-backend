@@ -18,3 +18,6 @@ DROP FUNCTION IF EXISTS disablestudent;
 DROP FUNCTION IF EXISTS enablestudent;
 DROP FUNCTION IF EXISTS getstudentbyprofile;
 DROP FUNCTION IF EXISTS getdirectionbydni;
+DROP FUNCTION IF EXISTS getstudentstatus;
+DROP FUNCTION IF EXISTS getstudentbydniall;
+DROP FUNCTION IF EXISTS getstudentsall;

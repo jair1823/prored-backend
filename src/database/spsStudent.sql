@@ -40,6 +40,24 @@ CREATE OR REPLACE FUNCTION getstudentbydniall(pdni varchar(50),ref refcursor)
     END;
 $$ LANGUAGE plpgsql;
 
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getstudentstatus(pdni varchar(50),ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+
+    OPEN ref FOR 
+        SELECT p.status FROM
+        public.student s 
+        INNER JOIN public.person p ON s.dni = p.dni
+        WHERE s.dni = pdni;
+
+    RETURN ref;
+
+    END;
+$$ LANGUAGE plpgsql;
+
 --###########################################################################
 
 CREATE OR REPLACE FUNCTION getcareersbydni(pdni varchar(50), ref refcursor)
