@@ -14,12 +14,18 @@ import {
     updateStudent,
     disableStudent,
     enableStudent,
-    getstudentbyprofile
+    getstudentbyprofile,
+    getStudentByDniAll,
+    getStudentsAll
 } from '../controllers/student.controller';
 const router = Router();
 
 router.get('/student', getStudents);
 router.get('/student/:dni', getStudentByDni);
+
+router.get('/student_all', getStudentsAll);
+router.get('/student_all/:dni', getStudentByDniAll);
+
 router.post('/student', createStudent);
 router.put('/student/:dni', updateStudent);
 

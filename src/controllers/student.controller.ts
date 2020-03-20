@@ -31,12 +31,114 @@ export const getStudents = async (req: Request, res: Response): Promise<Response
 }
 
 /**
+ * Get all students no matter status.
+ * path: /student_all/
+ * method: get
+ */
+export const getStudentsAll = async (req: Request, res: Response): Promise<Response> => {
+    const query = `select getstudentsall('studentsCursor');`;
+    const fetch = `FETCH ALL IN "studentsCursor";`;
+    const client = await pool.connect();
+    try {
+
+        await client.query('BEGIN');
+
+        await client.query(query)
+        const students: QueryResult = await client.query(fetch);
+
+        await client.query('ROLLBACK');
+        client.release();
+
+        return res.json(students.rows);
+    } catch (error) {
+        console.log(error);
+        return res.send({
+            msg: 'Internal Server Error'
+        });
+    }
+}
+
+/**
  * Get specific enable student.
  * path: /student/:dni
  * method: get
  */
 export const getStudentByDni = async (req: Request, res: Response): Promise<Response> => {
     const getStudent = `select getstudentbydni($1,'studentCursor');`;
+    const fetchStudent = `FETCH ALL IN "studentCursor";`;
+
+    const getCarees = `select getcareersbydni($1,'careersCursor');`;
+    const fetchCarees = `FETCH ALL IN "careersCursor";`;
+
+    const getNetworks = `select getnetworksbydni($1,'networksCursor');`;
+    const fetchNetworks = `FETCH ALL IN "networksCursor";`;
+
+    const getLanguages = `select getlanguagesbydni($1,'languagesCursor');`;
+    const fetchLanguages = `FETCH ALL IN "languagesCursor";`;
+
+    const getAssoCareer = `select getassociatedcareersbydni($1,'assoCareerCursor');`;
+    const fetchAssoCareer = `FETCH ALL IN "assoCareerCursor";`;
+
+    const getDirection = `select getdirectionbydni($1,'directionCursor');`;
+    const fetchDirection = `FETCH ALL IN "directionCursor";`;
+
+    const client = await pool.connect();
+    try {
+        const dni = req.params.dni;
+        await client.query('BEGIN');
+
+        await client.query(getStudent, [dni]);
+        const student: QueryResult = await client.query(fetchStudent);
+
+        await client.query(getCarees, [dni]);
+        const careers: QueryResult = await client.query(fetchCarees);
+
+        await client.query(getNetworks, [dni]);
+        const networks: QueryResult = await client.query(fetchNetworks);
+
+        await client.query(getLanguages, [dni]);
+        const languages: QueryResult = await client.query(fetchLanguages);
+
+        await client.query(getAssoCareer, [dni]);
+        const associated_careers: QueryResult = await client.query(fetchAssoCareer);
+
+        await client.query(getDirection, [dni]);
+        const direction: QueryResult = await client.query(fetchDirection);
+
+        await client.query('ROLLBACK');
+        client.release();
+
+        return res.json(
+            {
+                'student': student.rows[0],
+                'careers': careers.rows,
+                'networks': networks.rows,
+                'languages': languages.rows,
+                'associated_careers': associated_careers.rows,
+                'direction': direction.rows[0]
+            }
+
+
+        );
+    } catch (error) {
+
+        await client.query('ROLLBACK');
+        client.release();
+        console.log(error);
+
+        return res.send({
+            msg: 'Internal Server Error'
+        });
+    }
+}
+
+/**
+ * Get specific student no matter status.
+ * path: /student_all/:dni
+ * method: get
+ */
+export const getStudentByDniAll = async (req: Request, res: Response): Promise<Response> => {
+    const getStudent = `select getstudentbydniall($1,'studentCursor');`;
     const fetchStudent = `FETCH ALL IN "studentCursor";`;
 
     const getCarees = `select getcareersbydni($1,'careersCursor');`;
