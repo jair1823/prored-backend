@@ -329,7 +329,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION getdistricts(pid INTEGER, ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
-    SELECT * FROM public.district where id_canton = 0 and id_district <> 0;
+    SELECT * FROM public.district where id_canton = pid and id_district <> 0;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
