@@ -4,7 +4,7 @@ CREATE OR REPLACE FUNCTION getstudentbydni(pdni varchar(50),ref refcursor)
 
     OPEN ref FOR select 
         p.dni, p.name, p.lastname1, p.lastname2,
-        p.born_dates, d.id_district ,d.name as district, 
+        TO_CHAR(p.born_dates,'YYYY-mm-dd') AS born_dates, d.id_district ,d.name as district, 
         c.campus_code, c.name as campus,
         s.marital_status, s.profile, s.address, s.nationality,p.status
     from public.person p
@@ -26,7 +26,7 @@ CREATE OR REPLACE FUNCTION getstudentbydniall(pdni varchar(50),ref refcursor)
 
     OPEN ref FOR select 
         p.dni, p.name, p.lastname1, p.lastname2,
-        p.born_dates, d.id_district ,d.name as district, 
+        TO_CHAR(p.born_dates,'YYYY-mm-dd') AS born_dates, d.id_district ,d.name as district, 
         c.campus_code, c.name as campus,
         s.marital_status, s.profile, s.address, s.nationality,p.status
     from public.person p
