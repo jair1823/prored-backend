@@ -319,7 +319,7 @@ export const addCareer = async (req: Request, res: Response): Promise<Response> 
 
         client.release();
 
-        return res.status(500).json(
+        return res.status(200).json(
             {
                 msg: 'Career added'
             }
@@ -353,7 +353,7 @@ export const addLanguage = async (req: Request, res: Response): Promise<Response
 
         client.release();
 
-        return res.status(500).json(
+        return res.status(200).json(
             {
                 msg: 'Language added'
             }
@@ -387,7 +387,7 @@ export const addNetwork = async (req: Request, res: Response): Promise<Response>
 
         client.release();
 
-        return res.status(500).json(
+        return res.status(200).json(
             {
                 msg: 'Network added'
             }
@@ -422,7 +422,7 @@ export const addAssociatedCareer = async (req: Request, res: Response): Promise<
 
         client.release();
 
-        return res.status(500).json(
+        return res.status(200).json(
             {
                 msg: 'Associated Career added'
             }
@@ -455,7 +455,7 @@ export const removeCareer = async (req: Request, res: Response): Promise<Respons
         await client.query('COMMIT');
 
         client.release();
-        return res.status(500).json(
+        return res.status(200).json(
             {
                 msg: 'Career removed'
             }
@@ -488,7 +488,7 @@ export const removeLanguage = async (req: Request, res: Response): Promise<Respo
         await client.query('COMMIT');
 
         client.release();
-        return res.status(500).json(
+        return res.status(200).json(
             {
                 msg: 'Language removed'
             }
@@ -521,7 +521,7 @@ export const removeNetwork = async (req: Request, res: Response): Promise<Respon
         await client.query('COMMIT');
 
         client.release();
-        return res.status(500).json({
+        return res.status(200).json({
             msg: 'Network removed'
         });
     } catch (error) {
@@ -552,7 +552,7 @@ export const removeAssociatedCareer = async (req: Request, res: Response): Promi
         await client.query('COMMIT');
 
         client.release();
-        return res.status(500).json({
+        return res.status(200).json({
             msg: 'Associated Career removed'
         });
     } catch (error) {
