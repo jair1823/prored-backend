@@ -63,7 +63,7 @@ INSERT INTO public.network(name, network_type)
 --Avanzado
 
 INSERT INTO public.person(dni, name, lastname1, lastname2, born_dates, status)
-        VALUES ('116920331', 'Gabriel', 'Solórzano', 'Chanto', '31-10-1997', true);
+        VALUES ('116920331', 'Gabriel', 'Solórzano', 'Chanto', '1997-10-31', true);
 
 INSERT INTO public.student(dni, id_district, marital_status, campus_code, profile, address, nationality)
         VALUES ('116920331', 1, 'Soltero', 'C1', 'Avanzado', 'San Bosco de Santa Bárbara', 'CR');
@@ -85,7 +85,7 @@ INSERT INTO public.person_x_network(dni, id_network)
 --Básico
 
 INSERT INTO public.person(dni, name, lastname1, lastname2, born_dates, status)
-        VALUES ('411111111', 'Benjamin', 'Pavard', 'Ruíz', '31-10-1987', true);
+        VALUES ('411111111', 'Benjamin', 'Pavard', 'Ruíz', '1987-10-31', true);
 
 INSERT INTO public.student(dni, id_district, marital_status, campus_code, profile, address, nationality)
         VALUES ('411111111', 0, 'Casado', 'C1', 'Básico', 'Torre Eiffel', 'FR');
