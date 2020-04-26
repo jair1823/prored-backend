@@ -1,18 +1,12 @@
 import { Router } from 'express';
+import Campus_Controller from '../controllers/campus.controller';
+
 const router = Router();
 
-import {
-    getCampuses,
-    getCampusbyId,
-    createCampus,
-    updateCampus,
-    deleteCampus
-} from '../controllers/campus.controller';
-
-router.get('/campus', getCampuses);
-router.get('/campus/:id', getCampusbyId);
-router.post('/campus', createCampus);
-router.put('/campus/:id', updateCampus);
-router.delete('/campus/:id', deleteCampus);
+router.get('/', Campus_Controller.getCampuses);
+router.get('/:id', Campus_Controller.getCampusbyId);
+router.post('/', Campus_Controller.createCampus);
+router.put('/:id', Campus_Controller.updateCampus);
+router.delete('/:id', Campus_Controller.deleteCampus);
 
 export default router;

@@ -23,7 +23,7 @@ export function addRoutes(app: any) {
     app.use(Academic_Unit);
     app.use(Investigation_Unit);
     app.use(Career);
-    app.use(Campus);
+    app.use('/campus', Campus);
     app.use(Language);
     app.use(Directions);
     app.use(Student);
