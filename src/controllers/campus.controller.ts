@@ -3,7 +3,7 @@ import { PoolClient } from 'pg';
 import { pool } from '../database/connection';
 import Queries from '../database/Queries';
 
-export class CampusCotroller {
+export class CampusController {
 
     /** 
      * Get all campus.
@@ -33,15 +33,15 @@ export class CampusCotroller {
      * Get specific campus.
      * path: /campus/:id
      * method: get
-     */
+    */
     async getCampusbyId(req: Request, res: Response): Promise<Response> {
         const query = `select getcampusesbyid($1,'campusesCursor'); `;
         const fetch = `FETCH ALL IN "campusesCursor";`;
-        const client = await pool.connect();
+        const client: PoolClient = await pool.connect();
         try {
             const id = [req.params.id];
 
-            const response = await Queries.simpleSelectById(query, id, fetch, client);
+            const response = await Queries.simpleSelectWithParameter(query, id, fetch, client);
 
             return res.status(200).json(response.rows);
         } catch (error) {
@@ -58,10 +58,10 @@ export class CampusCotroller {
      * Create campus.
      * path: /campus/
      * method: post
-     */
+    */
     async createCampus(req: Request, res: Response): Promise<Response> {
         const query = `SELECT createcampus($1,$2)`;
-        const client = await pool.connect();
+        const client: PoolClient = await pool.connect();
         try {
             const values = [req.body.code, req.body.name];
 
@@ -85,10 +85,10 @@ export class CampusCotroller {
      * Update specific campus.
      * path: /campus/:id
      * method: put
-     */
+    */
     async updateCampus(req: Request, res: Response): Promise<Response> {
         const query = `SELECT updatecampus($1,$2)`;
-        const client = await pool.connect();
+        const client: PoolClient = await pool.connect();
         try {
             const values = [req.body.name, req.params.id];
 
@@ -114,7 +114,7 @@ export class CampusCotroller {
      */
     async deleteCampus(req: Request, res: Response): Promise<Response> {
         const query = `SELECT deletecampus($1)`;
-        const client = await pool.connect();
+        const client: PoolClient = await pool.connect();
         try {
             const id = [req.params.id]
 
@@ -122,7 +122,7 @@ export class CampusCotroller {
 
             return res.json({
                 msg: `Campus deleted succesfuly`
-            })
+            });
         } catch (error) {
 
             await Queries.simpleError(client, error);
@@ -134,6 +134,5 @@ export class CampusCotroller {
     }
 }
 
-const campusController = new CampusCotroller();
+const campusController = new CampusController();
 export default campusController;
-

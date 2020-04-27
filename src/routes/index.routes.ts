@@ -7,7 +7,6 @@ import Career from './career.routes';
 import Language from './language.routes';
 import Directions from './directions.routes'
 import Campus from './campus.routes';
-
 import Student from './student.routes';
 import Consultas from './consultas.routes';
 /**
@@ -17,14 +16,14 @@ import Consultas from './consultas.routes';
  * funcion que agrega todas las rutas a la app de express
  */
 export function addRoutes(app: any) {
-    app.use(Network);
-    app.use(Center);
+    app.use('/network',Network);
+    app.use('/center',Center);
     app.use(AssoCareer);
     app.use(Academic_Unit);
     app.use(Investigation_Unit);
-    app.use(Career);
+    app.use('/career', Career);
     app.use('/campus', Campus);
-    app.use(Language);
+    app.use('/language',Language);
     app.use(Directions);
     app.use(Student);
     app.use(Consultas);

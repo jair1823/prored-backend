@@ -1,204 +1,160 @@
 import { Request, Response } from 'express';
-import { QueryResult } from 'pg';
+import { PoolClient } from 'pg';
 import { pool } from '../database/connection';
+import Queries from '../database/Queries';
 
-/**
- * Get all associated career.
- * path: /associated_career
- * method: get
- */
-export const getAssoCareer = async (req: Request, res: Response): Promise<Response> => {
-    const query = `select getasocareer('asocareersCursor'); `;
-    const fetch = `FETCH ALL IN "asocareersCursor";`;
-    const client = await pool.connect();
-    try {
-        await client.query('BEGIN');
+export class AssociatedCareerController {
 
-        await client.query(query);
-        const asocareers: QueryResult = await client.query(fetch);
+    /**
+     * Get all associated career.
+     * path: /associated_career
+     * method: get
+    */
+    async getAssoCareer(req: Request, res: Response): Promise<Response> {
+        const query = `select getasocareer('asocareersCursor'); `;
+        const fetch = `FETCH ALL IN "asocareersCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
 
-        await client.query('ROLLBACK');
-        client.release();
+            const response = await Queries.simpleSelect(query, fetch, client);
 
-        return res.status(200).json(
-            asocareers.rows
-        );
-    } catch (error) {
+            return res.status(200).json(response.rows);
+        } catch (error) {
 
-        await client.query('ROLLBACK');
-        client.release();
-        console.log(error);
+            await Queries.simpleError(client, error);
 
-        return res.status(500).json(
-            {
-                msg: 'Internal server error'
-            }
-        );
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Get a specific associated career
+     * path: /associated_career/:id
+     * method: get
+    */
+    async getAssoCareerbyId(req: Request, res: Response): Promise<Response> {
+        const query = `select getasocareers($1,'asocareersCursor'); `;
+        const fetch = `FETCH ALL IN "asocareersCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const id = [parseInt(req.params.id)];
+            const response = await Queries.simpleSelectWithParameter(query, id, fetch, client);
+
+            return res.status(200).json(response.rows);
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Create Associated Career
+     * path: /associated_career
+     * method: post
+    */
+    async createAssoCareer(req: Request, res: Response): Promise<Response> {
+        const query = `SELECT createassociated_career($1,$2)`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const values = [req.body.name, req.body.id_center]
+
+            await Queries.simpleTransaction(query, values, client);
+
+            return res.json({
+                msg: "Associated Career created Succesfully"
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Update Associated career
+     * path: /associated_career/:id
+     * method: put
+    */
+    async updateAssoCareer(req: Request, res: Response): Promise<Response> {
+        const query = `SELECT updateassociated_career($1,$2)`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const values = [req.body.name, parseInt(req.params.id)];
+
+            await Queries.simpleTransaction(query, values, client);
+
+            return res.json({
+                msg: "Associated Career modified Succesfully"
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Delete Associated career
+     * path: /associated_career/:id
+     * method: delete
+     */
+    async deleteAssoCareer(req: Request, res: Response): Promise<Response> {
+        const query = `SELECT deleteassociated_career($1)`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const id = [parseInt(req.params.id)];
+
+            await Queries.simpleTransaction(query, id, client);
+
+            return res.json({
+                msg: `Associated Career deleted succesfuly`
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Get all associated career with center
+     * path: /associated_career_center
+     * method: get
+     */
+    async getAssoCareerWithCenter(req: Request, res: Response): Promise<Response> {
+        const query = `select getasocareercenter('asocareerscenterCursor'); `;
+        const fetch = `FETCH ALL IN "asocareerscenterCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
+
+            const response = await Queries.simpleSelect(query, fetch, client);
+
+            return res.status(200).json(response.rows);
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
     }
 }
 
-/**
- * Get a specific associated career
- * path: /associated_career/:id
- * method: get
- */
-export const getAssoCareerbyId = async (req: Request, res: Response): Promise<Response> => {
-    const query = `select getasocareers($1,'asocareersCursor'); `;
-    const fetch = `FETCH ALL IN "asocareersCursor";`;
-    const client = await pool.connect();
-    try {
-        const id = req.params.id;
-        await client.query('BEGIN');
-
-        await client.query(query, [id]);
-        const center: QueryResult = await client.query(fetch);
-
-        await client.query('ROLLBACK');
-        client.release();
-
-        return res.status(200).json(
-            center.rows
-        );
-    } catch (error) {
-
-        await client.query('ROLLBACK');
-        client.release();
-        console.log(error);
-
-        return res.status(500).json(
-            {
-                msg: 'Internal server error'
-            }
-        );
-    }
-}
-
-/**
- * Create Associated Career
- * path: /associated_career
- * method: post
- */
-export const createAssoCareer = async (req: Request, res: Response): Promise<Response> => {
-    const query = `SELECT createassociated_career($1,$2)`;
-    const client = await pool.connect();
-    try {
-        const { name, id_center } = req.body;
-
-        await client.query('BEGIN');
-        await client.query(query, [name, id_center]);
-        await client.query('COMMIT');
-        client.release();
-
-        return res.status(200).json(
-            {
-                msg: 'Associated Career Created'
-            }
-        );
-    } catch (error) {
-        await client.query('ROLLBACK');
-        client.release();
-        console.log(error);
-        return res.status(500).json(
-            {
-                msg: 'Internal server error'
-            }
-        );
-    }
-}
-
-/**
- * Update Associated career
- * path: /associated_career/:id
- * method: put
- */
-export const updateAssoCareer = async (req: Request, res: Response): Promise<Response> => {
-    const query = `SELECT updateassociated_career($1,$2)`;
-    const client = await pool.connect();
-    try {
-        const values = [req.body.name, req.params.id];
-
-        await client.query('BEGIN');
-        await client.query(query, values);
-        await client.query('COMMIT');
-        client.release();
-
-        return res.status(200).json({
-            msg: 'Associated Career Updated'
-        });
-    } catch (error) {
-        await client.query('ROLLBACK');
-        client.release();
-        console.log(error);
-        return res.status(500).json(
-            {
-                msg: 'Internal server error'
-            }
-        );
-    }
-}
-
-/**
- * Delete Associated career
- * path: /associated_career/:id
- * method: delete
- */
-export const deleteAssoCareer = async (req: Request, res: Response): Promise<Response> => {
-    const query = `SELECT deleteassociated_career($1)`;
-    const client = await pool.connect();
-    try {
-        const id = req.params.id;
-
-        await client.query('BEGIN');
-        await client.query(query, [id]);
-        await client.query('COMMIT');
-        client.release();
-
-        return res.status(200).json({
-            msg: 'Associated Career deleted'
-        });
-    } catch (error) {
-        await client.query('ROLLBACK');
-        client.release();
-        console.log(error);
-        return res.status(500).json(
-            {
-                msg: 'Internal server error'
-            }
-        );
-    }
-}
-
-/**
- * Get all associated career with center
- * path: /associated_career_center
- * method: get
- */
-export const getAssoCareerWithCenter = async (req: Request, res: Response): Promise<Response> => {
-    const query = `select getasocareercenter('asocareerscenterCursor'); `;
-    const fetch = `FETCH ALL IN "asocareerscenterCursor";`;
-    const client = await pool.connect();
-    try {
-        await client.query('BEGIN');
-
-        await client.query(query);
-        const asocareers: QueryResult = await client.query(fetch);
-
-        await client.query('ROLLBACK');
-        client.release();
-
-        return res.status(200).json(
-            asocareers.rows
-        );
-    } catch (error) {
-
-        await client.query('ROLLBACK');
-        client.release();
-        console.log(error);
-
-        return res.status(500).json(
-            {
-                msg: 'Internal server error'
-            }
-        );
-    }
-}
+const associatedCareerController = new AssociatedCareerController();
+export default associatedCareerController;
