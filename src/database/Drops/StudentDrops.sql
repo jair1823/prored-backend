@@ -1,3 +1,4 @@
+DROP FUNCTION IF EXISTS getstudents;
 DROP FUNCTION IF EXISTS getstudentbydni;
 DROP FUNCTION IF EXISTS getcareersbydni;
 DROP FUNCTION IF EXISTS getnetworksbydni;

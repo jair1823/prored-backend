@@ -1,7 +1,7 @@
 import { pool } from '../database/connection';
 import { readFileSync } from 'fs';
 
-const insert = readFileSync('src/database/inserts.sql').toString();
+const Seeds = readFileSync('src/database/Seeds/Seeds.sql').toString();
 
 
 /**
@@ -9,7 +9,7 @@ const insert = readFileSync('src/database/inserts.sql').toString();
  */
 async function execute() {
     try {
-        await pool.query(insert);
+        await pool.query(Seeds);
     } catch (error) {
         console.log(error);
     }

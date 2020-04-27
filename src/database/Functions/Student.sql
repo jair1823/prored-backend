@@ -1,3 +1,42 @@
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getstudents(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR select 
+p.dni, p.name, p.lastname1, p.lastname2,
+TO_CHAR(p.born_dates,'YYYY-mm-dd') AS born_dates, d.id_district ,d.name as district, 
+c.campus_code, c.name as campus,
+s.marital_status, s.profile, s.address, s.nationality,p.status
+
+from public.person p
+inner join public.student s on s.dni = p.dni
+inner join public.district d on d.id_district = s.id_district
+inner join public.campus c on c.campus_code = s.campus_code
+where p.status = true;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getstudentsall(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR select 
+p.dni, p.name, p.lastname1, p.lastname2,
+TO_CHAR(p.born_dates,'YYYY-mm-dd') AS born_dates, d.id_district ,d.name as district, 
+c.campus_code, c.name as campus,
+s.marital_status, s.profile, s.address, s.nationality,p.status
+
+from public.person p
+inner join public.student s on s.dni = p.dni
+inner join public.district d on d.id_district = s.id_district
+inner join public.campus c on c.campus_code = s.campus_code;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--#######################################################################
+
 CREATE OR REPLACE FUNCTION getstudentbydni(pdni varchar(50),ref refcursor)
     RETURNS refcursor AS $$
     BEGIN
