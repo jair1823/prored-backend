@@ -1,18 +1,12 @@
 import { Router } from 'express';
+import Network_Controller from '../controllers/network.controller'
+
 const router = Router();
 
-import {
-    getNetworks,
-    getNetworkbyId,
-    createNetwork,
-    deleteNetwork,
-    updateNetwork
-} from '../controllers/network.controller';
-
-router.get('/network', getNetworks);
-router.get('/network/:id', getNetworkbyId);
-router.post('/network', createNetwork);
-router.put('/network/:id', updateNetwork);
-router.delete('/network/:id', deleteNetwork);
+router.get('/', Network_Controller.getNetworks);
+router.get('/:id', Network_Controller.getNetworkbyId);
+router.post('/', Network_Controller.createNetwork);
+router.put('/:id', Network_Controller.updateNetwork);
+router.delete('/:id', Network_Controller.deleteNetwork);
 
 export default router;
