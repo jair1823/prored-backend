@@ -87,28 +87,6 @@ export class StudentController {
             const languages = await Queries.simpleSelectWithParameterContinous(getLanguages, dni, fetchLanguages, client);
             const associated_careers = await Queries.simpleSelectWithParameterContinous(getAssoCareer, dni, fetchAssoCareer, client);
             const direction = await Queries.simpleSelectWithParameter(getDirection, dni, fetchDirection, client);
-            // await client.query('BEGIN');
-
-            // await client.query(getStudent, [dni]);
-            // const student: QueryResult = await client.query(fetchStudent);
-
-            // await client.query(getCarees, [dni]);
-            // const careers: QueryResult = await client.query(fetchCarees);
-
-            // await client.query(getNetworks, [dni]);
-            // const networks: QueryResult = await client.query(fetchNetworks);
-
-            // await client.query(getLanguages, [dni]);
-            // const languages: QueryResult = await client.query(fetchLanguages);
-
-            // await client.query(getAssoCareer, [dni]);
-            // const associated_careers: QueryResult = await client.query(fetchAssoCareer);
-
-            // await client.query(getDirection, [dni]);
-            // const direction: QueryResult = await client.query(fetchDirection);
-
-            // await client.query('ROLLBACK');
-            // client.release();
 
             return res.status(200).json(
                 {
@@ -164,28 +142,6 @@ export class StudentController {
             const languages = await Queries.simpleSelectWithParameterContinous(getLanguages, dni, fetchLanguages, client);
             const associated_careers = await Queries.simpleSelectWithParameterContinous(getAssoCareer, dni, fetchAssoCareer, client);
             const direction = await Queries.simpleSelectWithParameter(getDirection, dni, fetchDirection, client);
-            // await client.query('BEGIN');
-
-            // await client.query(getStudent, [dni]);
-            // const student: QueryResult = await client.query(fetchStudent);
-
-            // await client.query(getCarees, [dni]);
-            // const careers: QueryResult = await client.query(fetchCarees);
-
-            // await client.query(getNetworks, [dni]);
-            // const networks: QueryResult = await client.query(fetchNetworks);
-
-            // await client.query(getLanguages, [dni]);
-            // const languages: QueryResult = await client.query(fetchLanguages);
-
-            // await client.query(getAssoCareer, [dni]);
-            // const associated_careers: QueryResult = await client.query(fetchAssoCareer);
-
-            // await client.query(getDirection, [dni]);
-            // const direction: QueryResult = await client.query(fetchDirection);
-
-            // await client.query('ROLLBACK');
-            // client.release();
 
             return res.status(200).json(
                 {
@@ -230,13 +186,6 @@ export class StudentController {
             await Queries.simpleTransactionContinous(createPerson, personValues, client);
             await Queries.simpleTransactionContinous(createStudent, studentValues, client);
 
-            // await client.query('BEGIN');
-
-            // await client.query(createPerson, personValues);
-            // await client.query(createStudent, studentValues);
-
-            // await client.query('COMMIT');
-
             const careers: [] = req.body.careers;
             const languages: [] = req.body.languages;
             const networks: [] = req.body.networks;
@@ -244,23 +193,20 @@ export class StudentController {
 
             careers.map(async (c) => {
                 await Queries.simpleTransactionContinous(createStudentXcareer, [personValues[0], c], client);
-                // await client.query(createStudentXcareer, [personValues[0], c]);
             });
 
             languages.map(async (l) => {
                 await Queries.simpleTransactionContinous(createStudentXlanguage, [personValues[0], l], client);
-                //await client.query(createStudentXlanguage, [personValues[0], l])
-            });
-            networks.map(async (n) => {
-                await Queries.simpleTransactionContinous(createStudentXnetworks, [personValues[0], n], client);
-                //await client.query(createStudentXnetworks, [personValues[0], n])
-            });
-            associated_careers.map(async (a) => {
-                await Queries.simpleTransaction(createStudentXassociated_career, [personValues[0], a], client);
-                //await client.query(createStudentXassociated_career, [personValues[0], a])
             });
 
-            //client.release();
+            networks.map(async (n) => {
+                await Queries.simpleTransactionContinous(createStudentXnetworks, [personValues[0], n], client);
+            });
+
+            associated_careers.map(async (a) => {
+                await Queries.simpleTransaction(createStudentXassociated_career, [personValues[0], a], client);
+            });
+            
             return res.status(200).json(
                 {
                     msg: 'Student created'
