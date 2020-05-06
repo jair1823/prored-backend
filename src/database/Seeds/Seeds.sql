@@ -1,30 +1,3 @@
-INSERT INTO public.province (id_province,name) 
-    VALUES 
-        (0,'Internacional');
-
-INSERT INTO public.province (name) 
-    VALUES 
-        ('San Jose'),
-        ('Heredia');
-
-INSERT INTO public.canton (id_canton,id_province,name) 
-    VALUES 
-        (0,0,'Internacional');
-
-INSERT INTO public.canton (id_province,name) 
-    VALUES 
-        (1,'Santa Ana'),
-        (2,'Santa Bárbara');
-
-INSERT INTO public.district (id_district,id_canton,name) 
-    VALUES
-        (0,0,'Internacional');
-
-INSERT INTO public.district (id_canton,name) 
-    VALUES
-        (1,'Piedades'),
-        (2,'Puraba');
-
 INSERT INTO public.campus (campus_code,name) 
     VALUES 
         ('C1','Heredia'),
@@ -66,7 +39,7 @@ INSERT INTO public.person(dni, name, lastname1, lastname2, born_dates, status)
         VALUES ('116920331', 'Gabriel', 'Solórzano', 'Chanto', '1997-10-31', true);
 
 INSERT INTO public.student(dni, id_district, marital_status, campus_code, profile, address, nationality)
-        VALUES ('116920331', 1, 'Soltero', 'C1', 'Avanzado', 'San Bosco de Santa Bárbara', 'CR');
+        VALUES ('116920331', 40406, 'Soltero', 'C1', 'Avanzado', 'San Bosco de Santa Bárbara', 'CR');
 
 INSERT INTO public.person_x_career(dni, career_code)
         VALUES ('116920331', 1);
