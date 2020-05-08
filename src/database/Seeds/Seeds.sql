@@ -10,12 +10,6 @@ INSERT INTO public.career(
         (2, 'Career 1', 'Licenciatura');
 
 
-INSERT INTO public.language(name)
-	VALUES 
-        ('Language 1'),
-        ('Language 2'),
-        ('Language 3');
-
 INSERT INTO public.center(name)
 	VALUES
         ('Center 1'),
@@ -45,7 +39,7 @@ INSERT INTO public.person_x_career(dni, career_code)
         VALUES ('116920331', 1);
 
 INSERT INTO public.person_x_language(dni, id_language)
-        VALUES ('116920331', 1);
+        VALUES ('116920331', 148);
 
 INSERT INTO public.person_x_associated_career(dni, id_associated_career)
         VALUES ('116920331', 1);
@@ -61,7 +55,7 @@ INSERT INTO public.person(dni, name, lastname1, lastname2, born_dates, status)
         VALUES ('411111111', 'Benjamin', 'Pavard', 'Ruíz', '1987-10-31', true);
 
 INSERT INTO public.student(dni, id_district, marital_status, campus_code, profile, address, nationality)
-        VALUES ('411111111', 0, 'Casado', 'C1', 'Básico', 'Torre Eiffel', 'FR');
+        VALUES ('411111111', 0, 'Casado', 'C1', 'Básico', 'Lille', 'FR');
 
 INSERT INTO public.person_x_career(dni, career_code)
         VALUES ('411111111', 1);

@@ -150,7 +150,7 @@ create table public.associated_career(
 
 create table public.language(
     id_language SERIAL PRIMARY KEY,
-    name varchar(50)
+    name varchar(100)
 );
 
 CREATE TYPE public.profile AS ENUM (
