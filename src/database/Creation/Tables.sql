@@ -115,12 +115,14 @@ CREATE TYPE public.degree AS ENUM (
 create table public.career(
     career_code integer PRIMARY KEY,
     name varchar(100),
-    degree public.degree
+    degree public.degree,
+    status boolean
 );
 
 create table public.campus(
     campus_code varchar(30) PRIMARY KEY,
-    name varchar(50)
+    name varchar(50),
+    status boolean
 );
 
 CREATE TYPE public.network_type AS ENUM (
@@ -133,19 +135,22 @@ CREATE TYPE public.network_type AS ENUM (
 create table public.network(
     id_network SERIAL PRIMARY KEY,
     name varchar(50),
-    network_type public.network_type
+    network_type public.network_type,
+    status boolean
     
 );
 
 create table public.center(
     id_center SERIAL PRIMARY KEY,
-    name varchar(50)
+    name varchar(50),
+    status boolean
 );
 
 create table public.associated_career(
     id_associated_career SERIAL PRIMARY KEY,
     id_center integer REFERENCES public.center(id_center),
-    name varchar(50)
+    name varchar(50),
+    status boolean
 );
 
 create table public.language(

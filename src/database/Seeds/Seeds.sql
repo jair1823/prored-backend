@@ -1,39 +1,39 @@
-INSERT INTO public.campus (campus_code,name) 
+INSERT INTO public.campus (campus_code,name, status) 
     VALUES 
-        ('01','San José'),
-        ('02','Quepos'),
-        ('03','Cartago');
+        ('01','San José',true),
+        ('02','Quepos',true),
+        ('03','Cartago',false);
 
 INSERT INTO public.career(
-	career_code, name, degree)
+	career_code, name, degree,status)
 	VALUES 
-        (1, 'Administración de Empresas', 'Diplomado'),
-        (2, 'Docencia', 'Licenciatura'),
-        (3, 'Ingeniería Informática', 'Bachillerato');
+        (1, 'Administración de Empresas', 'Diplomado',true),
+        (2, 'Docencia', 'Licenciatura',true),
+        (3, 'Ingeniería Informática', 'Bachillerato',false);
 
 
-INSERT INTO public.center(name)
+INSERT INTO public.center(name,status)
 	VALUES
-        ('ITCR'),
-        ('UCR'),
-        ('UNA');
+        ('ITCR',true),
+        ('UCR',true),
+        ('UNA',false);
 
-INSERT INTO public.associated_career(id_center, name)
+INSERT INTO public.associated_career(id_center, name,status)
 	VALUES 
-        (1, 'Ingeniería en Computación'),
-        (1, 'Ingeniería en Electrónica'), 
-        (2, 'Filosofía'),
-        (2, 'Periodismo'),
-        (3, 'Veterinaria'),
-        (3, 'Letras');
+        (1, 'Ingeniería en Computación',true),
+        (1, 'Ingeniería en Electrónica',true), 
+        (2, 'Filosofía',true),
+        (2, 'Periodismo',true),
+        (3, 'Veterinaria',false),
+        (3, 'Letras',true);
 
-INSERT INTO public.network(name, network_type)
+INSERT INTO public.network(name, network_type,status)
 	VALUES 
-        ('Municipalidad Heredia', 'Municipalidad'),
-        ('Municipalidad Santa Ana', 'Municipalidad'),
-        ('ONU', 'ONG'),
-        ('OMS', 'ONG'),
-        ('DanzaTEC', 'Grupo Artístico');
+        ('Municipalidad Heredia', 'Municipalidad',true),
+        ('Municipalidad Santa Ana', 'Municipalidad',true),
+        ('ONU', 'ONG',true),
+        ('OMS', 'ONG',true),
+        ('DanzaTEC', 'Grupo Artístico',false);
 
 
 -----------------------------------------------------------------------

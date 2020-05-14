@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION createcampus(ccode VARCHAR(30), n VARCHAR(50)) 
 RETURNS void AS $$
 BEGIN
-  INSERT INTO public.campus (campus_code, name) VALUES (ccode,n);
+  INSERT INTO public.campus (campus_code, name, status) VALUES (ccode,n,true);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -29,6 +29,16 @@ CREATE OR REPLACE FUNCTION getcampuses(ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
     SELECT * FROM campus;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--########################################################################################
+
+CREATE OR REPLACE FUNCTION getcampusesEnable(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM campus WHERE status = true;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;

@@ -154,6 +154,55 @@ export class AssociatedCareerController {
             });
         }
     }
+
+    /**
+     * Get the careers associated to a center
+     * path: /associated_career_from_center
+     * method: get
+     */
+    async getAsoCareerFromCenter(req: Request, res: Response): Promise<Response> {
+        const query = `select getasocareerfromcenter($1,'cur');`;
+        const fetch = `fetch all in "cur"`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const id = [parseInt(req.params.id)];
+            const response = await Queries.simpleSelectWithParameter(query, id, fetch, client);
+
+            return res.status(200).json(response.rows);
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Get the careers associated to a center
+     * path: /associated_career_from_center
+     * method: get
+     */
+    async getAsoCareerFromCenterEnable(req: Request, res: Response): Promise<Response> {
+        const query = `select getasocareerfromcenterEnable($1,'cur');`;
+        const fetch = `fetch all in "cur"`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const id = [parseInt(req.params.id)];
+            const response = await Queries.simpleSelectWithParameter(query, id, fetch, client);
+
+            return res.status(200).json(response.rows);
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
 }
 
 const associatedCareerController = new AssociatedCareerController();

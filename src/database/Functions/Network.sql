@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION createnetwork(n VARCHAR(50), nt network_type) 
 RETURNS void AS $$
 BEGIN
-  INSERT INTO public.network (name,network_type) VALUES (n, nt);
+  INSERT INTO public.network (name,network_type,status) VALUES (n, nt,true);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -29,6 +29,16 @@ CREATE OR REPLACE FUNCTION getnetworks(ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
     SELECT * FROM network;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--########################################################################################
+
+CREATE OR REPLACE FUNCTION getnetworksEnable(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM network where status = true;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;

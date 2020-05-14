@@ -30,6 +30,30 @@ export class CenterController {
     }
 
     /**
+     * Get all centers.
+     * path: /center/
+     * method: get
+    */
+    async getCenterEnable(req: Request, res: Response): Promise<Response> {
+        const query = `select getcentersEnable('centersCursor'); `;
+        const fetch = `FETCH ALL IN "centersCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
+
+            const response = await Queries.simpleSelect(query, fetch, client);
+
+            return res.status(200).json(response.rows);
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
      * Get specific center.
      * path: /center/:id
      * method: get
