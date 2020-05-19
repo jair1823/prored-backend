@@ -30,6 +30,30 @@ export class CareerController {
     }
 
     /**
+     * Get careeres enabled.
+     * path: /career/
+     * method: get
+     */
+    async getCareerEnable(req: Request, res: Response): Promise<Response> {
+        const query = `select getcareerEnable('careersCursorEnable'); `;
+        const fetch = `FETCH ALL IN "careersCursorEnable";`;
+        const client: PoolClient = await pool.connect();
+        try {
+
+            const response = await Queries.simpleSelect(query, fetch, client);
+
+            return res.status(200).json(response.rows);
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
      * Get specific career.
      * path: /career/:id
      * method: get

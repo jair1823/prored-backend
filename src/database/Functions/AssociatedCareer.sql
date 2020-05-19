@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION createassociated_career(n VARCHAR(50), idc integer) 
 RETURNS void AS $$
 BEGIN
-  INSERT INTO public.associated_career(name,id_center) values(n,idc);
+  INSERT INTO public.associated_career(name,id_center, status) values(n,idc, true);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -78,6 +78,25 @@ AS $BODY$
 BEGIN
   OPEN ref FOR 
     SELECT * FROM associated_career where id_center = pid;
+  RETURN ref;
+END;
+$BODY$;
+
+--########################################################################################
+
+CREATE OR REPLACE FUNCTION public.getasocareerfromcenterEnable(
+	pid integer,
+	ref refcursor)
+    RETURNS refcursor
+    LANGUAGE 'plpgsql'
+
+    COST 100
+    VOLATILE 
+    
+AS $BODY$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM associated_career where id_center = pid and status = true;
   RETURN ref;
 END;
 $BODY$;

@@ -2,7 +2,8 @@ import { Router } from 'express';
 import AssociatedCareer_Controller from '../controllers/associated_career.controller'
 const router = Router();
 
-
+router.get('/associated_career_from_center/:id', AssociatedCareer_Controller.getAsoCareerFromCenter);
+router.get('/associated_career_from_center/enabled/:id', AssociatedCareer_Controller.getAsoCareerFromCenterEnable);
 router.get('/associated_career', AssociatedCareer_Controller.getAssoCareer);
 router.get('/associated_career/:id', AssociatedCareer_Controller.getAssoCareerbyId);
 router.post('/associated_career', AssociatedCareer_Controller.createAssoCareer);

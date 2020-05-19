@@ -29,6 +29,30 @@ export class CampusController {
         }
     }
 
+    /** 
+     * Get all campus.
+     * path: /campus/
+     * method: get
+    */
+   async getCampusesEnable(req: Request, res: Response): Promise<Response> {
+    const query = `select getcampusesEnable('campusesCursor'); `;
+    const fetch = `FETCH ALL IN "campusesCursor";`;
+    const client: PoolClient = await pool.connect();
+    try {
+
+        const response = await Queries.simpleSelect(query, fetch, client);
+
+        return res.status(200).json(response.rows);
+    } catch (error) {
+
+        await Queries.simpleError(client, error);
+
+        return res.status(500).json({
+            msg: 'Internal Server Error'
+        });
+    }
+}
+
     /**
      * Get specific campus.
      * path: /campus/:id

@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION createcenter(n VARCHAR(50)) 
 RETURNS void AS $$
 BEGIN
-  INSERT INTO public.center(name) values(n);
+  INSERT INTO public.center(name,status) values(n,true);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -29,6 +29,16 @@ CREATE OR REPLACE FUNCTION getcenters(ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
     SELECT * FROM center;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--########################################################################################
+
+CREATE OR REPLACE FUNCTION getcentersEnable(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM center WHERE status = true;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;

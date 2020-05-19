@@ -30,6 +30,30 @@ export class NetworkController {
     }
 
     /**
+     * Get all networks Enabled.
+     * path: /network
+     * method: get
+    */
+    async getNetworksEnable(req: Request, res: Response): Promise<Response> {
+        const query = `select getnetworksEnable('networksCursor'); `;
+        const fetch = `FETCH ALL IN "networksCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
+
+            const response = await Queries.simpleSelect(query, fetch, client);
+
+            return res.status(200).json(response.rows);
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
      * Get specific network.
      * path: /network/:id
      * method: get

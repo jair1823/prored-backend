@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION createcareer(ccode integer, n VARCHAR(100), dg degree) 
 RETURNS void AS $$
 BEGIN
-  INSERT INTO public.career(career_code, name, degree) values (ccode,n,dg);
+  INSERT INTO public.career(career_code, name, degree, status) values (ccode,n,dg,true);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -29,6 +29,16 @@ CREATE OR REPLACE FUNCTION getcareer(ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
     SELECT * FROM public.career;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--########################################################################################
+
+CREATE OR REPLACE FUNCTION getcareerEnable(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM public.career WHERE status = true;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
