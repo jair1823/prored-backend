@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS public.person_x_network;
 DROP TABLE IF EXISTS public.person_x_language;
 DROP TABLE IF EXISTS public.person_x_career;
 DROP TABLE IF EXISTS public.person_x_associated_career;
+DROP TABLE IF EXISTS public.cv;
 DROP TABLE IF EXISTS public.student;
 DROP TABLE IF EXISTS public.language;
 DROP TABLE IF EXISTS public.associated_career;

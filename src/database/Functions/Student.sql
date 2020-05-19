@@ -183,13 +183,33 @@ CREATE OR REPLACE FUNCTION createstudent(
     pcampus_code varchar(30),
     pprofile profile,
     paddress text,
-    pnationality nationality
+    pnationality nationality,
+    pphone varchar(40),
+    pmail varchar(60)
     )
     RETURNS void AS $$
     BEGIN
-    INSERT INTO public.student(dni, id_district, marital_status, campus_code, profile, address, nationality)
-        VALUES (pdni, pid_district, pmarital_status, pcampus_code, pprofile, paddress, pnationality);
+    INSERT INTO public.student(dni, id_district, marital_status, campus_code, profile, address, nationality, phone_number, email)
+        VALUES (pdni, pid_district, pmarital_status, pcampus_code, pprofile, paddress, pnationality,pphone,pmail);
     END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION insertCV(id VARCHAR(50), fp VARCHAR(400), n VARCHAR(300)) 
+RETURNS void AS $$
+BEGIN
+  INSERT INTO public.cv (dni, file_path, name) VALUES (dni,fp,n);
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION deleteCV(id VARCHAR(50)) 
+RETURNS void AS $$
+BEGIN
+  INSERT INTO public.cv (dni, file_path, name) VALUES (dni,fp,n);
+END;
 $$ LANGUAGE plpgsql;
 
 --###########################################################################

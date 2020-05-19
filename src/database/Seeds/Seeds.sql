@@ -42,8 +42,8 @@ INSERT INTO public.network(name, network_type,status)
 INSERT INTO public.person(dni, name, lastname1, lastname2, born_dates, status)
         VALUES ('116920331', 'Gabriel', 'Solórzano', 'Chanto', '1997-10-31', true);
 
-INSERT INTO public.student(dni, id_district, marital_status, campus_code, profile, address, nationality)
-        VALUES ('116920331', 40406, 'Soltero', '01', 'Avanzado', 'San Bosco de Santa Bárbara', 'CR');
+INSERT INTO public.student(dni, id_district, marital_status, campus_code, profile, address, nationality, phone_number, email)
+        VALUES ('116920331', 40406, 'Soltero', '01', 'Avanzado', 'San Bosco de Santa Bárbara', 'CR', '+506 87062905', 'g.solorzano97@hotmail.com');
 
 INSERT INTO public.person_x_career(dni, career_code)
         VALUES ('116920331', 1);
@@ -64,8 +64,8 @@ INSERT INTO public.person_x_network(dni, id_network)
 INSERT INTO public.person(dni, name, lastname1, lastname2, born_dates, status)
         VALUES ('411111111', 'Benjamin', 'Pavard', 'Ruíz', '1987-10-31', true);
 
-INSERT INTO public.student(dni, id_district, marital_status, campus_code, profile, address, nationality)
-        VALUES ('411111111', 0, 'Casado', '01', 'Básico', 'Lille', 'FR');
+INSERT INTO public.student(dni, id_district, marital_status, campus_code, profile, address, nationality,phone_number,email)
+        VALUES ('411111111', 0, 'Casado', '01', 'Básico', 'Lille', 'FR','+506 89988755','pavard@bayern.com');
 
 INSERT INTO public.person_x_career(dni, career_code)
         VALUES ('411111111', 1);
