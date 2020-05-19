@@ -64,6 +64,10 @@ class Queries {
         await client.query('COMMIT');
     }
 
+    async release (client: PoolClient){
+        client.release();
+    }
+
     /**
      * 
      */

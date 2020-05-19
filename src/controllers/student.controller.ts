@@ -204,9 +204,11 @@ export class StudentController {
             });
 
             associated_careers.map(async (a) => {
-                await Queries.simpleTransaction(createStudentXassociated_career, [personValues[0], a], client);
+                await Queries.simpleTransactionContinous(createStudentXassociated_career, [personValues[0], a], client);
             });
             
+            await Queries.release(client);
+
             return res.status(200).json(
                 {
                     msg: 'Student created'
