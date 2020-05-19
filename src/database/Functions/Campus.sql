@@ -72,3 +72,27 @@ BEGIN
     RETURN res;
 END;
 $$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION disablecampus(pid varchar(50))
+    RETURNS void AS $$
+    BEGIN
+    UPDATE public.campus
+        SET status=false
+    WHERE campus_code = pid;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION enablecampus(pid varchar(50))
+    RETURNS void AS $$
+    BEGIN
+    UPDATE public.campus
+        SET status=true
+    WHERE campus_code = pid;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################

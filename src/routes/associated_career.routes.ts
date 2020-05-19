@@ -10,5 +10,7 @@ router.post('/associated_career', AssociatedCareer_Controller.createAssoCareer);
 router.put('/associated_career/:id', AssociatedCareer_Controller.updateAssoCareer);
 router.delete('/associated_career/:id', AssociatedCareer_Controller.deleteAssoCareer);
 router.get('/associated_career_center/', AssociatedCareer_Controller.getAssoCareerWithCenter);
+router.put('/associated_career/:id/disable', AssociatedCareer_Controller.disableAssociatedCareer);
+router.put('/associated_career/:id/enable', AssociatedCareer_Controller.enableAssociatedCareer);
 
 export default router;

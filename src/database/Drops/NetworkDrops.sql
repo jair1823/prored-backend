@@ -3,3 +3,5 @@ DROP FUNCTION IF EXISTS updatenetwork;
 DROP FUNCTION IF EXISTS deletenetwork;
 DROP FUNCTION IF EXISTS getnetworks;
 DROP FUNCTION IF EXISTS getnetworksbyid;
+DROP FUNCTION IF EXISTS disablenetwork;
+DROP FUNCTION IF EXISTS enablenetwork;

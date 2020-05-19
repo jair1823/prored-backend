@@ -52,3 +52,31 @@ BEGIN
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
+
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION disablecenter(pid INTEGER)
+    RETURNS void AS $$
+    BEGIN
+    UPDATE public.center
+        SET status=false
+    WHERE id_center = pid;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION enablecenter(pid INTEGER)
+    RETURNS void AS $$
+    BEGIN
+    UPDATE public.center
+        SET status=true
+    WHERE id_center = pid;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+
+

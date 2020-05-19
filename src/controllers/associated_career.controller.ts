@@ -203,6 +203,62 @@ export class AssociatedCareerController {
         }
     }
 
+
+    /**
+     * Disable specific associated_career.
+     * path: associated_career/career/:pid/disable
+     * method: put
+    */
+    async disableAssociatedCareer(req: Request, res: Response): Promise<Response> {
+        const disable = `SELECT disableassocareer($1);`;
+        const client = await pool.connect();
+        try {
+            const values = [req.params.id];
+
+            await Queries.simpleTransaction(disable, values, client);
+
+            return res.json({
+                msg: 'Associated Career disabled'
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Enable specific associated_career.
+     * path: /associated_career/:id/enable
+     * method: put
+     */
+    async enableAssociatedCareer(req: Request, res: Response): Promise<Response> {
+        const enable = `SELECT enableassocareer($1);`;
+        const client = await pool.connect();
+        try {
+            const values = [req.params.id];
+            await Queries.simpleTransaction(enable, values, client);
+
+            return res.json({
+                msg: 'Associated Career enabled'
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+
+
+
+
 }
 
 const associatedCareerController = new AssociatedCareerController();

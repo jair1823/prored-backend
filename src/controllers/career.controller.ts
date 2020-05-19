@@ -157,6 +157,60 @@ export class CareerController {
         }
     }
 
+
+    /**
+     * Disable specific career.
+     * path: /career/:pid/disable
+     * method: put
+    */
+    async disableCareer(req: Request, res: Response): Promise<Response> {
+        const disable = `SELECT disablecareer($1);`;
+        const client = await pool.connect();
+        try {
+            const values = [req.params.id];
+
+            await Queries.simpleTransaction(disable, values, client);
+
+            return res.json({
+                msg: 'Career disabled'
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Enable specific career.
+     * path: /career/:id/enable
+     * method: put
+     */
+    async enableCareer(req: Request, res: Response): Promise<Response> {
+        const enable = `SELECT enablecareer($1);`;
+        const client = await pool.connect();
+        try {
+            const values = [req.params.id];
+            await Queries.simpleTransaction(enable, values, client);
+
+            return res.json({
+                msg: 'Career enabled'
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+
+
 }
 
 const careerController = new CareerController();

@@ -3,3 +3,5 @@ DROP FUNCTION IF EXISTS updatecenter;
 DROP FUNCTION IF EXISTS deletecenter;
 DROP FUNCTION IF EXISTS getcenters;
 DROP FUNCTION IF EXISTS getcenterbyid;
+DROP FUNCTION IF EXISTS disablecenter;
+DROP FUNCTION IF EXISTS enablecenter;
