@@ -157,6 +157,60 @@ export class NetworkController {
         }
     }
 
+
+
+
+    /**
+         * Disable specific network.
+         * path: /network/:pid/disable
+         * method: put
+    */
+    async disableNetwork(req: Request, res: Response): Promise<Response> {
+        const disable = `SELECT disablenetwork($1);`;
+        const client = await pool.connect();
+        try {
+            const values = [req.params.id];
+
+            await Queries.simpleTransaction(disable, values, client);
+
+            return res.json({
+                msg: 'Network disabled'
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Enable specific network.
+     * path: /network/:id/enable
+     * method: put
+     */
+    async enableNetwork(req: Request, res: Response): Promise<Response> {
+        const enable = `SELECT enablenetwork($1);`;
+        const client = await pool.connect();
+        try {
+            const values = [req.params.id];
+            await Queries.simpleTransaction(enable, values, client);
+
+            return res.json({
+                msg: 'Network enabled'
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
 }
 
 const networkController = new NetworkController();

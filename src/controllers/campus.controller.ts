@@ -156,6 +156,59 @@ export class CampusController {
             });
         }
     }
+
+
+
+    /**
+     * Disable specific campus.
+     * path: /campus/:id/disable
+     * method: put
+     */
+    async disableCampus(req: Request, res: Response): Promise<Response> {
+        const disable = `SELECT disablecampus($1);`;
+        const client = await pool.connect();
+        try {
+            const values = [req.params.id];
+
+            await Queries.simpleTransaction(disable, values, client);
+
+            return res.json({
+                msg: 'Campus disable'
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Enable specific campus.
+     * path: /campus/:id/enable
+     * method: put
+     */
+    async enableCampus(req: Request, res: Response): Promise<Response> {
+        const enable = `SELECT enablecampus($1);`;
+        const client = await pool.connect();
+        try {
+            const values = [req.params.id];
+            await Queries.simpleTransaction(enable, values, client);
+
+            return res.json({
+                msg: 'Campus enable'
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
 }
 
 const campusController = new CampusController();

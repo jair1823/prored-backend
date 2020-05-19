@@ -100,3 +100,29 @@ BEGIN
   RETURN ref;
 END;
 $BODY$;
+
+
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION disableassocareer(pid INTEGER)
+    RETURNS void AS $$
+    BEGIN
+    UPDATE public.associated_career
+        SET status=false
+    WHERE id_associated_career = pid;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION enableassocareer(pid INTEGER)
+    RETURNS void AS $$
+    BEGIN
+    UPDATE public.associated_career
+        SET status=true
+    WHERE id_associated_career = pid;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################

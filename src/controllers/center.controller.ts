@@ -152,6 +152,59 @@ export class CenterController {
             });
         }
     }
+
+
+    /**
+     * Disable specific center.
+     * path: /center/:pid/disable
+     * method: put
+    */
+    async disableCenter(req: Request, res: Response): Promise<Response> {
+        const disable = `SELECT disablecenter($1);`;
+        const client = await pool.connect();
+        try {
+            const values = [req.params.id];
+
+            await Queries.simpleTransaction(disable, values, client);
+
+            return res.json({
+                msg: 'Center disabled'
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Enable specific center.
+     * path: /center/:id/enable
+     * method: put
+     */
+    async enableCenter(req: Request, res: Response): Promise<Response> {
+        const enable = `SELECT enablecenter($1);`;
+        const client = await pool.connect();
+        try {
+            const values = [req.params.id];
+            await Queries.simpleTransaction(enable, values, client);
+
+            return res.json({
+                msg: 'Center enabled'
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
 }
 
 const centerController = new CenterController();

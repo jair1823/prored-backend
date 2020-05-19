@@ -52,3 +52,28 @@ BEGIN
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
+
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION disablenetwork(pid INTEGER)
+    RETURNS void AS $$
+    BEGIN
+    UPDATE public.network
+        SET status=false
+    WHERE id_network = pid;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION enablenetwork(pid INTEGER)
+    RETURNS void AS $$
+    BEGIN
+    UPDATE public.network
+        SET status=true
+    WHERE id_network = pid;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
