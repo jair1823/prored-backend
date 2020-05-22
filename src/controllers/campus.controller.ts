@@ -209,6 +209,30 @@ export class CampusController {
             });
         }
     }
+
+    /**
+     * See if a campus_code already exists in the database
+     * path: /campus/exists/:id
+     * method: get
+     */
+    async checkCampusExists (req: Request, res: Response): Promise<Response> {
+        const query = `select campusexists($1);`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const id = [req.params.id];
+            const response = await Queries.simpleSelectNoCursor(query, id, client);
+
+
+            return res.status(200).json(response.rows[0]);
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
 }
 
 const campusController = new CampusController();
