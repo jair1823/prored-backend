@@ -11,5 +11,6 @@ router.put('/:id', Career_Controller.updateCareer);
 router.delete('/:id', Career_Controller.deleteCareer);
 router.put('/:id/disable', Career_Controller.disableCareer);
 router.put('/:id/enable', Career_Controller.enableCareer);
+router.get('/exists/:id', Career_Controller.checkCareerExists);
 
 export default router;

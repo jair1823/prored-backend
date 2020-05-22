@@ -3,8 +3,6 @@ import Consultas_Controller from '../controllers/consultas.controller'
 
 const router = Router();
 
-router.post('/person_exists', Consultas_Controller.checkPersonExists);
-router.post('/career_exists', Consultas_Controller.checkCareerExists);
-router.post('/campus_exists', Consultas_Controller.checkCampusExists);
+router.get('/person/exists/:id', Consultas_Controller.checkPersonExists);
 
 export default router;

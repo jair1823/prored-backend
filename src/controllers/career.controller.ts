@@ -209,8 +209,29 @@ export class CareerController {
         }
     }
 
+    /**
+     * See if a career_code already exists in the database
+     * path: /career/exists/:id
+     * method: get
+     */
+    async checkCareerExists(req: Request, res: Response): Promise<Response> {
+        const query = `select careerexists($1);`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const id = [parseInt(req.params.id)];
+            const response = await Queries.simpleSelectNoCursor(query, id, client);
 
 
+            return res.status(200).json(response.rows[0]);
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
 }
 
 const careerController = new CareerController();

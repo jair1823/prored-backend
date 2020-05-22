@@ -11,5 +11,6 @@ router.put('/:id', Campus_Controller.updateCampus);
 router.delete('/:id', Campus_Controller.deleteCampus);
 router.put('/:id/disable', Campus_Controller.disableCampus);
 router.put('/:id/enable', Campus_Controller.enableCampus);
+router.get('/exists/:id', Campus_Controller.checkCampusExists);
 
 export default router;
