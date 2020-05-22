@@ -174,7 +174,7 @@ export class StudentController {
     async createStudent(req: Request, res: Response): Promise<Response> {
         const client: PoolClient = await pool.connect();
         const createPerson = `SELECT createperson($1,$2,$3,$4,$5,$6,$7);`;
-        const createStudent = `SELECT createstudent($1,$2,$3,$4,$5,$6,$7);`;
+        const createStudent = `SELECT createstudent($1,$2,$3,$4,$5,$6,$7,$8);`;
         const createStudentXcareer = `SELECT createstudentxcareer($1,$2);`;
         const createStudentXlanguage = `SELECT createstudentxlanguage($1,$2);`;
         const createStudentXassociated_career = `SELECT createstudentxassociatedcareer($1,$2);`;
@@ -183,7 +183,7 @@ export class StudentController {
 
             const personValues = [req.body.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates,req.body.phone,req.body.email];
             const studentValues = [req.body.dni, req.body.id_district, req.body.marital_status,
-            req.body.campus_code, req.body.profile, req.body.address, req.body.nationality];
+            req.body.campus_code, req.body.profile, req.body.address, req.body.nationality,req.body.emergency];
 
             await Queries.simpleTransactionContinous(createPerson, personValues, client);
             await Queries.simpleTransactionContinous(createStudent, studentValues, client);
@@ -301,13 +301,13 @@ export class StudentController {
      * method: put
      */
     async updateStudent(req: Request, res: Response): Promise<Response> {
-        const updateStudent = `SELECT updatestudent($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13);`;
+        const updateStudent = `SELECT updatestudent($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14);`;
         const client: PoolClient = await pool.connect();
         try {
             const values = [
                 req.params.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates,
                 req.body.id_district, req.body.marital_status, req.body.campus_code,
-                req.body.profile, req.body.address, req.body.nationality,req.body.phone,req.body.email
+                req.body.profile, req.body.address, req.body.nationality,req.body.phone,req.body.email,req.body.emergency
             ];
 
             await Queries.simpleTransaction(updateStudent, values, client);

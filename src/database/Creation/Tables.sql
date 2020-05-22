@@ -168,7 +168,7 @@ CREATE TYPE public.profile AS ENUM (
 );
 
 CREATE TYPE public.marital_status AS ENUM (
-    'No especificado',
+    'No especifica',
     'Soltero',
     'Casado',
     'Divorciado', 
@@ -182,7 +182,8 @@ create table public.student(
     campus_code varchar(30) REFERENCES public.campus(campus_code),
     profile public.profile,
     address text,
-    nationality nationality
+    nationality nationality,
+    emergency_contact varchar(40)
 );
 
 create table public.cv(

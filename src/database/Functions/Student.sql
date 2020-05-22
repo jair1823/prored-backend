@@ -185,12 +185,13 @@ CREATE OR REPLACE FUNCTION createstudent(
     pcampus_code varchar(30),
     pprofile profile,
     paddress text,
-    pnationality nationality
+    pnationality nationality,
+    pemergency varchar(40)
     )
     RETURNS void AS $$
     BEGIN
-    INSERT INTO public.student(dni, id_district, marital_status, campus_code, profile, address, nationality)
-        VALUES (pdni, pid_district, pmarital_status, pcampus_code, pprofile, paddress, pnationality);
+    INSERT INTO public.student(dni, id_district, marital_status, campus_code, profile, address, nationality, emergency_contact)
+        VALUES (pdni, pid_district, pmarital_status, pcampus_code, pprofile, paddress, pnationality, pemergency);
     END;
 $$ LANGUAGE plpgsql;
 
@@ -267,7 +268,8 @@ CREATE OR REPLACE FUNCTION updatestudent(
     paddress text,
     pnationality nationality,
     pphone varchar(40),
-    pmail varchar(60)
+    pmail varchar(60),
+    pemergency varchar(40)
     )
     RETURNS void AS $$
     BEGIN
@@ -287,7 +289,8 @@ CREATE OR REPLACE FUNCTION updatestudent(
             campus_code=pcampus_code,
             profile=pprofile,
             address=paddress,
-            nationality=pnationality
+            nationality=pnationality,
+            emergency_contact=pemergency
         WHERE dni = pdni;
     END;
 $$ LANGUAGE plpgsql;
