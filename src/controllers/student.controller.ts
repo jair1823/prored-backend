@@ -181,9 +181,9 @@ export class StudentController {
         const createStudentXnetworks = `SELECT createstudentxnetwork($1,$2);`;
         try {
 
-            const personValues = [req.body.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates,req.body.phone,req.body.email];
+            const personValues = [req.body.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates,req.body.phone_number,req.body.email];
             const studentValues = [req.body.dni, req.body.id_district, req.body.marital_status,
-            req.body.campus_code, req.body.profile, req.body.address, req.body.nationality,req.body.emergency];
+            req.body.campus_code, req.body.profile, req.body.address, req.body.nationality,req.body.emergency_contact];
 
             await Queries.simpleTransactionContinous(createPerson, personValues, client);
             await Queries.simpleTransactionContinous(createStudent, studentValues, client);
@@ -307,7 +307,7 @@ export class StudentController {
             const values = [
                 req.params.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates,
                 req.body.id_district, req.body.marital_status, req.body.campus_code,
-                req.body.profile, req.body.address, req.body.nationality,req.body.phone,req.body.email,req.body.emergency
+                req.body.profile, req.body.address, req.body.nationality,req.body.phone_number,req.body.email,req.body.emergency_contact
             ];
 
             await Queries.simpleTransaction(updateStudent, values, client);
