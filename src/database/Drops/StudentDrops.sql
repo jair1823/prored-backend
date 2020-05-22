@@ -22,3 +22,5 @@ DROP FUNCTION IF EXISTS getdirectionbydni;
 DROP FUNCTION IF EXISTS getstudentstatus;
 DROP FUNCTION IF EXISTS getstudentbydniall;
 DROP FUNCTION IF EXISTS getstudentsall;
+DROP FUNCTION IF EXISTS insertCV;
+DROP FUNCTION IF EXISTS deleteCV;

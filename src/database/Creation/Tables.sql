@@ -6,7 +6,9 @@ create table public.person(
     lastname1 varchar(50),
     lastname2 varchar(50),
     born_dates date,
-    status boolean
+    status boolean,
+    phone_number varchar(40),
+    email varchar(60)
 );
 
 create table public.province(
@@ -166,6 +168,7 @@ CREATE TYPE public.profile AS ENUM (
 );
 
 CREATE TYPE public.marital_status AS ENUM (
+    'No especifica',
     'Soltero',
     'Casado',
     'Divorciado', 
@@ -179,7 +182,14 @@ create table public.student(
     campus_code varchar(30) REFERENCES public.campus(campus_code),
     profile public.profile,
     address text,
-    nationality nationality
+    nationality nationality,
+    emergency_contact varchar(40)
+);
+
+create table public.cv(
+    dni varchar(50) PRIMARY KEY REFERENCES public.student(dni),
+    file_path varchar(400),
+    name varchar(300)
 );
 
 create table public.person_x_career(

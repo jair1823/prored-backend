@@ -2,6 +2,9 @@ import { Request, Response } from 'express';
 import { PoolClient } from 'pg';
 import { pool } from '../database/connection';
 import Queries from '../database/Queries';
+import Save from '../lib/saveFile'
+import fs from 'fs'
+import path from 'path'
 
 export class StudentController {
 
@@ -170,18 +173,17 @@ export class StudentController {
      */
     async createStudent(req: Request, res: Response): Promise<Response> {
         const client: PoolClient = await pool.connect();
-        const createPerson = `SELECT createperson($1,$2,$3,$4,$5);`;
-        const createStudent = `SELECT createstudent($1,$2,$3,$4,$5,$6,$7);`;
+        const createPerson = `SELECT createperson($1,$2,$3,$4,$5,$6,$7);`;
+        const createStudent = `SELECT createstudent($1,$2,$3,$4,$5,$6,$7,$8);`;
         const createStudentXcareer = `SELECT createstudentxcareer($1,$2);`;
         const createStudentXlanguage = `SELECT createstudentxlanguage($1,$2);`;
         const createStudentXassociated_career = `SELECT createstudentxassociatedcareer($1,$2);`;
         const createStudentXnetworks = `SELECT createstudentxnetwork($1,$2);`;
         try {
 
-            const personValues = [req.body.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates];
+            const personValues = [req.body.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates,req.body.phone,req.body.email];
             const studentValues = [req.body.dni, req.body.id_district, req.body.marital_status,
-            req.body.campus_code, req.body.profile, req.body.address, req.body.nationality
-            ];
+            req.body.campus_code, req.body.profile, req.body.address, req.body.nationality,req.body.emergency];
 
             await Queries.simpleTransactionContinous(createPerson, personValues, client);
             await Queries.simpleTransactionContinous(createStudent, studentValues, client);
@@ -225,18 +227,87 @@ export class StudentController {
     }
 
     /**
+     * Insert CV to student.
+     * path: /student/CV/:dni
+     * method: post
+     */
+
+    async insertCV(req: Request, res: Response): Promise<Response> {
+        const client: PoolClient = await pool.connect();
+        const insert = `SELECT insertCV($1,$2,$3);`;
+        try {
+            let vals = await Save(req, res);
+            let pathInsert = `${req.body.tabla}/${vals[0]}`;
+            const values = [req.body.dni, pathInsert,vals[0]];
+            await Queries.simpleTransaction(insert, values, client);          
+            await Queries.release(client);
+
+            return res.status(200).json(
+                {
+                    msg: 'CV inserted'
+                }
+            );
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+        /**
+     * Insert CV to student.
+     * path: /student/CV/:dni
+     * method: put
+     */
+
+    async updateCV(req: Request, res: Response): Promise<Response> {
+        const client: PoolClient = await pool.connect();
+        const deleteD = `SELECT deleteCV($1);`;
+        const insert = `SELECT insertCV($1,$2,$3);`;
+        try {
+            const p = req.body.path;
+            let fullPath = path.join(__dirname + '../../..' + '/public/' + p);
+            fs.unlinkSync(fullPath);
+            const valuesD = [req.body.dni];
+            await Queries.simpleTransactionContinous(deleteD, valuesD, client);
+            let vals = await Save(req, res);
+            let pathInsert = `${req.body.tabla}/${vals[0]}`;
+            const values = [req.body.dni, pathInsert,vals[0]];
+            await Queries.simpleTransaction(insert, values, client);         
+            await Queries.release(client);
+
+            return res.status(200).json(
+                {
+                    msg: 'CV updated'
+                }
+            );
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+
+    /**
      * Update specific student.
      * path: /student/:dni
      * method: put
      */
     async updateStudent(req: Request, res: Response): Promise<Response> {
-        const updateStudent = `SELECT updatestudent($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11);`;
+        const updateStudent = `SELECT updatestudent($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14);`;
         const client: PoolClient = await pool.connect();
         try {
             const values = [
                 req.params.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates,
                 req.body.id_district, req.body.marital_status, req.body.campus_code,
-                req.body.profile, req.body.address, req.body.nationality
+                req.body.profile, req.body.address, req.body.nationality,req.body.phone,req.body.email,req.body.emergency
             ];
 
             await Queries.simpleTransaction(updateStudent, values, client);
