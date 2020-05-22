@@ -9,5 +9,7 @@ router.get('/:id', Campus_Controller.getCampusbyId);
 router.post('/', Campus_Controller.createCampus);
 router.put('/:id', Campus_Controller.updateCampus);
 router.delete('/:id', Campus_Controller.deleteCampus);
+router.put('/:id/disable', Campus_Controller.disableCampus);
+router.put('/:id/enable', Campus_Controller.enableCampus);
 
 export default router;

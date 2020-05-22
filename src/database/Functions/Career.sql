@@ -72,3 +72,27 @@ BEGIN
     RETURN res;
 END;
 $$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION disablecareer(pid INTEGER)
+    RETURNS void AS $$
+    BEGIN
+    UPDATE public.career
+        SET status=false
+    WHERE career_code = pid;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION enablecareer(pid INTEGER)
+    RETURNS void AS $$
+    BEGIN
+    UPDATE public.career
+        SET status=true
+    WHERE career_code = pid;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
