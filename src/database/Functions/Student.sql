@@ -6,7 +6,7 @@ BEGIN
 p.dni, p.name, p.lastname1, p.lastname2,p.phone_number,p.email,
 TO_CHAR(p.born_dates,'YYYY-mm-dd') AS born_dates, d.id_district ,d.name as district, 
 c.campus_code, c.name as campus,
-s.marital_status, s.profile, s.address, s.nationality,p.status
+s.marital_status, s.profile, s.address, s.nationality,s.emergency_contact,p.status
 
 from public.person p
 inner join public.student s on s.dni = p.dni
@@ -25,7 +25,7 @@ BEGIN
 p.dni, p.name, p.lastname1, p.lastname2,p.phone_number,p.email,
 TO_CHAR(p.born_dates,'YYYY-mm-dd') AS born_dates, d.id_district ,d.name as district, 
 c.campus_code, c.name as campus,
-s.marital_status, s.profile, s.address, s.nationality,p.status
+s.marital_status, s.profile, s.address, s.nationality,s.emergency_contact,p.status
 
 from public.person p
 inner join public.student s on s.dni = p.dni
@@ -45,7 +45,7 @@ CREATE OR REPLACE FUNCTION getstudentbydni(pdni varchar(50),ref refcursor)
         p.dni, p.name, p.lastname1, p.lastname2,p.phone_number,p.email,
         TO_CHAR(p.born_dates,'YYYY-mm-dd') AS born_dates, d.id_district ,d.name as district, 
         c.campus_code, c.name as campus,
-        s.marital_status, s.profile, s.address, s.nationality,p.status
+        s.marital_status, s.profile, s.address, s.nationality,s.emergency_contact,p.status
     from public.person p
     inner join public.student s on s.dni = p.dni
     inner join public.district d on d.id_district = s.id_district
@@ -67,7 +67,7 @@ CREATE OR REPLACE FUNCTION getstudentbydniall(pdni varchar(50),ref refcursor)
         p.dni, p.name, p.lastname1, p.lastname2,p.phone_number,p.email,
         TO_CHAR(p.born_dates,'YYYY-mm-dd') AS born_dates, d.id_district ,d.name as district, 
         c.campus_code, c.name as campus,
-        s.marital_status, s.profile, s.address, s.nationality,p.status
+        s.marital_status, s.profile, s.address, s.nationality,s.emergency_contact,p.status
     from public.person p
     inner join public.student s on s.dni = p.dni
     inner join public.district d on d.id_district = s.id_district

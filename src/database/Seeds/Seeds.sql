@@ -49,7 +49,7 @@ INSERT INTO public.person_x_career(dni, career_code)
         VALUES ('116920331', 1);
 
 INSERT INTO public.person_x_language(dni, id_language)
-        VALUES ('116920331', 148);
+        VALUES ('116920331', 149);
 
 INSERT INTO public.person_x_associated_career(dni, id_associated_career)
         VALUES ('116920331', 1);
