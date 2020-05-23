@@ -29,5 +29,8 @@ router.delete('/student/:dni/associated_career', Student_Controller.removeAssoci
 
 router.get('/student/profile/:profile', Student_Controller.getstudentbyprofile);
 router.get('/student/:dni/status', Student_Controller.getStudentStatus);
+
+router.post('/student/cv/', Student_Controller.insertCV);
+router.put('/student/cv/', Student_Controller.updateCV);
 export default router;
 
