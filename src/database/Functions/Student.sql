@@ -200,7 +200,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION insertCV(id VARCHAR(50), fp VARCHAR(400), n VARCHAR(300)) 
 RETURNS void AS $$
 BEGIN
-  INSERT INTO public.cv (dni, file_path, name) VALUES (dni,fp,n);
+  INSERT INTO public.cv (dni, file_path, name) VALUES (id,fp,n);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -209,7 +209,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION deleteCV(id VARCHAR(50)) 
 RETURNS void AS $$
 BEGIN
-  INSERT INTO public.cv (dni, file_path, name) VALUES (dni,fp,n);
+  INSERT INTO public.cv (dni, file_path, name) VALUES (id,fp,n);
 END;
 $$ LANGUAGE plpgsql;
 
