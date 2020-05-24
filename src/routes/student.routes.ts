@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import Student_Controller from '../controllers/student.controller'
+import upload from "../lib/saveFile";
 
 const router = Router();
 
@@ -30,7 +31,9 @@ router.delete('/student/:dni/associated_career', Student_Controller.removeAssoci
 router.get('/student/profile/:profile', Student_Controller.getstudentbyprofile);
 router.get('/student/:dni/status', Student_Controller.getStudentStatus);
 
-router.post('/student/cv/', Student_Controller.insertCV);
-router.put('/student/cv/', Student_Controller.updateCV);
+router.post('/studentcv/', upload,Student_Controller.insertCV);
+router.put('/studentcv/', upload,Student_Controller.updateCV);
+router.get('/studentcv/:dni', Student_Controller.getStudentCV);
+
 export default router;
 

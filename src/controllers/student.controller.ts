@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { PoolClient } from 'pg';
 import { pool } from '../database/connection';
 import Queries from '../database/Queries';
-import Save from '../lib/saveFile'
 import fs from 'fs'
 import path from 'path'
 
@@ -228,7 +227,7 @@ export class StudentController {
 
     /**
      * Insert CV to student.
-     * path: /student/CV/:dni
+     * path: /student/CV
      * method: post
      */
 
@@ -236,12 +235,10 @@ export class StudentController {
         const client: PoolClient = await pool.connect();
         const insert = `SELECT insertCV($1,$2,$3);`;
         try {
-            let vals = await Save(req, res);
-            let pathInsert = `${req.body.tabla}/${vals[0]}`;
-            const values = [req.body.dni, pathInsert,vals[0]];
+            let url = `${req.body.tabla}/${req.file.filename}`;
+            const values = [req.body.dni, url,req.file.filename];
+            console.log(values);
             await Queries.simpleTransaction(insert, values, client);          
-            await Queries.release(client);
-
             return res.status(200).json(
                 {
                     msg: 'CV inserted'
@@ -259,7 +256,7 @@ export class StudentController {
 
         /**
      * Insert CV to student.
-     * path: /student/CV/:dni
+     * path: /student/CV
      * method: put
      */
 
@@ -273,12 +270,9 @@ export class StudentController {
             fs.unlinkSync(fullPath);
             const valuesD = [req.body.dni];
             await Queries.simpleTransactionContinous(deleteD, valuesD, client);
-            let vals = await Save(req, res);
-            let pathInsert = `${req.body.tabla}/${vals[0]}`;
-            const values = [req.body.dni, pathInsert,vals[0]];
-            await Queries.simpleTransaction(insert, values, client);         
-            await Queries.release(client);
-
+            let url = `${req.body.tabla}/${req.file.filename}`;
+            const values = [req.body.dni, url,req.file.filename];
+            await Queries.simpleTransaction(insert, values, client);
             return res.status(200).json(
                 {
                     msg: 'CV updated'
@@ -294,6 +288,30 @@ export class StudentController {
         }
     }
 
+    /**
+     * Get student cv.
+     * path: /student/cv/:dni
+     * method: get
+     */
+    async getStudentCV(req: Request, res: Response): Promise<Response> {
+        const query = `select getcv($1,'studentCursor');`;
+        const fetch = `FETCH ALL IN "studentCursor";`;
+        const client = await pool.connect();
+        try {
+            const dni = [req.params.dni];
+            const response = await Queries.simpleSelectWithParameter(query, dni, fetch, client);
+            const rows = response.rows[0];
+            if(rows === undefined){
+                return res.json({});
+            }
+            return res.json(rows);
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
 
     /**
      * Update specific student.

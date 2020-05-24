@@ -209,8 +209,20 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION deleteCV(id VARCHAR(50)) 
 RETURNS void AS $$
 BEGIN
-  INSERT INTO public.cv (dni, file_path, name) VALUES (id,fp,n);
+  DELETE FROM public.cv WHERE dni = id;
 END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getcv(pdni varchar(50), ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+        OPEN ref FOR select *
+            from public.cv
+        where dni = pdni;
+        RETURN ref;
+    END;
 $$ LANGUAGE plpgsql;
 
 --###########################################################################
