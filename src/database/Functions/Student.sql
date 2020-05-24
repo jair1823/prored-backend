@@ -209,7 +209,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION deleteCV(id VARCHAR(50)) 
 RETURNS void AS $$
 BEGIN
-  INSERT INTO public.cv (dni, file_path, name) VALUES (id,fp,n);
+  DELETE FROM public.cv WHERE dni = id;
 END;
 $$ LANGUAGE plpgsql;
 

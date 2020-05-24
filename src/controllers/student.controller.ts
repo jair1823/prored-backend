@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { PoolClient } from 'pg';
 import { pool } from '../database/connection';
 import Queries from '../database/Queries';
-import Save from '../lib/saveFile'
 import fs from 'fs'
 import path from 'path'
 
@@ -236,9 +235,8 @@ export class StudentController {
         const client: PoolClient = await pool.connect();
         const insert = `SELECT insertCV($1,$2,$3);`;
         try {
-            let vals = await Save(req, res);
-            let pathInsert = `${req.body.tabla}/${vals[0]}`;
-            const values = [req.body.dni, pathInsert,vals[0]];
+            let url = `${req.body.tabla}/${req.file.filename}`;
+            const values = [req.body.dni, url,req.file.filename];
             console.log(values);
             await Queries.simpleTransaction(insert, values, client);          
             return res.status(200).json(
@@ -272,9 +270,8 @@ export class StudentController {
             fs.unlinkSync(fullPath);
             const valuesD = [req.body.dni];
             await Queries.simpleTransactionContinous(deleteD, valuesD, client);
-            let vals = await Save(req, res);
-            let pathInsert = `${req.body.tabla}/${vals[0]}`;
-            const values = [req.body.dni, pathInsert,vals[0]];
+            let url = `${req.body.tabla}/${req.file.filename}`;
+            const values = [req.body.dni, url,req.file.filename];
             await Queries.simpleTransaction(insert, values, client);
             return res.status(200).json(
                 {
