@@ -228,7 +228,7 @@ export class StudentController {
 
     /**
      * Insert CV to student.
-     * path: /student/CV/:dni
+     * path: /student/CV
      * method: post
      */
 
@@ -239,9 +239,8 @@ export class StudentController {
             let vals = await Save(req, res);
             let pathInsert = `${req.body.tabla}/${vals[0]}`;
             const values = [req.body.dni, pathInsert,vals[0]];
+            console.log(values);
             await Queries.simpleTransaction(insert, values, client);          
-            await Queries.release(client);
-
             return res.status(200).json(
                 {
                     msg: 'CV inserted'
@@ -259,7 +258,7 @@ export class StudentController {
 
         /**
      * Insert CV to student.
-     * path: /student/CV/:dni
+     * path: /student/CV
      * method: put
      */
 
@@ -276,9 +275,7 @@ export class StudentController {
             let vals = await Save(req, res);
             let pathInsert = `${req.body.tabla}/${vals[0]}`;
             const values = [req.body.dni, pathInsert,vals[0]];
-            await Queries.simpleTransaction(insert, values, client);         
-            await Queries.release(client);
-
+            await Queries.simpleTransaction(insert, values, client);
             return res.status(200).json(
                 {
                     msg: 'CV updated'
@@ -294,6 +291,26 @@ export class StudentController {
         }
     }
 
+    /**
+     * Get student cv.
+     * path: /student/cv/:dni
+     * method: get
+     */
+    async getStudentCV(req: Request, res: Response): Promise<Response> {
+        const query = `select getcv($1,'studentCursor');`;
+        const fetch = `FETCH ALL IN "studentCursor";`;
+        const client = await pool.connect();
+        try {
+            const dni = [req.params.dni];
+            const response = await Queries.simpleSelectWithParameter(query, dni, fetch, client);
+            return res.json(response.rows[0]);
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
 
     /**
      * Update specific student.

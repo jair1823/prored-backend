@@ -73,7 +73,7 @@ class Queries {
      */
     async  simpleError(client: PoolClient, error: any) {
         await client.query('ROLLBACK');
-        client.release();
+        // client.release();
         console.log(error);
     }
 }

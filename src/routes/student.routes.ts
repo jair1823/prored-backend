@@ -32,5 +32,7 @@ router.get('/student/:dni/status', Student_Controller.getStudentStatus);
 
 router.post('/student/cv/', Student_Controller.insertCV);
 router.put('/student/cv/', Student_Controller.updateCV);
+router.get('/student/cv/:dni', Student_Controller.getStudentCV);
+
 export default router;
 

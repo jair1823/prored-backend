@@ -14,11 +14,16 @@ const storage = multer.diskStorage({
         filename =  `${Date.now()}${hashCode}-${file.originalname}`;
         cb(null, filename)
         ext = file.mimetype;
+        console.log("Aqui1")
     }
 })
 
 
 const upload = multer({ storage: storage }).single('file')
+
+function delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
+}
 
 async function save(req: any, res: any) {
     await upload(req, res, function (err: any) {
@@ -28,6 +33,8 @@ async function save(req: any, res: any) {
             return res.status(500).json(err)
         }
     });
+    await delay(300);
+    console.log("Aqui2")
     return [filename, ext];
 }
 

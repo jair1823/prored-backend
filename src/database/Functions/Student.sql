@@ -215,6 +215,18 @@ $$ LANGUAGE plpgsql;
 
 --###########################################################################
 
+CREATE OR REPLACE FUNCTION getcv(pdni varchar(50), ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+        OPEN ref FOR select *
+            from public.cv
+        where dni = pdni;
+        RETURN ref;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
 CREATE OR REPLACE FUNCTION createstudentxcareer(pdni varchar(50),pcareer_code integer)
     RETURNS void AS $$
     BEGIN
