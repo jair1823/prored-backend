@@ -1,9 +1,15 @@
 import multer from "multer";
 import path from "path";
+import fs from 'fs';
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         let url = path.join("public/" + req.body.tabla);
+        if (!fs.existsSync(url)){
+            let dirpath = path.join(__dirname+"../../../public/" + req.body.tabla);
+            console.log(dirpath);
+            fs.mkdirSync(dirpath, { recursive: true });
+        }
         cb(null, url);
     },
     filename: function (req, file, cb) {
