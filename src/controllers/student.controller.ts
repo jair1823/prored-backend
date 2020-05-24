@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 import { PoolClient } from 'pg';
 import { pool } from '../database/connection';
 import Queries from '../database/Queries';
-import fs from 'fs'
-import path from 'path'
+import fs from 'fs';
+import path from 'path';
 
 export class StudentController {
 
@@ -227,7 +227,7 @@ export class StudentController {
 
     /**
      * Insert CV to student.
-     * path: /student/CV
+     * path: /studentcv
      * method: post
      */
 
@@ -237,7 +237,6 @@ export class StudentController {
         try {
             let url = `${req.body.tabla}/${req.file.filename}`;
             const values = [req.body.dni, url,req.file.filename];
-            console.log(values);
             await Queries.simpleTransaction(insert, values, client);          
             return res.status(200).json(
                 {
@@ -254,9 +253,9 @@ export class StudentController {
         }
     }
 
-        /**
-     * Insert CV to student.
-     * path: /student/CV
+    /**
+     * Update CV to student.
+     * path: /studentcv
      * method: put
      */
 
@@ -289,8 +288,41 @@ export class StudentController {
     }
 
     /**
+     * Delete CV from student.
+     * path: /studentcv/:dni
+     * method: delete
+     */
+
+    async deleteCV(req: Request, res: Response): Promise<Response> {
+        const client: PoolClient = await pool.connect();
+        const deleteD = `SELECT deleteCV($1);`;
+        const query = `select getcv($1,'studentCursor');`;
+        const fetch = `FETCH ALL IN "studentCursor";`;
+        try {
+            const dni = [req.params.dni];
+            const response = await Queries.simpleSelectWithParameterContinous(query, dni, fetch, client);
+            const p = response.rows[0].file_path;
+            let fullPath = path.join(__dirname + '../../..' + '/public/' + p);
+            fs.unlinkSync(fullPath);
+            await Queries.simpleTransaction(deleteD, dni, client);
+            return res.status(200).json(
+                {
+                    msg: 'CV deleted'
+                }
+            );
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
      * Get student cv.
-     * path: /student/cv/:dni
+     * path: /studentcv/:dni
      * method: get
      */
     async getStudentCV(req: Request, res: Response): Promise<Response> {
