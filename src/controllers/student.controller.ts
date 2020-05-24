@@ -303,7 +303,11 @@ export class StudentController {
         try {
             const dni = [req.params.dni];
             const response = await Queries.simpleSelectWithParameter(query, dni, fetch, client);
-            return res.json(response.rows[0]);
+            const rows = response.rows[0];
+            if(rows === undefined){
+                return res.json({});
+            }
+            return res.json(rows);
         } catch (error) {
             await Queries.simpleError(client, error);
             return res.status(500).json({
