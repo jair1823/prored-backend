@@ -16,25 +16,18 @@ router.put('/student/:dni', Student_Controller.updateStudent);
 router.put('/student/:dni/disable', Student_Controller.disableStudent);
 router.put('/student/:dni/enable', Student_Controller.enableStudent);
 
-router.post('/student/:dni/career', Student_Controller.addCareer);
-router.delete('/student/:dni/career', Student_Controller.removeCareer);
-
-router.post('/student/:dni/language', Student_Controller.addLanguage);
-router.delete('/student/:dni/language', Student_Controller.removeLanguage);
-
-router.post('/student/:dni/network', Student_Controller.addNetwork);
-router.delete('/student/:dni/network', Student_Controller.removeNetwork);
-
-router.post('/student/:dni/associated_career', Student_Controller.addAssociatedCareer);
-router.delete('/student/:dni/associated_career', Student_Controller.removeAssociatedCareer);
-
 router.get('/student/profile/:profile', Student_Controller.getstudentbyprofile);
 router.get('/student/:dni/status', Student_Controller.getStudentStatus);
 
-router.post('/studentcv/', upload,Student_Controller.insertCV);
-router.put('/studentcv/', upload,Student_Controller.updateCV);
-router.delete('/studentcv/:dni',Student_Controller.deleteCV);
+router.post('/studentcv/', upload, Student_Controller.insertCV);
+router.put('/studentcv/', upload, Student_Controller.updateCV);
+router.delete('/studentcv/:dni', Student_Controller.deleteCV);
 router.get('/studentcv/:dni', Student_Controller.getStudentCV);
+
+router.put('/student/:dni/careers', Student_Controller.updateCareersForStudent);
+router.put('/student/:dni/languages', Student_Controller.updateLanguagesForStudent);
+router.put('/student/:dni/networks', Student_Controller.updateNetworksForStudent);
+router.put('/student/:dni/associated_careers', Student_Controller.updateAssoCareersForStudent);
 
 export default router;
 
