@@ -340,7 +340,9 @@ export class StudentController {
             const response = await Queries.simpleSelectWithParameter(query, dni, fetch, client);
             const rows = response.rows[0];
             if(rows === undefined){
-                return res.json({});
+                return res.json({
+                    msg:"empty"
+                });
             }
             return res.json(rows);
         } catch (error) {
