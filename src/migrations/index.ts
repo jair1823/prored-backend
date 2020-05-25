@@ -1,7 +1,6 @@
 import { pool } from '../database/connection';
 import { readFileSync } from 'fs';
 
-const AcademicUnitDrops = readFileSync('src/database/Drops/AcademicUnitDrops.sql').toString();
 const AssociatedCareerDrops = readFileSync('src/database/Drops/AssociatedCareerDrops.sql').toString();
 const CampusDrops = readFileSync('src/database/Drops/CampusDrops.sql').toString();
 const CareerDrops = readFileSync('src/database/Drops/CareerDrops.sql').toString();
@@ -17,8 +16,6 @@ const TableDrops = readFileSync('src/database/Drops/TableDrops.sql').toString();
 const EnumNationality = readFileSync('src/database/Creation/EnumNationality.sql').toString();
 const Tables = readFileSync('src/database/Creation/Tables.sql').toString();
 
-
-const AcademicUnit = readFileSync('src/database/Functions/AcademicUnit.sql').toString();
 const AssociatedCareer = readFileSync('src/database/Functions/AssociatedCareer.sql').toString();
 const Campus = readFileSync('src/database/Functions/Campus.sql').toString();
 const Career = readFileSync('src/database/Functions/Career.sql').toString();
@@ -42,7 +39,6 @@ async function migration() {
     try {
         //Drops de toda la Base de Datos
         await pool.query(StudentDrops);
-        await pool.query(AcademicUnitDrops);
         await pool.query(AssociatedCareerDrops);
         await pool.query(CampusDrops);
         await pool.query(CareerDrops);
@@ -59,7 +55,6 @@ async function migration() {
         await pool.query(Tables);
 
         //Creación de todos los SPS
-        await pool.query(AcademicUnit);
         await pool.query(AssociatedCareer);
         await pool.query(Campus);
         await pool.query(Career);

@@ -1,5 +1,4 @@
 import Network from './network.routes';
-import Academic_Unit from './academic_unit.routes';
 import Investigation_Unit from './investigation_unit.routes';
 import Center from './center.routes';
 import AssoCareer from './associated_career.routes';
@@ -19,7 +18,6 @@ export function addRoutes(app: any) {
     app.use('/network',Network);
     app.use('/center',Center);
     app.use(AssoCareer);
-    app.use(Academic_Unit);
     app.use(Investigation_Unit);
     app.use('/career', Career);
     app.use('/campus', Campus);
