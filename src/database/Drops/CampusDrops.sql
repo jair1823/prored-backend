@@ -2,6 +2,7 @@ DROP FUNCTION IF EXISTS createcampus;
 DROP FUNCTION IF EXISTS updatecampus;
 DROP FUNCTION IF EXISTS deletecampus;
 DROP FUNCTION IF EXISTS getcampuses;
+DROP FUNCTION IF EXISTS getcampusesenable;
 DROP FUNCTION IF EXISTS getcampusesbyid;
 DROP FUNCTION IF EXISTS campusexists; 
 DROP FUNCTION IF EXISTS disablecampus;

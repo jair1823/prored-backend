@@ -28,20 +28,14 @@ create table public.district(
     name varchar(50)
 );
 
-create table public.academic_unit(
-    id_academic_unit SERIAL PRIMARY KEY,
-    name varchar(50)
-);
-
 create table public.investigation_unit(
     id_inv_unit SERIAL PRIMARY KEY,
     name varchar(50)
 );
 
-create table public.professor(
-    dni varchar(50) REFERENCES public.person(dni),
-    id_academic_unit integer REFERENCES public.academic_unit(id_academic_unit),
-    id_inv_unit integer REFERENCES public.investigation_unit(id_inv_unit)
+create table public.researcher(
+    dni varchar(50) REFERENCES public.person(dni)
+    --id_inv_unit integer REFERENCES public.investigation_unit(id_inv_unit)
 );
 
 create table public.project(
@@ -51,28 +45,32 @@ create table public.project(
     code_manage varchar(50)
 );
 
-CREATE TYPE public.role AS ENUM ('Estudiante Vinculado', 'Asistente Vinculado', 'Investigador Vinculado', 'Consultor Vinculado');
-
-create table public.person_x_project(
-    dni varchar(50) REFERENCES public.person(dni),
-    id_project integer REFERENCES public.project(id_project),
-    role public.role,
-    PRIMARY KEY(dni, id_project)
-);
-
-create table public.workshop(
-    id_workshop SERIAL PRIMARY KEY,
-    id_project integer REFERENCES public.project(id_project),
+create table public.acti_type(
+    id_acti_type SERIAL PRIMARY KEY,
     name varchar(50)
 );
+
+create table public.activity(
+    id_activity SERIAL PRIMARY KEY,
+    name varchar(50),
+    id_acti_type integer REFERENCES public.acti_type(id_acti_type),
+    id_project integer REFERENCES public.project(id_project)
+);
+
+create table person_x_activity(
+    dni varchar(50) REFERENCES public.person(dni),
+    id_activity integer REFERENCES public.activity(id_activity),
+    PRIMARY KEY(dni, id_activity)
+);
+
+CREATE TYPE public.role AS ENUM ('Estudiante Vinculado', 'Asistente Vinculado', 'Investigador Vinculado', 'Consultor Vinculado');
 
 create table public.document(
     id_document SERIAL PRIMARY KEY,
     id_project integer REFERENCES public.project(id_project),
-    id_workshop integer REFERENCES public.workshop(id_workshop),
+    id_activity integer REFERENCES public.activity(id_activity),
     name varchar(50),
-    file_path varchar(150),
-    file_extension varchar(30)
+    file_path varchar(150)
 );
 
 create table public.endoresement(
@@ -212,4 +210,34 @@ create table public.person_x_network(
     dni varchar(50) REFERENCES public.student(dni),
     id_network integer REFERENCES public.network(id_network),
     PRIMARY KEY(dni, id_network)
+);
+
+create table public.person_x_project(
+    dni varchar(50) REFERENCES public.person(dni),
+    id_project integer REFERENCES public.project(id_project),
+    role public.role,
+    rel_code SERIAL UNIQUE,
+    PRIMARY KEY(dni, id_project)
+);
+
+create table public.period(
+    id_period SERIAL PRIMARY KEY,
+    name varchar(50)
+);
+
+create table public.gantt(
+    id_gantt SERIAL UNIQUE,
+    rel_code integer REFERENCES public.person_x_project(rel_code),
+    id_period integer REFERENCES public.period(id_period),
+    PRIMARY KEY(rel_code,id_period)
+);
+
+create table public.gantt_task(
+    id_task SERIAL PRIMARY KEY,
+    id_gantt integer REFERENCES public.gantt(id_gantt),
+    task_name varchar(50),
+    description varchar(200),
+    start_date date,
+    end_date date
+
 );
