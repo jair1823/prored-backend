@@ -35,7 +35,7 @@ create table public.investigation_unit(
 );
 
 create table public.researcher(
-    dni varchar(50) REFERENCES public.person(dni),
+    dni varchar(50) PRIMARY KEY REFERENCES public.person(dni),
     id_inv_unit integer REFERENCES public.investigation_unit(id_inv_unit)
 );
 
