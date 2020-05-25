@@ -30,7 +30,8 @@ create table public.district(
 
 create table public.investigation_unit(
     id_inv_unit SERIAL PRIMARY KEY,
-    name varchar(50)
+    name varchar(50),
+    description text
 );
 
 create table public.researcher(
@@ -42,7 +43,8 @@ create table public.project(
     id_project SERIAL PRIMARY KEY,
     id_inv_unit integer REFERENCES public.investigation_unit(id_inv_unit),
     name varchar(50),
-    code_manage varchar(50)
+    code_manage varchar(50),
+    project_type boolean
 );
 
 create table public.acti_type(
@@ -58,12 +60,18 @@ create table public.activity(
 );
 
 create table person_x_activity(
+    rel_code SERIAL PRIMARY KEY,
     dni varchar(50) REFERENCES public.person(dni),
-    id_activity integer REFERENCES public.activity(id_activity),
-    PRIMARY KEY(dni, id_activity)
+    id_activity integer REFERENCES public.activity(id_activity)
 );
 
 CREATE TYPE public.role AS ENUM ('Estudiante Vinculado', 'Asistente Vinculado', 'Investigador Vinculado', 'Consultor Vinculado');
+
+
+CREATE TYPE public.endoresement_type AS ENUM (
+    'Interno',
+    'Externo'
+);
 
 create table public.document(
     id_document SERIAL PRIMARY KEY,
@@ -75,12 +83,11 @@ create table public.document(
 
 create table public.endoresement(
     id_document integer REFERENCES public.document(id_document),
-    type varchar(50)
+    type public.endoresement_type
 );
 
 create table public.project_form(
-    id_document integer REFERENCES public.document(id_document),
-    version varchar(20)
+    id_document integer REFERENCES public.document(id_document)
 );
 
 create table public.list_of_assitance(
@@ -89,7 +96,8 @@ create table public.list_of_assitance(
 );
 
 create table public.presentation(
-    id_document integer REFERENCES public.document(id_document)
+    id_document integer REFERENCES public.document(id_document),
+    presentation_name varchar(100)
 );
 
 create table public.photo(
@@ -100,8 +108,14 @@ create table public.photo(
 
 create table public.article(
     id_document integer REFERENCES public.document(id_document),
-    key_words varchar(50),
-    abstract varchar(50)
+    key_words varchar(100),
+    abstract text
+);
+
+create table public.paper(
+    id_document integer REFERENCES public.document(id_document),
+    paper_name varchar(100),
+    speaker varchar(50)
 );
 
 CREATE TYPE public.degree AS ENUM (
@@ -213,11 +227,10 @@ create table public.person_x_network(
 );
 
 create table public.person_x_project(
+    rel_code SERIAL PRIMARY KEY,
     dni varchar(50) REFERENCES public.person(dni),
     id_project integer REFERENCES public.project(id_project),
-    role public.role,
-    rel_code SERIAL UNIQUE,
-    PRIMARY KEY(dni, id_project)
+    role public.role
 );
 
 create table public.period(
@@ -226,10 +239,9 @@ create table public.period(
 );
 
 create table public.gantt(
-    id_gantt SERIAL UNIQUE,
+    id_gantt SERIAL PRIMARY KEY,
     rel_code integer REFERENCES public.person_x_project(rel_code),
-    id_period integer REFERENCES public.period(id_period),
-    PRIMARY KEY(rel_code,id_period)
+    id_period integer REFERENCES public.period(id_period)
 );
 
 create table public.gantt_task(
@@ -239,5 +251,4 @@ create table public.gantt_task(
     description varchar(200),
     start_date date,
     end_date date
-
 );
