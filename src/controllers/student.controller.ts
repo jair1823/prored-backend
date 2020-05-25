@@ -180,9 +180,9 @@ export class StudentController {
         const createStudentXnetworks = `SELECT createstudentxnetwork($1,$2);`;
         try {
 
-            const personValues = [req.body.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates,req.body.phone_number,req.body.email];
+            const personValues = [req.body.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates, req.body.phone_number, req.body.email];
             const studentValues = [req.body.dni, req.body.id_district, req.body.marital_status,
-            req.body.campus_code, req.body.profile, req.body.address, req.body.nationality,req.body.emergency_contact];
+            req.body.campus_code, req.body.profile, req.body.address, req.body.nationality, req.body.emergency_contact];
 
             await Queries.simpleTransactionContinous(createPerson, personValues, client);
             await Queries.simpleTransactionContinous(createStudent, studentValues, client);
@@ -207,7 +207,7 @@ export class StudentController {
             associated_careers.map(async (a) => {
                 await Queries.simpleTransactionContinous(createStudentXassociated_career, [personValues[0], a], client);
             });
-            
+
             await Queries.release(client);
 
             return res.status(200).json(
@@ -236,8 +236,8 @@ export class StudentController {
         const insert = `SELECT insertCV($1,$2,$3);`;
         try {
             let url = `${req.body.tabla}/${req.file.filename}`;
-            const values = [req.body.dni, url,req.file.filename];
-            await Queries.simpleTransaction(insert, values, client);          
+            const values = [req.body.dni, url, req.file.filename];
+            await Queries.simpleTransaction(insert, values, client);
             return res.status(200).json(
                 {
                     msg: 'CV inserted'
@@ -270,7 +270,7 @@ export class StudentController {
             const valuesD = [req.body.dni];
             await Queries.simpleTransactionContinous(deleteD, valuesD, client);
             let url = `${req.body.tabla}/${req.file.filename}`;
-            const values = [req.body.dni, url,req.file.filename];
+            const values = [req.body.dni, url, req.file.filename];
             await Queries.simpleTransaction(insert, values, client);
             return res.status(200).json(
                 {
@@ -303,7 +303,7 @@ export class StudentController {
             const response = await Queries.simpleSelectWithParameterContinous(query, dni, fetch, client);
             let message = "empty"
             let resultado = response.rows[0];
-            if(resultado != undefined){
+            if (resultado != undefined) {
                 console.log("Entre")
                 const p = resultado.file_path;
                 let fullPath = path.join(__dirname + '../../..' + '/public/' + p);
@@ -339,9 +339,9 @@ export class StudentController {
             const dni = [req.params.dni];
             const response = await Queries.simpleSelectWithParameter(query, dni, fetch, client);
             const rows = response.rows[0];
-            if(rows === undefined){
+            if (rows === undefined) {
                 return res.json({
-                    msg:"empty"
+                    msg: "empty"
                 });
             }
             return res.json(rows);
@@ -365,7 +365,7 @@ export class StudentController {
             const values = [
                 req.params.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates,
                 req.body.id_district, req.body.marital_status, req.body.campus_code,
-                req.body.profile, req.body.address, req.body.nationality,req.body.phone_number,req.body.email,req.body.emergency_contact
+                req.body.profile, req.body.address, req.body.nationality, req.body.phone_number, req.body.email, req.body.emergency_contact
             ];
 
             await Queries.simpleTransaction(updateStudent, values, client);
@@ -386,132 +386,31 @@ export class StudentController {
     }
 
     /**
-     * Create student x career.
-     * path: /student/:dni/career
-     * method: post
+     * Update careers for student.
+     * path: /student/:dni/careers
+     * method: put
      */
-    async addCareer(req: Request, res: Response): Promise<Response> {
+    async updateCareersForStudent(req: Request, res: Response): Promise<Response> {
         const createStudentXcareer = `SELECT createstudentxcareer($1,$2);`;
-        const client: PoolClient = await pool.connect();
-        try {
-            const values = [req.params.dni, req.body.career_code];
-
-            await Queries.simpleTransaction(createStudentXcareer, values, client);
-
-            return res.status(200).json(
-                {
-                    msg: 'Career added'
-                }
-            );
-        } catch (error) {
-
-            await Queries.simpleError(client, error);
-
-            return res.status(500).json({
-                msg: 'Internal Server Error'
-            });
-        }
-    }
-
-    /**
-     * Create student x language.
-     * path: /student/:dni/language
-     * method: post
-     */
-    async addLanguage(req: Request, res: Response): Promise<Response> {
-        const createStudentXlanguage = `SELECT createstudentxlanguage($1,$2);`;
-        const client: PoolClient = await pool.connect();
-        try {
-            const values = [req.params.dni, req.body.id_language];
-
-            await Queries.simpleTransaction(createStudentXlanguage, values, client);
-
-            return res.status(200).json(
-                {
-                    msg: 'Language added'
-                }
-            );
-        } catch (error) {
-
-            await Queries.simpleError(client, error);
-
-            return res.status(500).json({
-                msg: 'Internal Server Error'
-            });
-        }
-    }
-
-    /**
-     * Create student x network.
-     * path: /student/:dni/network
-     * method: post
-     */
-    async addNetwork(req: Request, res: Response): Promise<Response> {
-        const createStudentXnetworks = `SELECT createstudentxnetwork($1,$2);`;
-        const client = await pool.connect();
-        try {
-            const values = [req.params.dni, req.body.id_network];
-            await Queries.simpleTransaction(createStudentXnetworks, values, client);
-
-            return res.status(200).json(
-                {
-                    msg: 'Network added'
-                }
-            );
-        } catch (error) {
-
-            await Queries.simpleError(client, error);
-
-            return res.status(500).json({
-                msg: 'Internal Server Error'
-            });
-        }
-    }
-
-    /**
-     * Create student x associated career.
-     * path: /student/:dni/associated_career
-     * method: post
-     */
-    async addAssociatedCareer(req: Request, res: Response): Promise<Response> {
-        const createStudentXassociated_career = `SELECT createstudentxassociatedcareer($1,$2);`;
-        const client = await pool.connect();
-        try {
-            const values = [req.params.dni, req.body.id_associated_career];
-            await Queries.simpleTransaction(createStudentXassociated_career, values, client);
-
-            return res.status(200).json(
-                {
-                    msg: 'Associated Career added'
-                }
-            );
-        } catch (error) {
-
-            await Queries.simpleError(client, error);
-
-            return res.status(500).json({
-                msg: 'Internal Server Error'
-            });
-        }
-    }
-
-    /**
-     * Delete student x career.
-     * path: /student/:dni/career
-     * method: delete
-     */
-    async removeCareer(req: Request, res: Response): Promise<Response> {
         const deleteStudentXcareer = `SELECT deletestudentxcareer($1, $2);`;
-        const client = await pool.connect();
+        const client: PoolClient = await pool.connect();
         try {
-            const values = [req.params.dni, req.body.career_code];
-            await Queries.simpleTransaction(deleteStudentXcareer, values, client);
+            const toDelete: any = req.body.toDelete;
+            const toCreate: any = req.body.toCreate;
+            const dni = req.params.dni;
+            toDelete.map(async (d: number) => {
+                await Queries.simpleTransactionContinous(deleteStudentXcareer, [dni, d], client);
+            });
+            toCreate.map(async (c: number) => {
+                await Queries.simpleTransactionContinous(createStudentXcareer, [dni, c], client);
+            });
 
-            return res.status(200).json(
-                {
-                    msg: 'Career removed'
-                }
-            );
+            Queries.release(client);
+
+            return res.status(200).json({
+                msg: 'Careers updated'
+            });
+
         } catch (error) {
             await Queries.simpleError(client, error);
 
@@ -522,24 +421,32 @@ export class StudentController {
     }
 
     /**
-     * Delete student x language.
-     * path: /student/:dni/language
-     * method: delete
+     * Update languages for student.
+     * path: /student/:dni/languages
+     * method: put
      */
-    async removeLanguage(req: Request, res: Response): Promise<Response> {
+    async updateLanguagesForStudent(req: Request, res: Response): Promise<Response> {
+        const createStudentXlanguage = `SELECT createstudentxlanguage($1,$2);`;
         const deleteStudentXlanguage = `SELECT deletestudentxlanguage($1,$2);`;
-        const client = await pool.connect();
+        const client: PoolClient = await pool.connect();
         try {
-            const values = [req.params.dni, req.body.id_language];
-            await Queries.simpleTransaction(deleteStudentXlanguage, values, client);
+            const toDelete: any = req.body.toDelete;
+            const toCreate: any = req.body.toCreate;
+            const dni = req.params.dni;
+            toDelete.map(async (d: number) => {
+                await Queries.simpleTransactionContinous(deleteStudentXlanguage, [dni, d], client);
+            });
+            toCreate.map(async (c: number) => {
+                await Queries.simpleTransactionContinous(createStudentXlanguage, [dni, c], client);
+            });
 
-            return res.status(200).json(
-                {
-                    msg: 'Language removed'
-                }
-            );
+            Queries.release(client);
+
+            return res.status(200).json({
+                msg: 'Langueges updated'
+            });
+
         } catch (error) {
-
             await Queries.simpleError(client, error);
 
             return res.status(500).json({
@@ -548,23 +455,34 @@ export class StudentController {
         }
     }
 
+
     /**
-     * Delete student x network.
-     * path: /student/:dni/network
-     * method: delete
+     * Update networks for student.
+     * path: /student/:dni/networks
+     * method: put
      */
-    async removeNetwork(req: Request, res: Response): Promise<Response> {
+    async updateNetworksForStudent(req: Request, res: Response): Promise<Response> {
+        const createStudentXnetworks = `SELECT createstudentxnetwork($1,$2);`;
         const deleteStudentXnetwork = `SELECT deletestudentxnetwork($1,$2);`;
-        const client = await pool.connect();
+        const client: PoolClient = await pool.connect();
         try {
-            const values = [req.params.dni, req.body.id_network];
-            await Queries.simpleTransaction(deleteStudentXnetwork, values, client);
+            const toDelete: any = req.body.toDelete;
+            const toCreate: any = req.body.toCreate;
+            const dni = req.params.dni;
+            toDelete.map(async (d: number) => {
+                await Queries.simpleTransactionContinous(deleteStudentXnetwork, [dni, d], client);
+            });
+            toCreate.map(async (c: number) => {
+                await Queries.simpleTransactionContinous(createStudentXnetworks, [dni, c], client);
+            });
+
+            Queries.release(client);
 
             return res.status(200).json({
-                msg: 'Network removed'
+                msg: 'Networks updated'
             });
-        } catch (error) {
 
+        } catch (error) {
             await Queries.simpleError(client, error);
 
             return res.status(500).json({
@@ -574,22 +492,32 @@ export class StudentController {
     }
 
     /**
-     * Delete student x associated career.
-     * path: /student/:dni/associated_career
-     * method: delete
+     * Update associated_careers for student.
+     * path: /student/:dni/associated_careers
+     * method: put
      */
-    async removeAssociatedCareer(req: Request, res: Response): Promise<Response> {
+    async updateAssoCareersForStudent(req: Request, res: Response): Promise<Response> {
+        const createStudentXassociated_career = `SELECT createstudentxassociatedcareer($1,$2);`;
         const deleteStudentXassoCareer = `SELECT deletestudentxassociatedcareer($1, $2);`;
-        const client = await pool.connect();
+        const client: PoolClient = await pool.connect();
         try {
-            const values = [req.params.dni, req.body.id_associated_career]
-            await Queries.simpleTransaction(deleteStudentXassoCareer, values, client);
+            const toDelete: any = req.body.toDelete;
+            const toCreate: any = req.body.toCreate;
+            const dni = req.params.dni;
+            toDelete.map(async (d: number) => {
+                await Queries.simpleTransactionContinous(deleteStudentXassoCareer, [dni, d], client);
+            });
+            toCreate.map(async (c: number) => {
+                await Queries.simpleTransactionContinous(createStudentXassociated_career, [dni, c], client);
+            });
+
+            Queries.release(client);
 
             return res.status(200).json({
-                msg: 'Associated Career removed'
+                msg: 'Associated Careers updated'
             });
-        } catch (error) {
 
+        } catch (error) {
             await Queries.simpleError(client, error);
 
             return res.status(500).json({
