@@ -1,18 +1,11 @@
 import { Router } from 'express';
+import Inv_Unit_Controller from '../controllers/investigation_unit.controller'
+
 const router = Router();
 
-import {
-    getInvestigation_Units,
-    getInvestigation_UnitbyId,
-    createInvestigation_Unit,
-    updateInvestigation_Unit,
-    deleteInvestigation_Unit
-} from '../controllers/investigation_unit.controller';
-
-router.get('/investigation_unit', getInvestigation_Units);
-router.get('/investigation_unit/:id', getInvestigation_UnitbyId);
-router.post('/investigation_unit', createInvestigation_Unit);
-router.put('/investigation_unit/:id', updateInvestigation_Unit);
-router.delete('/investigation_unit/:id', deleteInvestigation_Unit);
+router.get('/investigation_unit', Inv_Unit_Controller.getInvestigation_Units);
+router.get('/investigation_unit/:id', Inv_Unit_Controller.getInvestigation_UnitbyId);
+router.post('/investigation_unit', Inv_Unit_Controller.createInvestigation_Unit);
+router.put('/investigation_unit/:id', Inv_Unit_Controller.updateInvestigation_Unit);
 
 export default router;

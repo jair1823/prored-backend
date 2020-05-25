@@ -35,6 +35,11 @@ INSERT INTO public.network(name, network_type,status)
         ('OMS', 'ONG',true),
         ('DanzaTEC', 'Grupo Artístico',false);
 
+INSERT INTO public.investigation_unit(name,description)
+	VALUES
+        ('Laboratorio de computación','Lab dedicado a programación'),
+        ('Laboratorio de física','Lab dedicado a la física'),
+        ('Centro de enseñanza','Facultad dedicada a la investigación de mejores prácticas de docencia');
 
 -----------------------------------------------------------------------
 --Avanzado
