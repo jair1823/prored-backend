@@ -302,8 +302,10 @@ export class StudentController {
             const dni = [req.params.dni];
             const response = await Queries.simpleSelectWithParameterContinous(query, dni, fetch, client);
             let message = "empty"
-            if(!response.rows[0] === undefined){
-                const p = response.rows[0].file_path;
+            let resultado = response.rows[0];
+            if(resultado != undefined){
+                console.log("Entre")
+                const p = resultado.file_path;
                 let fullPath = path.join(__dirname + '../../..' + '/public/' + p);
                 fs.unlinkSync(fullPath);
                 await Queries.simpleTransaction(deleteD, dni, client);
