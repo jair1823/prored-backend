@@ -301,13 +301,17 @@ export class StudentController {
         try {
             const dni = [req.params.dni];
             const response = await Queries.simpleSelectWithParameterContinous(query, dni, fetch, client);
-            const p = response.rows[0].file_path;
-            let fullPath = path.join(__dirname + '../../..' + '/public/' + p);
-            fs.unlinkSync(fullPath);
-            await Queries.simpleTransaction(deleteD, dni, client);
+            let message = "empty"
+            if(!response.rows[0] === undefined){
+                const p = response.rows[0].file_path;
+                let fullPath = path.join(__dirname + '../../..' + '/public/' + p);
+                fs.unlinkSync(fullPath);
+                await Queries.simpleTransaction(deleteD, dni, client);
+                message = "CV deleted";
+            }
             return res.status(200).json(
                 {
-                    msg: 'CV deleted'
+                    msg: message
                 }
             );
         } catch (error) {
