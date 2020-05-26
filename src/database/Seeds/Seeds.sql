@@ -74,3 +74,18 @@ INSERT INTO public.student(dni, id_district, marital_status, campus_code, profil
 
 INSERT INTO public.person_x_career(dni, career_code)
         VALUES ('411111111', 1);
+
+
+
+
+
+
+----------------------------------------------------------------------------
+
+
+
+INSERT INTO public.person(dni, name, lastname1, lastname2, born_dates, status,phone_number,email)
+        VALUES ('402430534', 'Calvo', 'Meta a', 'James', '1987-10-31', true,'+506 89988755','zz@rm.com');
+
+INSERT INTO public.researcher(dni, id_inv_unit)
+        VALUES ('402430534',1);
