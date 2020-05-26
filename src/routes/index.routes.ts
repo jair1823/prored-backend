@@ -8,6 +8,7 @@ import Directions from './directions.routes'
 import Campus from './campus.routes';
 import Student from './student.routes';
 import Consultas from './consultas.routes';
+import Researcher from './researcher.routes';
 import Project from './project.routes'
 /**
  * 
@@ -25,6 +26,7 @@ export function addRoutes(app: any) {
     app.use('/language',Language);
     app.use(Directions);
     app.use(Student);
+    app.use(Researcher);
     app.use(Consultas);
     app.use('/project', Project);
 }
