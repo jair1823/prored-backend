@@ -35,7 +35,7 @@ export class InvestigationUnitController {
         try {
             const id = [parseInt(req.params.id)];
             const response = await Queries.simpleSelectWithParameter(query, id, fetch, client);
-            return res.status(200).json(response.rows);
+            return res.status(200).json(response.rows[0]);
         } catch (error) {
             await Queries.simpleError(client, error);
             return res.status(500).json({
