@@ -9,6 +9,7 @@ import Campus from './campus.routes';
 import Student from './student.routes';
 import Consultas from './consultas.routes';
 import Researcher from './researcher.routes';
+import Project from './project.routes'
 /**
  * 
  * @param app variable que contiene la aplicacion de express
@@ -27,4 +28,5 @@ export function addRoutes(app: any) {
     app.use(Student);
     app.use(Researcher);
     app.use(Consultas);
+    app.use('/project', Project);
 }
