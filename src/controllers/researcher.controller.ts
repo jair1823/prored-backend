@@ -52,8 +52,8 @@ export class ResearcherController {
 
 
     /**
-     * Get specific student no matter status.
-     * path: /student_all/:dni
+     * Get specific researcher no matter status.
+     * path: /researcher/:dni
      * method: get
      */
     async getResearcherByDni(req: Request, res: Response): Promise<Response> {
@@ -65,11 +65,7 @@ export class ResearcherController {
         try {
             const dni = [req.params.dni];
             const student = await Queries.simpleSelectWithParameterContinous(getResearcher, dni, fetchResearcher, client);
-            return res.status(200).json(
-                {
-                    'student': student.rows[0],
-                }
-            );
+            return res.status(200).json(student.rows[0]);
         } catch (error) {
 
             await Queries.simpleError(client, error);

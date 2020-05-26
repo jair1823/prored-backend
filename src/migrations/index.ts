@@ -12,8 +12,8 @@ const NetworkDrops = readFileSync('src/database/Drops/NetworkDrops.sql').toStrin
 const PersonDrops = readFileSync('src/database/Drops/PersonDrops.sql').toString();
 const StudentDrops = readFileSync('src/database/Drops/StudentDrops.sql').toString();
 const ProjectDrops = readFileSync('src/database/Drops/ProjectDrops.sql').toString();
-const TableDrops = readFileSync('src/database/Drops/TableDrops.sql').toString();
 const ResearcherDrops = readFileSync('src/database/Drops/ResearcherDrops.sql').toString();
+const TableDrops = readFileSync('src/database/Drops/TableDrops.sql').toString();
 
 const EnumNationality = readFileSync('src/database/Creation/EnumNationality.sql').toString();
 const Tables = readFileSync('src/database/Creation/Tables.sql').toString();

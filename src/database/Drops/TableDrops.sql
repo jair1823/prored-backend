@@ -16,7 +16,6 @@ DROP TABLE IF EXISTS public.campus;
 DROP TABLE IF EXISTS public.career;
 DROP TABLE IF EXISTS public.article;
 DROP TABLE IF EXISTS public.photo;
-DROP TABLE IF EXISTS public.presentation;
 DROP TABLE IF EXISTS public.list_of_assitance;
 DROP TABLE IF EXISTS public.project_form;
 DROP TABLE IF EXISTS public.endorsement;
