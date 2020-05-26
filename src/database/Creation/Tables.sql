@@ -100,11 +100,6 @@ create table public.list_of_assitance(
     date date
 );
 
-create table public.presentation(
-    id_document integer PRIMARY KEY REFERENCES public.document(id_document),
-    presentation_name varchar(100)
-);
-
 create table public.photo(
     id_document integer PRIMARY KEY REFERENCES public.document(id_document),
     date date,
