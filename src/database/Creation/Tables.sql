@@ -39,12 +39,17 @@ create table public.researcher(
     id_inv_unit integer REFERENCES public.investigation_unit(id_inv_unit)
 );
 
+CREATE TYPE public.project_type AS ENUM (
+    'Estudiantes',
+    'Normal'
+);
+
 create table public.project(
     id_project SERIAL PRIMARY KEY,
     id_inv_unit integer REFERENCES public.investigation_unit(id_inv_unit),
     name varchar(50),
     code_manage varchar(50),
-    project_type boolean
+    project_type public.project_type
 );
 
 create table public.acti_type(
@@ -65,10 +70,10 @@ create table person_x_activity(
     id_activity integer REFERENCES public.activity(id_activity)
 );
 
-CREATE TYPE public.role AS ENUM ('Estudiante Vinculado', 'Asistente Vinculado', 'Investigador Vinculado', 'Consultor Vinculado');
+CREATE TYPE public.role AS ENUM ('Investigador', 'Asistente Vinculado', 'Co Investigador');
 
 
-CREATE TYPE public.endoresement_type AS ENUM (
+CREATE TYPE public.endorsement_type AS ENUM (
     'Interno',
     'Externo'
 );
@@ -81,39 +86,39 @@ create table public.document(
     file_path varchar(150)
 );
 
-create table public.endoresement(
-    id_document integer REFERENCES public.document(id_document),
-    type public.endoresement_type
+create table public.endorsement(
+    id_document integer PRIMARY KEY REFERENCES public.document(id_document),
+    type public.endorsement_type
 );
 
 create table public.project_form(
-    id_document integer REFERENCES public.document(id_document)
+    id_document integer PRIMARY KEY REFERENCES public.document(id_document)
 );
 
 create table public.list_of_assitance(
-    id_document integer REFERENCES public.document(id_document),
+    id_document integer PRIMARY KEY REFERENCES public.document(id_document),
     date date
 );
 
 create table public.presentation(
-    id_document integer REFERENCES public.document(id_document),
+    id_document integer PRIMARY KEY REFERENCES public.document(id_document),
     presentation_name varchar(100)
 );
 
 create table public.photo(
-    id_document integer REFERENCES public.document(id_document),
+    id_document integer PRIMARY KEY REFERENCES public.document(id_document),
     date date,
     comment text
 );
 
 create table public.article(
-    id_document integer REFERENCES public.document(id_document),
+    id_document integer PRIMARY KEY REFERENCES public.document(id_document),
     key_words varchar(100),
     abstract text
 );
 
 create table public.paper(
-    id_document integer REFERENCES public.document(id_document),
+    id_document integer PRIMARY KEY REFERENCES public.document(id_document),
     paper_name varchar(100),
     speaker varchar(50)
 );

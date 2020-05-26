@@ -11,6 +11,7 @@ const LanguageDrops = readFileSync('src/database/Drops/LanguageDrops.sql').toStr
 const NetworkDrops = readFileSync('src/database/Drops/NetworkDrops.sql').toString();
 const PersonDrops = readFileSync('src/database/Drops/PersonDrops.sql').toString();
 const StudentDrops = readFileSync('src/database/Drops/StudentDrops.sql').toString();
+const ProjectDrops = readFileSync('src/database/Drops/ProjectDrops.sql').toString();
 const TableDrops = readFileSync('src/database/Drops/TableDrops.sql').toString();
 
 const EnumNationality = readFileSync('src/database/Creation/EnumNationality.sql').toString();
@@ -26,6 +27,7 @@ const Language = readFileSync('src/database/Functions/Language.sql').toString();
 const Network = readFileSync('src/database/Functions/Network.sql').toString();
 const Person = readFileSync('src/database/Functions/Person.sql').toString();
 const Student = readFileSync('src/database/Functions/Student.sql').toString();
+const Project = readFileSync('src/database/Functions/Project.sql').toString();
 
 
 
@@ -48,6 +50,7 @@ async function migration() {
         await pool.query(LanguageDrops);
         await pool.query(NetworkDrops);
         await pool.query(PersonDrops);
+        await pool.query(ProjectDrops);
         await pool.query(TableDrops);
 
         //Creacion de todas las tablas y tipos
@@ -65,6 +68,7 @@ async function migration() {
         await pool.query(Network);
         await pool.query(Student);
         await pool.query(Person);
+        await pool.query(Project);
 
         return;
     } catch (error) {
