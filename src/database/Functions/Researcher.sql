@@ -51,7 +51,7 @@ BEGIN
   OPEN ref FOR select 
 p.dni, p.name, p.lastname1, p.lastname2,p.phone_number,p.email,
 TO_CHAR(p.born_dates,'YYYY-mm-dd') AS born_dates, p.status,
-s.id_inv_unit, d.name
+s.id_inv_unit, d.name as nameInvUnit
 from public.person p
 inner join public.researcher s on s.dni = p.dni
 inner join public.investigation_unit d on d.id_inv_unit = s.id_inv_unit
@@ -67,7 +67,7 @@ BEGIN
   OPEN ref FOR select 
 p.dni, p.name, p.lastname1, p.lastname2,p.phone_number,p.email,
 TO_CHAR(p.born_dates,'YYYY-mm-dd') AS born_dates, p.status,
-s.id_inv_unit, d.name
+s.id_inv_unit, d.name  as nameInvUnit
 from public.person p
 inner join public.researcher s on s.dni = p.dni
 inner join public.investigation_unit d on d.id_inv_unit = s.id_inv_unit;
@@ -76,3 +76,24 @@ END;
 $$ LANGUAGE plpgsql;
 
 --#######################################################################
+
+--#######################################################################
+
+CREATE OR REPLACE FUNCTION getresearcherbydni(pdni varchar(50),ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+
+    OPEN ref FOR select 
+        p.dni, p.name, p.lastname1, p.lastname2,p.phone_number,p.email,
+        TO_CHAR(p.born_dates,'YYYY-mm-dd') AS born_dates, p.status,
+        s.id_inv_unit, d.name  as nameInvUnit
+        
+    from public.person p
+    inner join public.researcher s on s.dni = p.dni
+    inner join public.investigation_unit d on d.id_inv_unit = s.id_inv_unit
+    where p.status = true and p.dni = pdni;
+
+    RETURN ref;
+
+    END;
+$$ LANGUAGE plpgsql;

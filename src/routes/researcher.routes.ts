@@ -8,6 +8,7 @@ router.get('/researcher', Researcher_Controller.getResearchers);
 router.get('/researcher_all', Researcher_Controller.getResearchersAll);
 router.post('/researcher', Researcher_Controller.createResearcher);
 router.put('/researcher/:dni', Researcher_Controller.updateResearcher);
+router.get('/researcher/:dni', Researcher_Controller.getResearcherByDni);
 
 
 

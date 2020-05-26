@@ -89,3 +89,4 @@ INSERT INTO public.person(dni, name, lastname1, lastname2, born_dates, status,ph
 
 INSERT INTO public.researcher(dni, id_inv_unit)
         VALUES ('402430534',1);
+

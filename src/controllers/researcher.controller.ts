@@ -46,6 +46,40 @@ export class ResearcherController {
             });
         }
     }
+
+
+
+
+
+    /**
+     * Get specific student no matter status.
+     * path: /student_all/:dni
+     * method: get
+     */
+    async getResearcherByDni(req: Request, res: Response): Promise<Response> {
+        const getResearcher = `select getresearcherbydni($1,'researcherCursor');`;
+        const fetchResearcher = `FETCH ALL IN "researcherCursor";`;
+
+
+        const client: PoolClient = await pool.connect();
+        try {
+            const dni = [req.params.dni];
+            const student = await Queries.simpleSelectWithParameterContinous(getResearcher, dni, fetchResearcher, client);
+            return res.status(200).json(
+                {
+                    'student': student.rows[0],
+                }
+            );
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
     
   
 
@@ -90,7 +124,7 @@ export class ResearcherController {
      * method: put
      */
     async updateResearcher(req: Request, res: Response): Promise<Response> {
-        const updateResearcher = `SELECT updatestudent($1,$2,$3,$4,$5,$6,$7,$8);`;
+        const updateResearcher = `SELECT updateresearcher($1,$2,$3,$4,$5,$6,$7,$8);`;
         const client: PoolClient = await pool.connect();
         try {
             const values = [
