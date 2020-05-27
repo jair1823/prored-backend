@@ -13,6 +13,7 @@ const PersonDrops = readFileSync('src/database/Drops/PersonDrops.sql').toString(
 const StudentDrops = readFileSync('src/database/Drops/StudentDrops.sql').toString();
 const ProjectDrops = readFileSync('src/database/Drops/ProjectDrops.sql').toString();
 const ResearcherDrops = readFileSync('src/database/Drops/ResearcherDrops.sql').toString();
+const ActivityDrops = readFileSync('src/database/Drops/ActivityDrops.sql').toString();
 const TableDrops = readFileSync('src/database/Drops/TableDrops.sql').toString();
 
 const EnumNationality = readFileSync('src/database/Creation/EnumNationality.sql').toString();
@@ -30,7 +31,7 @@ const Person = readFileSync('src/database/Functions/Person.sql').toString();
 const Student = readFileSync('src/database/Functions/Student.sql').toString();
 const Researcher =  readFileSync('src/database/Functions/Researcher.sql').toString();
 const Project = readFileSync('src/database/Functions/Project.sql').toString();
-
+const Activity = readFileSync('src/database/Functions/Activity.sql').toString();
 
 
 
@@ -54,6 +55,7 @@ async function migration() {
         await pool.query(PersonDrops);
         await pool.query(ProjectDrops);
         await pool.query(ResearcherDrops);
+        await pool.query(ActivityDrops);
         await pool.query(TableDrops);
 
 
@@ -74,6 +76,7 @@ async function migration() {
         await pool.query(Person);
         await pool.query(Researcher);
         await pool.query(Project);
+        await pool.query(Activity);
 
         return;
     } catch (error) {
