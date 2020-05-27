@@ -19,7 +19,7 @@ class Queries {
      */
     async simpleSelectNoCursor(query: string, values: any, client: PoolClient): Promise<QueryResult> {
         await client.query('BEGIN');
-        const response: QueryResult = await client.query(query,values);
+        const response: QueryResult = await client.query(query, values);
         await client.query('ROLLBACK');
         client.release();
         return response;
@@ -37,14 +37,20 @@ class Queries {
         return response;
     }
 
-        /**
+    /**
      * 
      */
+    async rollback(client: PoolClient) {
+        await client.query('ROLLBACK');
+        client.release();
+    }
+
+    /**
+ * 
+ */
     async simpleSelectWithParameterContinous(query: string, values: any, fetch: string, client: PoolClient) {
-        await client.query('BEGIN');
         await client.query(query, values);
         const response: QueryResult = await client.query(fetch);
-        await client.query('ROLLBACK');
         return response;
     }
 
@@ -58,13 +64,29 @@ class Queries {
         client.release();
     }
 
-    async  simpleTransactionContinous(query: string, values: any, client: PoolClient) {
+    /**
+     * 
+     */
+    async begin(client: PoolClient) {
         await client.query('BEGIN');
-        await client.query(query, values);
-        await client.query('COMMIT');
     }
 
-    async release (client: PoolClient){
+    /**
+     * 
+     */
+    async commit(client: PoolClient) {
+        await client.query('COMMIT');
+        client.release();
+    }
+
+    /**
+     * 
+     */
+    async  simpleTransactionContinous(query: string, values: any, client: PoolClient) {
+        await client.query(query, values);
+    }
+
+    async release(client: PoolClient) {
         client.release();
     }
 

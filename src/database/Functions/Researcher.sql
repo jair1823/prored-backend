@@ -45,6 +45,17 @@ $$ LANGUAGE plpgsql;
 
 --###########################################################################
 
+CREATE OR REPLACE FUNCTION getresearchersbasic(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR select 
+p.dni, p.name, p.lastname1, p.lastname2, p.status
+from public.person p
+inner join public.researcher s on s.dni = p.dni;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
 
 CREATE OR REPLACE FUNCTION getresearchers(ref refcursor) RETURNS refcursor AS $$
 BEGIN
@@ -74,8 +85,6 @@ inner join public.investigation_unit d on d.id_inv_unit = s.id_inv_unit;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
-
---#######################################################################
 
 --#######################################################################
 

@@ -10,6 +10,8 @@ router.get('/student/:dni', Student_Controller.getStudentByDni);
 router.get('/student_all', Student_Controller.getStudentsAll);
 router.get('/student_all/:dni', Student_Controller.getStudentByDniAll);
 
+router.get('/student_basic', Student_Controller.getStudentsBasic);
+
 router.post('/student', Student_Controller.createStudent);
 router.put('/student/:dni', Student_Controller.updateStudent);
 

@@ -35,6 +35,18 @@ inner join public.campus c on c.campus_code = s.campus_code;
 END;
 $$ LANGUAGE plpgsql;
 
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getstudentsbasic(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR select 
+p.dni, p.name, p.lastname1, p.lastname2,p.status
+from public.person p
+inner join public.student s on s.dni = p.dni;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
 --#######################################################################
 
 CREATE OR REPLACE FUNCTION getstudentbydni(pdni varchar(50),ref refcursor)
@@ -210,6 +222,18 @@ CREATE OR REPLACE FUNCTION deleteCV(id VARCHAR(50))
 RETURNS void AS $$
 BEGIN
   DELETE FROM public.cv WHERE dni = id;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION updateCV(id VARCHAR(50),fp VARCHAR(400), n VARCHAR(300)) 
+RETURNS void AS $$
+BEGIN
+  UPDATE public.cv SET 
+    name = n,
+    file_path = fp
+  WHERE dni = id;
 END;
 $$ LANGUAGE plpgsql;
 
