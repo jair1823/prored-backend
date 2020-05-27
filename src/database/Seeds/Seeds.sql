@@ -85,7 +85,31 @@ INSERT INTO public.researcher(dni, id_inv_unit)
         VALUES ('402430534',1);
 
 ----------------------------------------------------------------------------
---Investigador
+--Proyecto
 
 INSERT INTO public.project(id_inv_unit, name, code_manage, project_type)
         VALUES (1, 'Proyecto de desarrollo de la ProRed', 'PR001', 'Estudiantes');
+
+INSERT INTO public.project(id_inv_unit, name, code_manage, project_type)
+        VALUES (1, 'Proyecto de investigación de Mantos Aquiferos', 'PR002', 'Estudiantes');
+
+----------------------------------------------------------------------------
+--Tipo Actividad
+
+INSERT INTO public.acti_type(name)
+	VALUES
+        ('Taller');
+
+----------------------------------------------------------------------------
+--Actividad
+
+INSERT INTO public.activity(name, id_acti_type, id_project) 
+        values ('Taller de computación',1,1);
+
+----------------------------------------------------------------------------
+--Personas x Actividad
+
+INSERT INTO public.person_x_activity(dni, id_activity) 
+        values 
+                ('116920331',1),
+                ('402430534',1);
