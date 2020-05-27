@@ -28,5 +28,5 @@ export function addRoutes(app: any) {
     app.use(Student);
     app.use(Researcher);
     app.use(Consultas);
-    app.use('/project', Project);
+    app.use(Project);
 }

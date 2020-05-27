@@ -8,7 +8,7 @@ export class ResearcherController {
 
     /**
      * Get all enable researchers.
-     * path: /researchers/
+     * path: /researcher/
      * method: get
     */
     async getResearchers(req: Request, res: Response): Promise<Response> {
@@ -47,10 +47,6 @@ export class ResearcherController {
         }
     }
 
-
-
-
-
     /**
      * Get specific researcher no matter status.
      * path: /researcher/:dni
@@ -64,7 +60,7 @@ export class ResearcherController {
         const client: PoolClient = await pool.connect();
         try {
             const dni = [req.params.dni];
-            const student = await Queries.simpleSelectWithParameterContinous(getResearcher, dni, fetchResearcher, client);
+            const student = await Queries.simpleSelectWithParameter(getResearcher, dni, fetchResearcher, client);
             return res.status(200).json(student.rows[0]);
         } catch (error) {
 
@@ -76,9 +72,25 @@ export class ResearcherController {
         }
     }
 
-    
-  
-
+    /**
+     * Get all researchers basic information.
+     * path: /researcher_basic/
+     * method: get
+    */
+   async getResearchersBasic(req: Request, res: Response): Promise<Response> {
+    const query = `select getresearchersbasic('researchersCursor');`;
+    const fetch = `FETCH ALL IN "researchersCursor";`;
+    const client: PoolClient = await pool.connect();
+    try {
+        const response = await Queries.simpleSelect(query, fetch, client);
+        return res.status(200).json(response.rows);
+    } catch (error) {
+        await Queries.simpleError(client, error);
+        return res.status(500).json({
+            msg: 'Internal Server Error'
+        });
+    }
+}
    
     /**
      * Create new researcher.
@@ -94,9 +106,10 @@ export class ResearcherController {
             const personValues = [req.body.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates, req.body.phone_number, req.body.email];
             const researcherValues = [req.body.dni, req.body.id_inv_unit];
 
+            await Queries.begin(client);
             await Queries.simpleTransactionContinous(createPerson, personValues, client);
             await Queries.simpleTransactionContinous(createResearcher, researcherValues, client);
-            await Queries.release(client);
+            await Queries.commit(client);
 
             return res.status(200).json(
                 {
@@ -112,7 +125,6 @@ export class ResearcherController {
             });
         }
     }
-
 
     /**
      * Update specific researcher.
@@ -144,8 +156,6 @@ export class ResearcherController {
             });
         }
     }
-
-
 }
 
 const researcherController = new ResearcherController();

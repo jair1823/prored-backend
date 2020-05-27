@@ -84,3 +84,8 @@ INSERT INTO public.person(dni, name, lastname1, lastname2, born_dates, status,ph
 INSERT INTO public.researcher(dni, id_inv_unit)
         VALUES ('402430534',1);
 
+----------------------------------------------------------------------------
+--Investigador
+
+INSERT INTO public.project(id_inv_unit, name, code_manage, project_type)
+        VALUES (1, 'Proyecto de desarrollo de la ProRed', 'PR001', 'Estudiantes');

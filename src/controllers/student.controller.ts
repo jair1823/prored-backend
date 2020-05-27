@@ -82,13 +82,14 @@ export class StudentController {
         const client: PoolClient = await pool.connect();
         try {
             const dni = [req.params.dni];
-
+            await Queries.begin(client);
             const student = await Queries.simpleSelectWithParameterContinous(getStudent, dni, fetchStudent, client);
             const careers = await Queries.simpleSelectWithParameterContinous(getCarees, dni, fetchCarees, client);
             const networks = await Queries.simpleSelectWithParameterContinous(getNetworks, dni, fetchNetworks, client);
             const languages = await Queries.simpleSelectWithParameterContinous(getLanguages, dni, fetchLanguages, client);
             const associated_careers = await Queries.simpleSelectWithParameterContinous(getAssoCareer, dni, fetchAssoCareer, client);
-            const direction = await Queries.simpleSelectWithParameter(getDirection, dni, fetchDirection, client);
+            const direction = await Queries.simpleSelectWithParameterContinous(getDirection, dni, fetchDirection, client);
+            await Queries.rollback(client);
 
             return res.status(200).json(
                 {
@@ -138,12 +139,14 @@ export class StudentController {
         try {
             const dni = [req.params.dni];
 
+            await Queries.begin(client);
             const student = await Queries.simpleSelectWithParameterContinous(getStudent, dni, fetchStudent, client);
             const careers = await Queries.simpleSelectWithParameterContinous(getCarees, dni, fetchCarees, client);
             const networks = await Queries.simpleSelectWithParameterContinous(getNetworks, dni, fetchNetworks, client);
             const languages = await Queries.simpleSelectWithParameterContinous(getLanguages, dni, fetchLanguages, client);
             const associated_careers = await Queries.simpleSelectWithParameterContinous(getAssoCareer, dni, fetchAssoCareer, client);
-            const direction = await Queries.simpleSelectWithParameter(getDirection, dni, fetchDirection, client);
+            const direction = await Queries.simpleSelectWithParameterContinous(getDirection, dni, fetchDirection, client);
+            await Queries.rollback(client);
 
             return res.status(200).json(
                 {
@@ -155,6 +158,30 @@ export class StudentController {
                     'direction': direction.rows[0]
                 }
             );
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Get all students basic information.
+     * path: /student_basic/
+     * method: get
+    */
+    async getStudentsBasic(req: Request, res: Response): Promise<Response> {
+        const query = `select getstudentsbasic('studentsCursor');`;
+        const fetch = `FETCH ALL IN "studentsCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
+
+            const response = await Queries.simpleSelect(query, fetch, client);
+
+            return res.status(200).json(response.rows);
         } catch (error) {
 
             await Queries.simpleError(client, error);
@@ -183,7 +210,8 @@ export class StudentController {
             const personValues = [req.body.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates, req.body.phone_number, req.body.email];
             const studentValues = [req.body.dni, req.body.id_district, req.body.marital_status,
             req.body.campus_code, req.body.profile, req.body.address, req.body.nationality, req.body.emergency_contact];
-
+            
+            await Queries.begin(client);
             await Queries.simpleTransactionContinous(createPerson, personValues, client);
             await Queries.simpleTransactionContinous(createStudent, studentValues, client);
 
@@ -208,7 +236,7 @@ export class StudentController {
                 await Queries.simpleTransactionContinous(createStudentXassociated_career, [personValues[0], a], client);
             });
 
-            await Queries.release(client);
+            await Queries.commit(client);
 
             return res.status(200).json(
                 {
@@ -261,17 +289,21 @@ export class StudentController {
 
     async updateCV(req: Request, res: Response): Promise<Response> {
         const client: PoolClient = await pool.connect();
-        const deleteD = `SELECT deleteCV($1);`;
-        const insert = `SELECT insertCV($1,$2,$3);`;
+        // const deleteD = `SELECT deleteCV($1);`;
+        // const insert = `SELECT insertCV($1,$2,$3);`;
+        const update = `SELECT updateCV($1,$2,$3);`
         try {
             const p = req.body.path;
             let fullPath = path.join(__dirname + '../../..' + '/public/' + p);
             fs.unlinkSync(fullPath);
-            const valuesD = [req.body.dni];
-            await Queries.simpleTransactionContinous(deleteD, valuesD, client);
+            //const valuesD = [req.body.dni];
+            // await Queries.begin(client);
+            // await Queries.simpleTransactionContinous(deleteD, valuesD, client);
             let url = `${req.body.tabla}/${req.file.filename}`;
             const values = [req.body.dni, url, req.file.filename];
-            await Queries.simpleTransaction(insert, values, client);
+            await Queries.simpleTransaction(update, values, client);
+            // await Queries.simpleTransactionContinous(insert, values, client);
+            // await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: 'CV updated'
@@ -300,6 +332,7 @@ export class StudentController {
         const fetch = `FETCH ALL IN "studentCursor";`;
         try {
             const dni = [req.params.dni];
+            await Queries.begin(client);
             const response = await Queries.simpleSelectWithParameterContinous(query, dni, fetch, client);
             let message = "empty"
             let resultado = response.rows[0];
@@ -398,6 +431,7 @@ export class StudentController {
             const toDelete: any = req.body.toDelete;
             const toCreate: any = req.body.toCreate;
             const dni = req.params.dni;
+            await Queries.begin(client);
             toDelete.map(async (d: number) => {
                 await Queries.simpleTransactionContinous(deleteStudentXcareer, [dni, d], client);
             });
@@ -405,7 +439,7 @@ export class StudentController {
                 await Queries.simpleTransactionContinous(createStudentXcareer, [dni, c], client);
             });
 
-            Queries.release(client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: 'Careers updated'
@@ -433,6 +467,7 @@ export class StudentController {
             const toDelete: any = req.body.toDelete;
             const toCreate: any = req.body.toCreate;
             const dni = req.params.dni;
+            await Queries.begin(client);
             toDelete.map(async (d: number) => {
                 await Queries.simpleTransactionContinous(deleteStudentXlanguage, [dni, d], client);
             });
@@ -440,7 +475,7 @@ export class StudentController {
                 await Queries.simpleTransactionContinous(createStudentXlanguage, [dni, c], client);
             });
 
-            Queries.release(client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: 'Langueges updated'
@@ -469,6 +504,7 @@ export class StudentController {
             const toDelete: any = req.body.toDelete;
             const toCreate: any = req.body.toCreate;
             const dni = req.params.dni;
+            await Queries.begin(client);
             toDelete.map(async (d: number) => {
                 await Queries.simpleTransactionContinous(deleteStudentXnetwork, [dni, d], client);
             });
@@ -476,7 +512,7 @@ export class StudentController {
                 await Queries.simpleTransactionContinous(createStudentXnetworks, [dni, c], client);
             });
 
-            Queries.release(client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: 'Networks updated'
@@ -504,6 +540,7 @@ export class StudentController {
             const toDelete: any = req.body.toDelete;
             const toCreate: any = req.body.toCreate;
             const dni = req.params.dni;
+            await Queries.begin(client);
             toDelete.map(async (d: number) => {
                 await Queries.simpleTransactionContinous(deleteStudentXassoCareer, [dni, d], client);
             });
@@ -511,7 +548,7 @@ export class StudentController {
                 await Queries.simpleTransactionContinous(createStudentXassociated_career, [dni, c], client);
             });
 
-            Queries.release(client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: 'Associated Careers updated'

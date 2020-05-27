@@ -87,7 +87,7 @@ export class ProjectController {
             await Queries.simpleTransaction(query, values, client);
 
             return res.json({
-                msg: `Project modified succesfully`
+                msg: `Projecupdateprojectt modified succesfully`
             });
         } catch (error) {
 
@@ -99,6 +99,48 @@ export class ProjectController {
         }
     }
 
+    /**
+     * Assign a person to project.
+     * path: /project/assign
+     * method: post
+    */
+    async assignPersonProject(req: Request, res: Response): Promise<Response> {
+        const query = `SELECT assignpersonproject($1,$2,$3)`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const values = [req.body.dni, req.body.id_project, req.body.role];
+            await Queries.simpleTransaction(query, values, client);
+            return res.json({
+                msg: "Person assigned to project Succesfully"
+            });
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Assign a person to project.
+     * path: /project
+     * method: post
+    */
+    async getPersonsProject(req: Request, res: Response): Promise<Response> {
+        const query = `select getpersonsproject($1,'projectCursor');`;
+        const fetch = `FETCH ALL IN "projectCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const id = [parseInt(req.params.id)];
+            const response = await Queries.simpleSelectWithParameter(query, id, fetch, client);
+            return res.status(200).json(response.rows);
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
 }
 
 const projectController = new ProjectController();
