@@ -4,3 +4,4 @@ DROP FUNCTION IF EXISTS getactivitybyid;
 DROP FUNCTION IF EXISTS getactivitybyidproject;
 DROP FUNCTION IF EXISTS assignpersontoactivity;
 DROP FUNCTION IF EXISTS getpersonsactivity;
+DROP FUNCTION IF EXISTS updateactivity;

@@ -32,12 +32,54 @@ export class ActivityController {
     }
 
     /**
+     * Update specific activity.
+     * path: /activity/:id
+     * method: put
+    */
+   async updateActivity(req: Request, res: Response): Promise<Response> {
+    const query = `SELECT updateactivity($1,$2,$3,$4)`;
+    const client: PoolClient = await pool.connect();
+    try {
+        const values = [parseInt(req.params.id),req.body.name, req.body.id_acti_type, req.body.id_project];
+        await Queries.simpleTransaction(query, values, client);
+        return res.json({
+            msg: `Activity modified succesfully`
+        });
+    } catch (error) {
+        await Queries.simpleError(client, error);
+        return res.status(500).json({
+            msg: 'Internal Server Error'
+        });
+    }
+}
+
+    /**
      * Get all activities.
      * path: /activity/
      * method: get
      */
     async getActivities(req: Request, res: Response): Promise<Response> {
         const query = `select getactivities('activityCursor'); `;
+        const fetch = `FETCH ALL IN "activityCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const response = await Queries.simpleSelect(query, fetch, client);
+            return res.status(200).json(response.rows);
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Get all activities.
+     * path: /activity/
+     * method: get
+     */
+    async getActivitiesNoProject(req: Request, res: Response): Promise<Response> {
+        const query = `select getactivitiesnoproject('activityCursor'); `;
         const fetch = `FETCH ALL IN "activityCursor";`;
         const client: PoolClient = await pool.connect();
         try {

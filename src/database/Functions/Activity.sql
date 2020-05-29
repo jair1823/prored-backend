@@ -7,6 +7,31 @@ $$ LANGUAGE plpgsql;
 
 --########################################################################################
 
+CREATE OR REPLACE FUNCTION updateactivity(pid integer, pname VARCHAR(100), pidtype integer,pidproject integer) 
+RETURNS void AS $$
+BEGIN
+  UPDATE public.activity 
+  SET 
+    name = pname,
+    id_acti_type = pidtype,
+    id_project = pidproject
+  WHERE id_activity = pid;
+END;
+$$ LANGUAGE plpgsql;
+
+--########################################################################################
+
+CREATE OR REPLACE FUNCTION getactivitiesnoproject(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM public.activity
+    WHERE id_project IS null;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--########################################################################################
+
 CREATE OR REPLACE FUNCTION getactivities(ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
