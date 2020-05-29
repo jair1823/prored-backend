@@ -113,3 +113,37 @@ INSERT INTO public.person_x_activity(dni, id_activity)
         values 
                 ('116920331',1),
                 ('402430534',1);
+
+
+-- Personas x Proyecto
+
+INSERT INTO  public.person_x_project(dni , id_project, role )
+        values 
+                ('116920331' , 1  , 'Investigador'),
+                ('402430534' , 1  , 'Investigador');
+
+
+
+-- Period
+INSERT INTO public.period(name)
+        values
+                ('II Semestre 2020'),
+                ('I  Semestre 2021');
+
+-- Gantt 
+
+
+INSERT INTO public.gantt(rel_code , id_period)
+        values 
+                (1,1),
+                (2,2);
+
+--Gantt Task 
+
+INSERT INTO public.gantt_task(id_gantt, task_name, description, start_date, end_date)
+        values
+                (1, 'Primera tarea Gantt1',  'Descripción', '2020-02-02' , '2020-02-03'),
+                (2 ,'Primera tarea Gantt2', 'Descripción2' , '2020-02-06', '2020-02-09'),
+                (2 ,'Primera tarea Gantt2', 'Descripción2' , '2020-02-06', '2020-02-09');
+
+
