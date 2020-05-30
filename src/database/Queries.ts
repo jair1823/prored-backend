@@ -40,6 +40,18 @@ class Queries {
     /**
      * 
      */
+    async insertWithReturn(query: string, values: any, fetch: string, client: PoolClient) {
+        await client.query('BEGIN');
+        await client.query(query, values);
+        const response: QueryResult = await client.query(fetch);
+        await client.query('COMMIT');
+        client.release();
+        return response;
+    }
+
+    /**
+     * 
+     */
     async rollback(client: PoolClient) {
         await client.query('ROLLBACK');
         client.release();

@@ -11,14 +11,15 @@ export class ProjectController {
      * method: post
     */
     async createProject(req: Request, res: Response): Promise<Response> {
-        const query = `SELECT createproject($1,$2,$3,$4)`;
+        const query = `SELECT createproject($1,$2,$3,$4,'projectCursor')`;
+        const fetch = `FETCH ALL IN "projectCursor";`;
         const client: PoolClient = await pool.connect();
         try {
             const values = [req.body.inv_unit, req.body.name, req.body.code_manage, req.body.project_type];
-            await Queries.simpleTransaction(query, values, client);
-            return res.json({
-                msg: "Project created Succesfully"
-            });
+            const response = await Queries.insertWithReturn(query, values, fetch, client);
+            return res.json(
+                response.rows[0]
+            );
         } catch (error) {
             await Queries.simpleError(client, error);
             return res.status(500).json({

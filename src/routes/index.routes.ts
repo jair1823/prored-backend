@@ -11,6 +11,7 @@ import Consultas from './consultas.routes';
 import Researcher from './researcher.routes';
 import Project from './project.routes'
 import Activity from './activity.routes'
+import Document from './document.routes'
 /**
  * 
  * @param app variable que contiene la aplicacion de express
@@ -31,4 +32,5 @@ export function addRoutes(app: any) {
     app.use(Consultas);
     app.use(Project);
     app.use('/activity',Activity);
+    app.use(Document);
 }

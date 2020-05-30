@@ -1,9 +1,11 @@
 --########################################################################################
 
-CREATE OR REPLACE FUNCTION createproject(id_inv integer,n varchar(50),cd varchar(50), pt project_type) 
-RETURNS void AS $$
+CREATE OR REPLACE FUNCTION createproject(id_inv integer,n varchar(50),cd varchar(50), pt project_type, ref refcursor) 
+ RETURNS refcursor AS $$
 BEGIN
-  INSERT INTO public.project (id_inv_unit, name, code_manage, project_type) VALUES (id_inv, n, cd, pt);
+  OPEN ref FOR
+  INSERT INTO public.project (id_inv_unit, name, code_manage, project_type) VALUES (id_inv, n, cd, pt) RETURNING id_project;
+  RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
 
