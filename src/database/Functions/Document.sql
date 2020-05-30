@@ -25,3 +25,45 @@ CREATE OR REPLACE FUNCTION getprojectform(pid integer, ref refcursor)
         RETURN ref;
     END;
 $$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION createendorsement(idp integer,ptype endorsement_type, pfile varchar(100),ppath varchar(200)) 
+RETURNS void AS $$
+BEGIN
+  INSERT INTO public.endorsement(id_project, type, filename, file_path) values (idp,ptype,pfile,ppath);
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION deleteendorsement(id integer) 
+RETURNS void AS $$
+BEGIN
+  DELETE FROM public.endorsement WHERE id_endorsement = id;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getendorsement(pid integer, ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+        OPEN ref FOR select * 
+            from public.endorsement
+        where id_endorsement = pid;
+        RETURN ref;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getendorsementsproject(pid integer, ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+        OPEN ref FOR select * 
+            from public.endorsement
+        where id_project = pid;
+        RETURN ref;
+    END;
+$$ LANGUAGE plpgsql;
