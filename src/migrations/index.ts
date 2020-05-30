@@ -15,6 +15,7 @@ const ProjectDrops = readFileSync('src/database/Drops/ProjectDrops.sql').toStrin
 const ResearcherDrops = readFileSync('src/database/Drops/ResearcherDrops.sql').toString();
 const ActivityDrops = readFileSync('src/database/Drops/ActivityDrops.sql').toString();
 const TableDrops = readFileSync('src/database/Drops/TableDrops.sql').toString();
+const GanttDrops =  readFileSync('src/database/Drops/GanttDrops.sql').toString();
 
 const EnumNationality = readFileSync('src/database/Creation/EnumNationality.sql').toString();
 const Tables = readFileSync('src/database/Creation/Tables.sql').toString();
@@ -32,8 +33,7 @@ const Student = readFileSync('src/database/Functions/Student.sql').toString();
 const Researcher =  readFileSync('src/database/Functions/Researcher.sql').toString();
 const Project = readFileSync('src/database/Functions/Project.sql').toString();
 const Activity = readFileSync('src/database/Functions/Activity.sql').toString();
-
-
+const Gantt  = readFileSync('src/database/Functions/Gantt.sql').toString();
 
 
 /**
@@ -57,6 +57,7 @@ async function migration() {
         await pool.query(ResearcherDrops);
         await pool.query(ActivityDrops);
         await pool.query(TableDrops);
+        await pool.query(GanttDrops);
 
 
         //Creacion de todas las tablas y tipos
@@ -77,6 +78,7 @@ async function migration() {
         await pool.query(Researcher);
         await pool.query(Project);
         await pool.query(Activity);
+        await pool.query(Gantt);
 
         return;
     } catch (error) {
