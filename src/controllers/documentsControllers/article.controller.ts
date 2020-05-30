@@ -1,0 +1,130 @@
+import { Request, Response } from 'express';
+import { PoolClient } from 'pg';
+import { pool } from '../../database/connection';
+import Queries from '../../database/Queries'
+import fs from 'fs';
+import path from 'path';
+
+export class ArticleController {
+
+        /**
+     * Create Article for a project.
+     * path: /article
+     * method: post
+     */
+
+    async insertArticle(req: Request, res: Response): Promise<Response> {
+        const client: PoolClient = await pool.connect();
+        const insert = `SELECT createarticle($1,$2,$3,$4,$5,$6,$7,$8,$9);`;
+        try {
+            const url = `${req.body.tabla}/${req.file.filename}`;
+            const values = [req.body.id_project, req.body.title,req.body.key_words,req.body.abstract,
+                            req.body.authors,req.body.magazine,req.body.url,req.file.filename, url];
+            await Queries.simpleTransaction(insert, values, client);
+            return res.status(200).json(
+                {
+                    msg: 'Article inserted'
+                }
+            );
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Delete a Article from a project.
+     * path: /article/:id
+     * method: delete
+     */
+
+    async deleteArticle(req: Request, res: Response): Promise<Response> {
+        const client: PoolClient = await pool.connect();
+        const deleteD = `SELECT deletearticle($1);`;
+        const query = `SELECT getarticle($1,'articleCursor');`;
+        const fetch = `FETCH ALL IN "articleCursor";`;
+        try {
+            const id = [req.params.id];
+            await Queries.begin(client);
+            const response = await Queries.simpleSelectWithParameterContinous(query, id, fetch, client);
+            let message = "empty";
+            let resultado = response.rows[0];
+            if (resultado != undefined) {
+                const p = resultado.file_path;
+                let fullPath = path.join(__dirname + '../../../..' + '/public/' + p);
+                fs.unlinkSync(fullPath);
+                await Queries.simpleTransaction(deleteD, id, client);
+                message = "Article deleted";
+            }
+            return res.status(200).json(
+                {
+                    msg: message
+                }
+            );
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+        /**
+     * Get Article.
+     * path: /article/:id
+     * method: get
+     */
+
+    async getArticle(req: Request, res: Response): Promise<Response> {
+        const query = `select getarticle($1,'articleCursor');`;
+        const fetch = `FETCH ALL IN "articleCursor";`;
+        const client = await pool.connect();
+        try {
+            const dni = [req.params.id];
+            const response = await Queries.simpleSelectWithParameter(query, dni, fetch, client);
+            const rows = response.rows[0];
+            if (rows === undefined) {
+                return res.json({
+                    msg: "empty"
+                });
+            }
+            return res.json(rows);
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Get Article from project.
+     * path: /article/project/:id
+     * method: get
+     */
+
+    async getArticleProject(req: Request, res: Response): Promise<Response> {
+        const query = `select getarticlesproject($1,'articleCursor');`;
+        const fetch = `FETCH ALL IN "articleCursor";`;
+        const client = await pool.connect();
+        try {
+            const dni = [req.params.id];
+            const response = await Queries.simpleSelectWithParameter(query, dni, fetch, client);
+            const rows = response.rows;
+            return res.json(rows);
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+}
+
+const articleController = new ArticleController();
+export default articleController;
