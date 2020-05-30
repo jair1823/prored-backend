@@ -1,3 +1,5 @@
+--Project Form ########################################################################################################
+
 CREATE OR REPLACE FUNCTION createprojectform(idp integer, pdate date, pfile varchar(100),ppath varchar(200)) 
 RETURNS void AS $$
 BEGIN
@@ -26,7 +28,7 @@ CREATE OR REPLACE FUNCTION getprojectform(pid integer, ref refcursor)
     END;
 $$ LANGUAGE plpgsql;
 
---###########################################################################
+--Endorsement ########################################################################################################
 
 CREATE OR REPLACE FUNCTION createendorsement(idp integer,ptype endorsement_type, pfile varchar(100),ppath varchar(200)) 
 RETURNS void AS $$
@@ -63,6 +65,58 @@ CREATE OR REPLACE FUNCTION getendorsementsproject(pid integer, ref refcursor)
     BEGIN
         OPEN ref FOR select * 
             from public.endorsement
+        where id_project = pid;
+        RETURN ref;
+    END;
+$$ LANGUAGE plpgsql;
+
+--Article ########################################################################################################
+
+CREATE OR REPLACE FUNCTION createarticle(
+  idp integer,
+  ptitle varchar(100),
+  pkey_words varchar(200),
+  pabstract text,
+  pauthors varchar(200),
+  pmagazine varchar(50),
+  purl varchar (200),
+  pfile varchar(100),
+  ppath varchar(200)) 
+RETURNS void AS $$
+BEGIN
+  INSERT INTO public.article(id_project, title, key_words, abstract, authors, magazine, url, filename, file_path)
+  values (idp, ptitle, pkey_words, pabstract, pauthors, pmagazine, purl, pfile,ppath);
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION deletearticle(id integer) 
+RETURNS void AS $$
+BEGIN
+  DELETE FROM public.article WHERE id_article = id;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getarticle(pid integer, ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+        OPEN ref FOR select * 
+            from public.article
+        where id_article = pid;
+        RETURN ref;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getarticlesproject(pid integer, ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+        OPEN ref FOR select * 
+            from public.article
         where id_project = pid;
         RETURN ref;
     END;

@@ -5,3 +5,7 @@ DROP FUNCTION IF EXISTS createendorsement;
 DROP FUNCTION IF EXISTS deleteendorsement;
 DROP FUNCTION IF EXISTS getendorsement;
 DROP FUNCTION IF EXISTS getendorsementsproject;
+DROP FUNCTION IF EXISTS createarticle;
+DROP FUNCTION IF EXISTS deletearticle;
+DROP FUNCTION IF EXISTS getarticle;
+DROP FUNCTION IF EXISTS getarticlesproject;
