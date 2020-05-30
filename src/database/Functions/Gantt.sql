@@ -103,7 +103,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION getgantt_tasks(pid_gantt integer , ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
-    SELECT id_task, task_name,  description,  start_date,  end_date 
+    SELECT id_task, task_name,  description,  TO_CHAR(start_date,'YYYY-mm-dd') as start_date,  TO_CHAR(end_date,'YYYY-mm-dd') as end_date 
     FROM public.gantt_task
     where id_gantt =pid_gantt;
   RETURN ref;

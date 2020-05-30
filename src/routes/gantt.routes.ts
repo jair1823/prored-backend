@@ -13,7 +13,7 @@ router.get('/gantt/:id', Gantt_Controller.getGantts);
 /*Gantt Tasks*/
 router.post('/gantt_task', Gantt_Controller.createGantt_Task);
 router.put('/gantt_task/:id', Gantt_Controller.updateGantt_Task);
-router.get('/gantt_task', Gantt_Controller.getGantt_Tasks);
+router.get('/gantt_task/:id', Gantt_Controller.getGantt_Tasks);
 
 
 export default router;

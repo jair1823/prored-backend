@@ -252,7 +252,7 @@ async updatePeriod(req: Request, res: Response): Promise<Response> {
         const fetchResearcher = `FETCH ALL IN "ganttsCursor";`;
         const client: PoolClient = await pool.connect();
         try {
-            const values = [req.body.id_gantt];
+            const values = [req.params.id];
             const gantts = await Queries.simpleSelectWithParameter(getResearcher, values, fetchResearcher, client);
             return res.status(200).json(gantts.rows);
         } catch (error) {
