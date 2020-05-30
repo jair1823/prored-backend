@@ -78,44 +78,70 @@ CREATE TYPE public.endorsement_type AS ENUM (
     'Externo'
 );
 
-create table public.document(
-    id_document SERIAL PRIMARY KEY,
-    id_project integer REFERENCES public.project(id_project),
-    id_activity integer REFERENCES public.activity(id_activity),
-    name varchar(50),
-    file_path varchar(150)
+CREATE TYPE public.paper_type AS ENUM (
+    'Ponente',
+    'Visita'
 );
 
+--Documentos
+
 create table public.endorsement(
-    id_document integer PRIMARY KEY REFERENCES public.document(id_document),
-    type public.endorsement_type
+    id_endorsement SERIAL PRIMARY KEY,
+    id_project integer REFERENCES public.project(id_project),
+    type public.endorsement_type,
+    filename varchar(100),
+    file_path varchar(200)
 );
 
 create table public.project_form(
-    id_document integer PRIMARY KEY REFERENCES public.document(id_document)
-);
-
-create table public.list_of_assitance(
-    id_document integer PRIMARY KEY REFERENCES public.document(id_document),
-    date date
-);
-
-create table public.photo(
-    id_document integer PRIMARY KEY REFERENCES public.document(id_document),
-    date date,
-    comment text
+    id_project_form SERIAL PRIMARY KEY,
+    id_project integer REFERENCES public.project(id_project),
+    date_created date,
+    filename varchar(100),
+    file_path varchar(200)
 );
 
 create table public.article(
-    id_document integer PRIMARY KEY REFERENCES public.document(id_document),
-    key_words varchar(100),
-    abstract text
+    id_article SERIAL PRIMARY KEY,
+    id_project integer REFERENCES public.project(id_project),
+    title varchar(100),
+    key_words varchar(200),
+    abstract text,
+    authors varchar (200),
+    magazine varchar (50),
+    url varchar (200),
+    filename varchar(100),
+    file_path varchar (200)
 );
 
 create table public.paper(
-    id_document integer PRIMARY KEY REFERENCES public.document(id_document),
+    id_paper SERIAL PRIMARY KEY,
+    id_project integer REFERENCES public.project(id_project),
     paper_name varchar(100),
-    speaker varchar(50)
+    speaker varchar(50),
+    place varchar(100),
+    type public.paper_type,
+    country public.nationality,
+    date_assisted date,
+    filename varchar (100),
+    file_path varchar (200)
+);
+
+create table public.photo(
+    id_document SERIAL PRIMARY KEY,
+    id_activity integer REFERENCES public.activity(id_activity),
+    date_taken date,
+    comment text,
+    filename varchar (100),
+    file_path varchar (200)
+);
+
+create table public.list_of_assitance(
+    id_document SERIAL PRIMARY KEY,
+    id_activity integer REFERENCES public.activity(id_activity),
+    date_passed date,
+    filename varchar (100),
+    file_path varchar (200)
 );
 
 CREATE TYPE public.degree AS ENUM (

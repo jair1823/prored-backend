@@ -11,6 +11,7 @@ const LanguageDrops = readFileSync('src/database/Drops/LanguageDrops.sql').toStr
 const NetworkDrops = readFileSync('src/database/Drops/NetworkDrops.sql').toString();
 const PersonDrops = readFileSync('src/database/Drops/PersonDrops.sql').toString();
 const StudentDrops = readFileSync('src/database/Drops/StudentDrops.sql').toString();
+const DocumentDrops = readFileSync('src/database/Drops/DocumentDrops.sql').toString();
 const ProjectDrops = readFileSync('src/database/Drops/ProjectDrops.sql').toString();
 const ResearcherDrops = readFileSync('src/database/Drops/ResearcherDrops.sql').toString();
 const ActivityDrops = readFileSync('src/database/Drops/ActivityDrops.sql').toString();
@@ -31,6 +32,7 @@ const Network = readFileSync('src/database/Functions/Network.sql').toString();
 const Person = readFileSync('src/database/Functions/Person.sql').toString();
 const Student = readFileSync('src/database/Functions/Student.sql').toString();
 const Researcher =  readFileSync('src/database/Functions/Researcher.sql').toString();
+const Document = readFileSync('src/database/Functions/Document.sql').toString();
 const Project = readFileSync('src/database/Functions/Project.sql').toString();
 const Activity = readFileSync('src/database/Functions/Activity.sql').toString();
 const Gantt  = readFileSync('src/database/Functions/Gantt.sql').toString();
@@ -53,6 +55,7 @@ async function migration() {
         await pool.query(LanguageDrops);
         await pool.query(NetworkDrops);
         await pool.query(PersonDrops);
+        await pool.query(DocumentDrops);
         await pool.query(ProjectDrops);
         await pool.query(ResearcherDrops);
         await pool.query(ActivityDrops);
@@ -76,6 +79,7 @@ async function migration() {
         await pool.query(Student);
         await pool.query(Person);
         await pool.query(Researcher);
+        await pool.query(Document);
         await pool.query(Project);
         await pool.query(Activity);
         await pool.query(Gantt);
