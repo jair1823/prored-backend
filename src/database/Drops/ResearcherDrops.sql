@@ -4,3 +4,4 @@ DROP FUNCTION IF EXISTS getresearchers;
 DROP FUNCTION IF EXISTS getresearchersall;
 DROP FUNCTION IF EXISTS getresearcherbydni;
 DROP FUNCTION IF EXISTS getresearchersbasic;
+DROP FUNCTION IF EXISTS getresearcherbydniall;

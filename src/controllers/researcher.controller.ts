@@ -48,6 +48,27 @@ export class ResearcherController {
     }
 
     /**
+     * Get all researcher no matter status by dni.
+     * path: /researcher_all/:dni
+     * method: get
+     */
+
+    async getResearchersByIdAll(req: Request, res: Response): Promise<Response> {
+        const query = `select getresearcherbydniall($1,'researchersCursor');`;
+        const fetch = `FETCH ALL IN "researchersCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const response = await Queries.simpleSelectWithParameter(query, [req.params.dni],fetch, client);
+            return res.status(200).json(response.rows[0]);
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
      * Get specific researcher no matter status.
      * path: /researcher/:dni
      * method: get
