@@ -128,7 +128,7 @@ create table public.paper(
 );
 
 create table public.photo(
-    id_document SERIAL PRIMARY KEY,
+    id_photo SERIAL PRIMARY KEY,
     id_activity integer REFERENCES public.activity(id_activity),
     date_taken date,
     comment text,
@@ -137,7 +137,7 @@ create table public.photo(
 );
 
 create table public.list_of_assitance(
-    id_document SERIAL PRIMARY KEY,
+    id_list SERIAL PRIMARY KEY,
     id_activity integer REFERENCES public.activity(id_activity),
     date_passed date,
     filename varchar (100),

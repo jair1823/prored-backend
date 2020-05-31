@@ -13,3 +13,7 @@ DROP FUNCTION IF EXISTS createpaper;
 DROP FUNCTION IF EXISTS deletepaper;
 DROP FUNCTION IF EXISTS getpaper;
 DROP FUNCTION IF EXISTS getpapersproject;
+DROP FUNCTION IF EXISTS createlistofassistance;
+DROP FUNCTION IF EXISTS deletelistofassistance;
+DROP FUNCTION IF EXISTS getlistofassistance;
+DROP FUNCTION IF EXISTS getlistofassistanceactivity;

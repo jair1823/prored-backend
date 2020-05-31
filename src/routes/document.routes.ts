@@ -3,6 +3,7 @@ import Article_Controller from '../controllers/documentsControllers/article.cont
 import Endorsement_Controller from '../controllers/documentsControllers/endorsement.controller'
 import Project_Form_Controller from '../controllers/documentsControllers/project_form.controller'
 import Paper_Controller from '../controllers/documentsControllers/paper.controller'
+import List_Of_Assistance from '../controllers/documentsControllers/list_of_assistance.controller'
 import upload from "../lib/saveFile";
 
 const router = Router();
@@ -27,5 +28,10 @@ router.post('/paper/nofile', Paper_Controller.insertPaperNoFile);
 router.delete('/paper/:id', Paper_Controller.deletePaper);
 router.get('/paper/:id', Paper_Controller.getPaper);
 router.get('/paper/project/:id', Paper_Controller.getPaperProject);
+
+router.post('/list',upload, List_Of_Assistance.insertList);
+router.delete('/list/:id', List_Of_Assistance.deleteList);
+router.get('/list/:id', List_Of_Assistance.getList);
+router.get('/list/activity/:id', List_Of_Assistance.getListActivity);
 
 export default router;
