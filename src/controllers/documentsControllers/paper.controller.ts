@@ -5,25 +5,25 @@ import Queries from '../../database/Queries'
 import fs from 'fs';
 import path from 'path';
 
-export class ArticleController {
+export class PaperController {
 
-        /**
-     * Create Article for a project.
-     * path: /article
+    /**
+     * Create Paper for a project.
+     * path: /paper
      * method: post
      */
 
-    async insertArticle(req: Request, res: Response): Promise<Response> {
+    async insertPaper(req: Request, res: Response): Promise<Response> {
         const client: PoolClient = await pool.connect();
-        const insert = `SELECT createarticle($1,$2,$3,$4,$5,$6,$7,$8,$9);`;
+        const insert = `SELECT createpaper($1,$2,$3,$4,$5,$6,$7,$8,$9);`;
         try {
             const url = `${req.body.tabla}/${req.file.filename}`;
-            const values = [req.body.id_project, req.body.title,req.body.key_words,req.body.abstract,
-                            req.body.authors,req.body.magazine,req.body.url,req.file.filename, url];
+            const values = [req.body.id_project, req.body.paper_name,req.body.speaker,req.body.place,
+                            req.body.type,req.body.country,req.body.date_assisted,req.file.filename, url];
             await Queries.simpleTransaction(insert, values, client);
             return res.status(200).json(
                 {
-                    msg: 'Article inserted'
+                    msg: 'Paper inserted'
                 }
             );
         } catch (error) {
@@ -37,21 +37,21 @@ export class ArticleController {
     }
 
     /**
-     * Create Article with no file for a project.
-     * path: /article/nofile
+     * Create Paper with no file for a project.
+     * path: /paper/nofile
      * method: post
      */
 
-    async insertArticleNoFile(req: Request, res: Response): Promise<Response> {
+    async insertPaperNoFile(req: Request, res: Response): Promise<Response> {
         const client: PoolClient = await pool.connect();
-        const insert = `SELECT createarticle($1,$2,$3,$4,$5,$6,$7,$8,$9);`;
+        const insert = `SELECT createpaper($1,$2,$3,$4,$5,$6,$7,$8,$9);`;
         try {
-            const values = [req.body.id_project, req.body.title,req.body.key_words,req.body.abstract,
-                            req.body.authors,req.body.magazine,req.body.url,null, null];
+            const values = [req.body.id_project, req.body.paper_name,req.body.speaker,req.body.place,
+                req.body.type,req.body.country,req.body.date_assisted,null, null];
             await Queries.simpleTransaction(insert, values, client);
             return res.status(200).json(
                 {
-                    msg: 'Article inserted'
+                    msg: 'Paper inserted'
                 }
             );
         } catch (error) {
@@ -65,16 +65,16 @@ export class ArticleController {
     }
 
     /**
-     * Delete a Article from a project.
-     * path: /article/:id
+     * Delete a Paper from a project.
+     * path: /paper/:id
      * method: delete
      */
 
-    async deleteArticle(req: Request, res: Response): Promise<Response> {
+    async deletePaper(req: Request, res: Response): Promise<Response> {
         const client: PoolClient = await pool.connect();
-        const deleteD = `SELECT deletearticle($1);`;
-        const query = `SELECT getarticle($1,'articleCursor');`;
-        const fetch = `FETCH ALL IN "articleCursor";`;
+        const deleteD = `SELECT deletepaper($1);`;
+        const query = `SELECT getpaper($1,'paperCursor');`;
+        const fetch = `FETCH ALL IN "paperCursor";`;
         try {
             const id = [req.params.id];
             await Queries.begin(client);
@@ -88,7 +88,7 @@ export class ArticleController {
                     fs.unlinkSync(fullPath);
                 }
                 await Queries.simpleTransaction(deleteD, id, client);
-                message = "Article deleted";
+                message = "Paper deleted";
             }
             return res.status(200).json(
                 {
@@ -103,15 +103,15 @@ export class ArticleController {
         }
     }
 
-        /**
-     * Get Article.
-     * path: /article/:id
+    /**
+     * Get Paper.
+     * path: /paper/:id
      * method: get
      */
 
-    async getArticle(req: Request, res: Response): Promise<Response> {
-        const query = `select getarticle($1,'articleCursor');`;
-        const fetch = `FETCH ALL IN "articleCursor";`;
+    async getPaper(req: Request, res: Response): Promise<Response> {
+        const query = `select getpaper($1,'paperCursor');`;
+        const fetch = `FETCH ALL IN "paperCursor";`;
         const client = await pool.connect();
         try {
             const dni = [req.params.id];
@@ -132,14 +132,14 @@ export class ArticleController {
     }
 
     /**
-     * Get Article from project.
-     * path: /article/project/:id
+     * Get Paper from project.
+     * path: /paper/project/:id
      * method: get
      */
 
-    async getArticleProject(req: Request, res: Response): Promise<Response> {
-        const query = `select getarticlesproject($1,'articleCursor');`;
-        const fetch = `FETCH ALL IN "articleCursor";`;
+    async getPaperProject(req: Request, res: Response): Promise<Response> {
+        const query = `select getpapersproject($1,'paperCursor');`;
+        const fetch = `FETCH ALL IN "paperCursor";`;
         const client = await pool.connect();
         try {
             const dni = [req.params.id];
@@ -156,5 +156,5 @@ export class ArticleController {
 
 }
 
-const articleController = new ArticleController();
-export default articleController;
+const paperController = new PaperController();
+export default paperController;

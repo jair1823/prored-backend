@@ -9,3 +9,7 @@ DROP FUNCTION IF EXISTS createarticle;
 DROP FUNCTION IF EXISTS deletearticle;
 DROP FUNCTION IF EXISTS getarticle;
 DROP FUNCTION IF EXISTS getarticlesproject;
+DROP FUNCTION IF EXISTS createpaper;
+DROP FUNCTION IF EXISTS deletepaper;
+DROP FUNCTION IF EXISTS getpaper;
+DROP FUNCTION IF EXISTS getpapersproject;
