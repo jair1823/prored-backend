@@ -5,6 +5,7 @@ const router = Router();
 
 router.get('/researcher', Researcher_Controller.getResearchers);
 router.get('/researcher_all', Researcher_Controller.getResearchersAll);
+router.get('/researcher_all/:dni', Researcher_Controller.getResearchersByIdAll);
 router.get('/researcher_basic', Researcher_Controller.getResearchersBasic);
 router.post('/researcher', Researcher_Controller.createResearcher);
 router.put('/researcher/:dni', Researcher_Controller.updateResearcher);
