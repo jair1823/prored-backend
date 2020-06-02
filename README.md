@@ -19,6 +19,7 @@ Cada una de las rutas para los estudiantes, se encuentran asociadas al controlad
 | student.controller@getStudentByDni             | /student/:dni                     | GET          | Función encargada de  obtener un estudiante activo por su  identificación                                    |
 | student.controller@getStudentsAll              | /student_all                      | GET          | Función encargada de  obtener los estudiantes sin  importar estado de activación                             |
 | student.controller@getStudentByDniAll          | /student_all/:dni                 | GET          | Función encargada de  obtener un estudiante activo  por su identificación  sin importar estado de activación |
+| student.controller@getStudentsBasic          | /student_basic/                | GET          | Función encargada de  obtener información básica del estudiante |
 | student.controller@createStudent               | /student                          | POST         | Función encargada de crear un estudiante                                                                     |
 | student.controller@updateStudent               | /student/:dni                     | PUT          | Función encargada de actualizar un estudiante                                                                |
 | student.controller@disableStudent              | /student/:dni/disable             | PUT          | Función encargada de deshabilitar un estudiante                                                              |
@@ -151,6 +152,7 @@ Cada una de las rutas para los investigadores, se encuentran asociadas al contro
 |------------------------------------------------|-----------------------------------|--------------|-------------------------------------------------------------------------|
 | researcher.controller@getResearchers           | /researcher/                      | GET          | Función encargada de  obtener los investigadores activos                |
 | researcher.controller@getResearchersAll        | /researcher_all/                  | GET          | Función encargada de  obtener una unidad de investigación específica    |
+| researcher.controller@getResearchersBasic        | /researcher_basic/                  | GET          | Función encargada de  información básica de un investigador    |
 | researcher.controller@createResearcher         | /researcher/                      | POST         | Función encargada de  crear una unidad de investigación                 |
 | researcher.controller@updateResearcher         | /researcher/:dni                  | PUT          | Función encargada de  actualizar  una unidad de investigación           |
 | researcher.controller@getResearcherByDni       | /researcher/:dni                  | GET          | Función encargada de obtener un investigador por la identificación      |
@@ -162,3 +164,73 @@ Cada una de las rutas para las consultas, se encuentran asociadas al controlador
 | Método                                  | Ruta                 | HTTP  Request | Descripción                                                                         |
 |-----------------------------------------|----------------------|---------------|-------------------------------------------------------------------------------------|
 | consultas.controller@checkPersonExists  | /person/exists/:id       | GET          | Función encargada de informar si un vinculado existe en el sistema                  |
+
+
+### Proyecto 
+Cada una de las rutas para el proyecto, se encuentran asociadas al controlador project.controller.
+
+
+| Método                                 | Ruta                 | HTTP Request | Descripción                                               |
+|----------------------------------------|----------------------|--------------|-----------------------------------------------------------|
+| project.controller@createProject       | /project/            | POST         | Función encargada de  crear projecto                      |
+| project.controller@updateProject       | /project/:id         | PUT          | Función encargada de actualizar un proyecto               |
+| project.controller@getProjects         | /project/            | GET          | Función encargada de  obtener los proyectos               |
+| project.controller@getProjectbyId      | /project/:id         | GET          | Función encargada de obtener un proyecto específico       |
+| project.controller@assignPersonProject | /project/assign/     | POST         | Función encargada de  asignar personas al proyecto        |
+| project.controller@getPersonsProject   | /project_persons/:id | GET          | Función encargada de obtener los vinculados a un proyecto |
+
+
+
+### Actividad
+Cada una de las rutas para las actividades, se encuentran asociadas al controlador activity.controller.
+
+| Método                                    | Ruta                  | HTTP Request | Descripción                                             |
+|-------------------------------------------|-----------------------|--------------|---------------------------------------------------------|
+| project.controller@createActivity         | /activity/            | POST         | Función encargada de  crear actividad                   |
+| project.controller@updateActivity         | /activity/:id         | PUT          | Función encargada de actualizar una actividad           |
+| project.controller@assignPersonActivity   | /activity/assign      | POST         | Función encargada de asignar actividades                |
+| project.controller@getActivities          | /activity/            | GET          | Función encargada de  obtener actividades               |
+| project.controller@getActivitybyProjectId | /activity/project/:id | GET          | Función encargada de obtener actividades por proyecto   |
+| project.controller@getActivitiesNoProject | /activity/alone       | GET          | Función encargada de obtener actividades independientes |
+| project.controller@assignPersonsActivity  | /activity/project/:id | GET          | Función encargada de obtener personas por actividad     |
+| project.controller@getActivitybyId        | /activity/:id         | GET          | Función encargada de obtener actividad específica       |
+
+
+
+
+
+### Gantt
+Cada una de las rutas para el Gantt, se encuentran asociadas al controlador gantt.controller.
+
+| Método                            | Ruta            | HTTP Request | Descripción                                           |
+|-----------------------------------|-----------------|--------------|-------------------------------------------------------|
+| gantt.controller@createPeriod     | /period/        | POST         | Función encargada de  crear periodo                   |
+| gantt.controller@updatePeriod     | /period/:id     | PUT          | Función encargada de actualizar periodo               |
+| gantt.controller@getPeriods       | /period/        | GET          | Función encargada de ver los periodos                 |
+| gantt.controller@createGantt      | /gantt/         | POST         | Función encargada de  crear el gantt                  |
+| gantt.controller@getGantts        | /gantt/:id      | GET          | Función encargada de obtener el gantt por proyecto    |
+| gantt.controller@createGantt_Task | /gantt_task/    | POST         | Función encargada de crear tareas del gantt           |
+| gantt.controller@updateGantt_Task | /gantt_task/:id | PUT          | Función encargada de actualizar las tareas del gantt  |
+| gantt.controller@getGantt_Tasks   | /gantt_task/:id | GET          | Función encargada de obtener tareas de un gantt       |
+
+
+
+### Documento
+
+Cada una de las rutas para los documentos, se encuentran asociadas al controlador activity.controller.
+
+| Método                                     | Ruta                     | HTTP Request | Descripción                                            |
+|--------------------------------------------|--------------------------|--------------|--------------------------------------------------------|
+| document.controller@insertProjectForm      | /project_form/           | POST         | Función encargada de insertar un form de proyecto      |
+| document.controller@deleteProjectForm      | /project_form/:id        | DELETE       | Función encargada de eliminar form de proyecto         |
+| document.controller@getProjectForm         | /project_form/:id        | GET          | Función encargada de obtener form de proyecto          |
+| document.controller@insertEndorsement      | /endorsement/            | POST         | Función encargada de insertar endorsement              |
+| document.controller@deleteEndorsement      | /endorsement/:id         | DELETE       | Función encargada de eliminar endorsement              |
+| document.controller@getEndorsement         | /endorsement/:id         | GET          | Función encargada de  obtener endorsement              |
+| document.controller@getEndorsementsProject | /endorsement/project/:id | GET          | Función encargada de obtener endorsements por proyecto |
+| document.controller@insertArticle          | /article/                | POST         | Función encargada de insertar artículo                 |
+| document.controller@deleteArticle          | /article/:id             | DELETE       | Función encargada de eliminar artículo                 |
+| document.controller@getArticle             | /article/:id             | GET          | Función encargada de obtener artículo                  |
+| document.controller@getArticleProject      | /article/project/:id     | GET          | Función encargada de obtener artículo por proyecto     |
+
+
