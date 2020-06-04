@@ -27,6 +27,30 @@ export class ConsultasController {
             });
         }
     }
+
+    /**
+     * Get all persons basic information.
+     * path: /person/basic
+     * method: get
+    */
+   async getPersonsBasic(req: Request, res: Response): Promise<Response> {
+    const query = `select getPersons('personsCursor');`;
+    const fetch = `FETCH ALL IN "personsCursor";`;
+    const client: PoolClient = await pool.connect();
+    try {
+
+        const response = await Queries.simpleSelect(query, fetch, client);
+
+        return res.status(200).json(response.rows);
+    } catch (error) {
+
+        await Queries.simpleError(client, error);
+
+        return res.status(500).json({
+            msg: 'Internal Server Error'
+        });
+    }
+}
 }
 
 const consultaController = new ConsultasController();
