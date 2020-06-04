@@ -37,12 +37,15 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION creategantt(
     prel_code integer,
-    pid_period integer
+    pid_period integer,
+    ref refcursor
     )
-    RETURNS void AS $$
+    RETURNS refcursor AS $$
     BEGIN
-        INSERT INTO public.gantt( rel_code, id_period)
-        VALUES ( prel_code , pid_period );
+      OPEN ref FOR
+          INSERT INTO public.gantt( rel_code, id_period)
+          VALUES ( prel_code , pid_period )RETURNING id_gantt;
+      RETURN ref;
     END;
 $$ LANGUAGE plpgsql;
 
