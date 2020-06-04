@@ -5,24 +5,31 @@ import Queries from '../../database/Queries'
 import fs from 'fs';
 import path from 'path';
 
-export class ListOfAssistanceController {
+export class PhotoController {
 
     /**
-     * Create a List of assitance from an activity.
-     * path: /list
+     * Create a Photo for an activity.
+     * path: /photo
      * method: post
      */
 
-    async insertList(req: Request, res: Response): Promise<Response> {
+    async insertPhotos(req: Request, res: Response): Promise<Response> {
         const client: PoolClient = await pool.connect();
-        const insert = `SELECT createlistofassistance($1,$2,$3,$4);`;
+        const insert = `SELECT createphoto($1,$2,$3,$4,$5);`;
         try {
-            const url = `${req.body.tabla}/${req.file.filename}`;
-            const values = [req.body.id_activity, req.body.date_passed, req.file.filename, url];
-            await Queries.simpleTransaction(insert, values, client);
+            const files = JSON.stringify(req.files);
+            const filesParsed = JSON.parse(files);
+            const bodies = JSON.parse(req.body.data);
+            await Queries.begin(client);
+            for(let i = 0; i < bodies.length;i++){
+                let url = `${req.body.tabla}/${filesParsed[i].filename}`;
+                let values = [req.body.id_activity, bodies[i].date_taken, bodies[i].comment, filesParsed[i].filename, url];
+                await Queries.simpleTransactionContinous(insert, values, client);
+            }
+            await Queries.commit(client);
             return res.status(200).json(
                 {
-                    msg: 'List of Assistance inserted'
+                    msg: 'Photo inserted'
                 }
             );
         } catch (error) {
@@ -36,16 +43,16 @@ export class ListOfAssistanceController {
     }
 
     /**
-     * Delete a List of assistance from an activity.
-     * path: /list/:id
+     * Delete a Photo from an activity.
+     * path: /photo/:id
      * method: delete
      */
 
-    async deleteList(req: Request, res: Response): Promise<Response> {
+    async deletePhoto(req: Request, res: Response): Promise<Response> {
         const client: PoolClient = await pool.connect();
-        const deleteD = `SELECT deletelistofassistance($1);`;
-        const query = `SELECT getlistofassistance($1,'listCursor');`;
-        const fetch = `FETCH ALL IN "listCursor";`;
+        const deleteD = `SELECT deletephoto($1);`;
+        const query = `SELECT getphoto($1,'photoCursor');`;
+        const fetch = `FETCH ALL IN "photoCursor";`;
         try {
             const id = [req.params.id];
             await Queries.begin(client);
@@ -57,7 +64,7 @@ export class ListOfAssistanceController {
                 let fullPath = path.join(__dirname + '../../../..' + '/public/' + p);
                 fs.unlinkSync(fullPath);
                 await Queries.simpleTransaction(deleteD, id, client);
-                message = "List of Assitance deleted";
+                message = "Photo deleted";
             }
             return res.status(200).json(
                 {
@@ -73,14 +80,14 @@ export class ListOfAssistanceController {
     }
 
     /**
-     * Get List of Assistance.
-     * path: /list/:id
+     * Get Photo.
+     * path: /photo/:id
      * method: get
      */
 
-    async getList(req: Request, res: Response): Promise<Response> {
-        const query = `select getlistofassistance($1,'listCursor');`;
-        const fetch = `FETCH ALL IN "listCursor";`;
+    async getPhoto(req: Request, res: Response): Promise<Response> {
+        const query = `select getphoto($1,'photoCursor');`;
+        const fetch = `FETCH ALL IN "photoCursor";`;
         const client = await pool.connect();
         try {
             const dni = [req.params.id];
@@ -101,14 +108,14 @@ export class ListOfAssistanceController {
     }
 
     /**
-     * Get List of assistance from an activity.
-     * path: /list/activity/:id
+     * Get Photos from activity.
+     * path: /photo/activity/:id
      * method: get
      */
 
-    async getListActivity(req: Request, res: Response): Promise<Response> {
-        const query = `select getlistofassistanceactivity($1,'listCursor');`;
-        const fetch = `FETCH ALL IN "listCursor";`;
+    async getPhotosActivity(req: Request, res: Response): Promise<Response> {
+        const query = `select getphotosactivity($1,'photoCursor');`;
+        const fetch = `FETCH ALL IN "photoCursor";`;
         const client = await pool.connect();
         try {
             const dni = [req.params.id];
@@ -124,5 +131,5 @@ export class ListOfAssistanceController {
     }
 }
 
-const listOfAssistanceController = new ListOfAssistanceController();
-export default listOfAssistanceController;
+const photoController = new PhotoController();
+export default photoController;

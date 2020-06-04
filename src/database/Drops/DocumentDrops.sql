@@ -17,3 +17,7 @@ DROP FUNCTION IF EXISTS createlistofassistance;
 DROP FUNCTION IF EXISTS deletelistofassistance;
 DROP FUNCTION IF EXISTS getlistofassistance;
 DROP FUNCTION IF EXISTS getlistofassistanceactivity;
+DROP FUNCTION IF EXISTS createphoto;
+DROP FUNCTION IF EXISTS deletephoto;
+DROP FUNCTION IF EXISTS getphoto;
+DROP FUNCTION IF EXISTS getphotosactivity;

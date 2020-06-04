@@ -12,6 +12,7 @@ import Researcher from './researcher.routes';
 import Project from './project.routes'
 import Activity from './activity.routes'
 import Document from './document.routes'
+import DocumentMultiple from './document_multiple.routes'
 import Gantt from './gantt.routes'
 /**
  * 
@@ -35,4 +36,5 @@ export function addRoutes(app: any) {
     app.use(Gantt);
     app.use('/activity',Activity);
     app.use(Document);
+    app.use(DocumentMultiple);
 }

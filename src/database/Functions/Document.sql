@@ -215,3 +215,45 @@ CREATE OR REPLACE FUNCTION getlistofassistanceactivity(pid integer, ref refcurso
         RETURN ref;
     END;
 $$ LANGUAGE plpgsql;
+
+--Photo ########################################################################################################
+
+CREATE OR REPLACE FUNCTION createphoto(ida integer, pdate date, pcomment text, pfile varchar(100),ppath varchar(200)) 
+RETURNS void AS $$
+BEGIN
+  INSERT INTO public.photo(id_activity, date_taken,comment, filename, file_path) values (ida,pdate,pcomment,pfile,ppath);
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION deletephoto(id integer) 
+RETURNS void AS $$
+BEGIN
+  DELETE FROM public.photo WHERE id_photo = id;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getphoto(pid integer, ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+        OPEN ref FOR select id_photo, id_activity, TO_CHAR(date_taken,'YYYY-mm-dd') as date_taken,comment, filename, file_path 
+            from public.photo
+        where id_photo = pid;
+        RETURN ref;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getphotosactivity(pid integer, ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+        OPEN ref FOR select id_photo, id_activity, TO_CHAR(date_taken,'YYYY-mm-dd') as date_taken,comment, filename, file_path
+            from public.photo
+        where id_activity = pid;
+        RETURN ref;
+    END;
+$$ LANGUAGE plpgsql;
