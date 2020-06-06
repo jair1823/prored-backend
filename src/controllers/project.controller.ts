@@ -13,10 +13,20 @@ export class ProjectController {
     async createProject(req: Request, res: Response): Promise<Response> {
         const query = `SELECT createproject($1,$2,$3,$4,'projectCursor')`;
         const fetch = `FETCH ALL IN "projectCursor";`;
+        const assign = `SELECT assignpersonproject($1,$2,$3)`;
         const client: PoolClient = await pool.connect();
         try {
+            await Queries.begin(client);
             const values = [req.body.inv_unit, req.body.name, req.body.code_manage, req.body.project_type];
-            const response = await Queries.insertWithReturn(query, values, fetch, client);
+            const response = await Queries.insertWithReturnContinous(query, values, fetch, client);
+
+            const persons: any = req.body.persons;
+
+            persons.map(async (p:any) => {
+                await Queries.simpleTransactionContinous(assign, [p.dni,response.rows[0].id_project,p.role], client);
+            });
+            
+            await Queries.commit(client);
             return res.json(
                 response.rows[0]
             );
