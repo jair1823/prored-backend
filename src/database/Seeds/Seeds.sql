@@ -122,7 +122,7 @@ INSERT INTO  public.person_x_project(dni , id_project, role )
 INSERT INTO public.period(name)
         values
                 ('II Semestre 2020'),
-                ('I  Semestre 2021');
+                ('I Semestre 2021');
 
 -- Gantt 
 

@@ -7,33 +7,33 @@ import Queries from '../database/Queries';
  * Delete a gannt Tasks.
 */
 
-async function  deleteGantt_Task(id_gantt: any) {
+async function deleteGantt_Task(id_gantt: any) {
     const query = `SELECT deletegantt_tasks($1);`;
     const client: PoolClient = await pool.connect();
     try {
-        const values = [id_gantt ];
+        const values = [id_gantt];
         await Queries.simpleTransaction(query, values, client);
         return true;
-        
+
     } catch (error) {
 
         await Queries.simpleError(client, error);
-        console.log(  "Internal Server Error")
+        console.log("Internal Server Error")
         return false;
     }
 }
 
 
-async function createGantt_Task_Function(gantt_list:any) {
+async function createGantt_Task_Function(gantt_list: any) {
     const query = `SELECT creategantt_task($1,$2,$3,$4,$5);`;
     const client: PoolClient = await pool.connect();
     try {
         const listaGanttLine = gantt_list
         await Queries.begin(client);
-        for (let i = 0 ;  i < listaGanttLine.length ; i++){
-            const values = [listaGanttLine[i].id_gantt, listaGanttLine[i].task_name, 
-                            listaGanttLine[i].description, listaGanttLine[i].start_date, 
-                            listaGanttLine[i].end_date
+        for (let i = 0; i < listaGanttLine.length; i++) {
+            const values = [listaGanttLine[i].id_gantt, listaGanttLine[i].task_name,
+            listaGanttLine[i].description, listaGanttLine[i].start_date,
+            listaGanttLine[i].end_date
             ];
             await Queries.simpleTransactionContinous(query, values, client);
         }
@@ -41,8 +41,8 @@ async function createGantt_Task_Function(gantt_list:any) {
         await Queries.commit(client);
         console.log("Gantt Tasks created Succesfully")
         return true;
-            
-        
+
+
     } catch (error) {
 
         await Queries.simpleError(client, error);
@@ -63,8 +63,8 @@ export class GanttController {
      * method: post
     */
 
-   async createPeriod(req: Request, res: Response): Promise<Response> {
-    const query = `SELECT createperiod($1)`;
+    async createPeriod(req: Request, res: Response): Promise<Response> {
+        const query = `SELECT createperiod($1)`;
         const client: PoolClient = await pool.connect();
         try {
             const values = [req.body.name];
@@ -90,8 +90,8 @@ export class GanttController {
     */
 
 
-async updatePeriod(req: Request, res: Response): Promise<Response> {
-    const query = `SELECT updateperiod($1,$2)`;
+    async updatePeriod(req: Request, res: Response): Promise<Response> {
+        const query = `SELECT updateperiod($1,$2)`;
         const client: PoolClient = await pool.connect();
         try {
             const values = [req.body.name, req.params.id];
@@ -114,22 +114,43 @@ async updatePeriod(req: Request, res: Response): Promise<Response> {
      * method: get
     */
 
-   async getPeriods(req: Request, res: Response): Promise<Response> {
-    const query = `select getperiods('periodsCursor');`;
-    const fetch = `FETCH ALL IN "periodsCursor";`;
-    const client: PoolClient = await pool.connect();
-    try {
-        const response = await Queries.simpleSelect(query, fetch, client);
-        return res.status(200).json(response.rows);
-    } catch (error) {
-        await Queries.simpleError(client, error);
-        return res.status(500).json({
-            msg: 'Internal Server Error'
-        });
+    async getPeriods(req: Request, res: Response): Promise<Response> {
+        const query = `select getperiods('periodsCursor');`;
+        const fetch = `FETCH ALL IN "periodsCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const response = await Queries.simpleSelect(query, fetch, client);
+            return res.status(200).json(response.rows);
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
     }
-}
 
+    /**
+     * See if a period already exists in the database
+     * path: /period/exists
+     * method: get
+     */
+    async checkPeriodExists(req: Request, res: Response): Promise<Response> {
+        const query = `select periodexists($1);`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const name = [req.body.name];
+            const response = await Queries.simpleSelectNoCursor(query, name, client);
 
+            return res.status(200).json(response.rows[0]);
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
 
 
     /**
@@ -137,11 +158,11 @@ async updatePeriod(req: Request, res: Response): Promise<Response> {
      * path: /gantt/
      * method: post
     */
-   async createGantt(req: Request, res: Response): Promise<Response> {
-    const query = `SELECT creategantt($1,$2)`;
+    async createGantt(req: Request, res: Response): Promise<Response> {
+        const query = `SELECT creategantt($1,$2)`;
         const client: PoolClient = await pool.connect();
         try {
-            const values =  [req.body.rel_code, req.params.id_period];
+            const values = [req.body.rel_code, req.params.id_period];
             await Queries.simpleTransaction(query, values, client);
 
             return res.json({
@@ -183,17 +204,17 @@ async updatePeriod(req: Request, res: Response): Promise<Response> {
      * path: /gantt_task/
      * method: post
     */
-    
+
     async createGantt_Task(req: Request, res: Response): Promise<Response> {
         const query = `SELECT creategantt_task($1,$2,$3,$4,$5);`;
         const client: PoolClient = await pool.connect();
         try {
             const listaGanttLine = req.body.gantt_list
             await Queries.begin(client);
-            for (let i = 0 ;  i < listaGanttLine.length ; i++){
-                const values = [listaGanttLine[i].id_gantt, listaGanttLine[i].task_name, 
-                                listaGanttLine[i].description, listaGanttLine[i].start_date, 
-                                listaGanttLine[i].end_date
+            for (let i = 0; i < listaGanttLine.length; i++) {
+                const values = [listaGanttLine[i].id_gantt, listaGanttLine[i].task_name,
+                listaGanttLine[i].description, listaGanttLine[i].start_date,
+                listaGanttLine[i].end_date
                 ];
                 await Queries.simpleTransactionContinous(query, values, client);
             }
@@ -213,7 +234,7 @@ async updatePeriod(req: Request, res: Response): Promise<Response> {
     }
 
 
-   
+
     /**
      * Update gantt tasks of a gantt
      * path: /gantt_task/
@@ -223,7 +244,7 @@ async updatePeriod(req: Request, res: Response): Promise<Response> {
     async updateGantt_Task(req: Request, res: Response): Promise<Response> {
         try {
             const listaGanttLine = req.body.gantt_list;
-            const id_gantt =   req.body.id_gantt;
+            const id_gantt = req.body.id_gantt;
             deleteGantt_Task(id_gantt);
             createGantt_Task_Function(listaGanttLine)
             return res.json({
@@ -239,14 +260,14 @@ async updatePeriod(req: Request, res: Response): Promise<Response> {
 
 
 
-   
+
     /**
      * Get gantt tasks of a gantt
      * path: /gantt_task/
      * method: get
      */
 
-     
+
     async getGantt_Tasks(req: Request, res: Response): Promise<Response> {
         const getResearcher = `select getgantt_tasks($1,'ganttsCursor');`;
         const fetchResearcher = `FETCH ALL IN "ganttsCursor";`;
@@ -264,9 +285,9 @@ async updatePeriod(req: Request, res: Response): Promise<Response> {
             });
         }
     }
-    
 
-    
+
+
 }
 
 const ganttController = new GanttController();
