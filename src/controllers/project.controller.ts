@@ -90,13 +90,19 @@ export class ProjectController {
      */
     async updateProject(req: Request, res: Response): Promise<Response> {
         const query = `SELECT updateproject($1,$2,$3,$4,$5)`;
+        const assign = `SELECT assignpersonproject($1,$2,$3)`;
         const client: PoolClient = await pool.connect();
         try {
-
+            await Queries.begin(client);
             const values = [parseInt(req.params.id), req.body.inv_unit, req.body.name, req.body.code_manage, req.body.project_type];
 
-            await Queries.simpleTransaction(query, values, client);
+            await Queries.simpleTransactionContinous(query, values, client);
+            const persons: any = req.body.persons;
 
+            persons.map(async (p:any) => {
+                await Queries.simpleTransactionContinous(assign, [p.dni,parseInt(req.params.id),p.role], client);
+            });
+            await Queries.commit(client);
             return res.json({
                 msg: `Projecupdateprojectt modified succesfully`
             });
