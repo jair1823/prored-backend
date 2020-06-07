@@ -154,6 +154,27 @@ export class ProjectController {
     }
 
     /**
+     * Get all persons not assigned to a specific project.
+     * path: /project_persons/:id
+     * method: get
+    */
+   async getPersonsNotInProject(req: Request, res: Response): Promise<Response> {
+    const query = `select getpersonsnotinproject($1,'projectCursor');`;
+    const fetch = `FETCH ALL IN "projectCursor";`;
+    const client: PoolClient = await pool.connect();
+    try {
+        const id = [parseInt(req.params.id)];
+        const response = await Queries.simpleSelectWithParameter(query, id, fetch, client);
+        return res.status(200).json(response.rows);
+    } catch (error) {
+        await Queries.simpleError(client, error);
+        return res.status(500).json({
+            msg: 'Internal Server Error'
+        });
+    }
+}
+
+    /**
      * Get all students assigned to project.
      * path: /project/students/:id
      * method: get

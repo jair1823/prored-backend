@@ -5,3 +5,4 @@ DROP FUNCTION IF EXISTS updateproject;
 DROP FUNCTION IF EXISTS assignpersonproject;
 DROP FUNCTION IF EXISTS getpersonsproject;
 DROP FUNCTION IF EXISTS getstudentsproject;
+DROP FUNCTION IF EXISTS getpersonsnotinproject;

@@ -38,8 +38,8 @@ INSERT INTO public.investigation_unit(name,description)
 -----------------------------------------------------------------------
 --Avanzado
 
-INSERT INTO public.person(dni, name, lastname1, lastname2, born_dates, status, phone_number, email)
-        VALUES ('116920331', 'Gabriel', 'Solórzano', 'Chanto', '1997-10-31', true, '+506 87062905', 'g.solorzano97@hotmail.com');
+INSERT INTO public.person(dni, name, lastname1, lastname2, born_dates, status, phone_number, email,person_type)
+        VALUES ('116920331', 'Gabriel', 'Solórzano', 'Chanto', '1997-10-31', true, '+506 87062905', 'g.solorzano97@hotmail.com','Estudiante');
 
 INSERT INTO public.student(dni, id_district, marital_status, campus_code, profile, address, nationality, emergency_contact)
         VALUES ('116920331', 40406, 'Soltero', '1', 'Avanzado', 'San Bosco de Santa Bárbara', 'CR', '85858522');
@@ -60,8 +60,8 @@ INSERT INTO public.person_x_network(dni, id_network)
 -----------------------------------------------------------------------
 --Básico
 
-INSERT INTO public.person(dni, name, lastname1, lastname2, born_dates, status,phone_number,email)
-        VALUES ('411111111', 'Benjamin', 'Pavard', 'Ruíz', '1987-10-31', true,'+506 89988755','pavard@bayern.com');
+INSERT INTO public.person(dni, name, lastname1, lastname2, born_dates, status,phone_number,email, person_type)
+        VALUES ('411111111', 'Benjamin', 'Pavard', 'Ruíz', '1987-10-31', true,'+506 89988755','pavard@bayern.com', 'Estudiante');
 
 INSERT INTO public.student(dni, id_district, marital_status, campus_code, profile, address, nationality, emergency_contact)
         VALUES ('411111111', 0, 'Casado', '1', 'Básico', 'Lille', 'FR', '89562345');
@@ -72,8 +72,8 @@ INSERT INTO public.person_x_career(dni, career_code)
 ----------------------------------------------------------------------------
 --Investigador
 
-INSERT INTO public.person(dni, name, lastname1, lastname2, born_dates, status,phone_number,email)
-        VALUES ('402430534', 'Albert', 'Solís', 'Ruíz', '1987-10-31', true,'+506 89988755','zz@rm.com');
+INSERT INTO public.person(dni, name, lastname1, lastname2, born_dates, status,phone_number,email,person_type)
+        VALUES ('402430534', 'Albert', 'Solís', 'Ruíz', '1987-10-31', true,'+506 89988755','zz@rm.com','Investigador');
 
 INSERT INTO public.researcher(dni, id_inv_unit)
         VALUES ('402430534',1);
@@ -114,7 +114,6 @@ INSERT INTO public.person_x_activity(dni, id_activity)
 INSERT INTO  public.person_x_project(dni , id_project, role )
         values 
                 ('116920331' , 1  , 'Investigador'),
-                ('411111111' , 1  , 'Investigador'),
                 ('402430534' , 1  , 'Investigador');
 
 
