@@ -9,5 +9,6 @@ router.get('/project', Project_Controller.getProjects);
 router.get('/project/:id', Project_Controller.getProjectbyId);
 router.post('/project/assign', Project_Controller.assignPersonProject);
 router.get('/project_persons/:id', Project_Controller.getPersonsProject);
+router.get('/project/students/:id', Project_Controller.getStudentsProject);
 
 export default router;

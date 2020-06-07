@@ -65,3 +65,20 @@ BEGIN
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
+
+--########################################################################################
+
+CREATE OR REPLACE FUNCTION getstudentsproject(pidp integer, ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    (select per.dni,per.name,per.lastname1,per.lastname2
+        from public.person_x_project proj
+    inner join public.person per on proj.dni = per.dni
+    where proj.id_project = pidp)
+    INTERSECT
+    (select p.dni, p.name, p.lastname1, p.lastname2
+      from public.person p
+      inner join public.student s on s.dni = p.dni);
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
