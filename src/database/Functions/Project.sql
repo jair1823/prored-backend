@@ -82,3 +82,19 @@ BEGIN
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
+
+--########################################################################################
+
+CREATE OR REPLACE FUNCTION getpersonsnotinproject(pidp integer, ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    (select dni,name,lastname1,lastname2,person_type from public.person
+	where status = true)
+  except 
+  (select p.dni, p.name, p.lastname1, p.lastname2, p.person_type 
+  from public.person_x_project pp
+  inner join person p on p.dni = pp.dni
+  where pp.id_project = pidp);
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;

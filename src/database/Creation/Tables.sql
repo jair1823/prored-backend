@@ -1,5 +1,10 @@
 --create database prored;
 
+CREATE TYPE public.person_type AS ENUM (
+    'Estudiante',
+    'Investigador'
+);
+
 create table public.person(
     dni varchar(50) PRIMARY KEY,
     name varchar(50),
@@ -8,7 +13,8 @@ create table public.person(
     born_dates date,
     status boolean,
     phone_number varchar(40),
-    email varchar(60)
+    email varchar(60),
+    person_type person_type
 );
 
 create table public.province(
