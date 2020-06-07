@@ -24,7 +24,9 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION getprojectbyid(pid INTEGER, ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
-    SELECT * FROM public.project where id_project = pid;
+    SELECT p.id_project, p.name, p.code_manage, p.project_type, p.id_inv_unit, iv.name as inv_unit_name, iv.description FROM public.project p
+    inner join investigation_unit iv on iv.id_inv_unit = p.id_inv_unit 
+    where id_project = pid;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
