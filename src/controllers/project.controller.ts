@@ -133,9 +133,9 @@ export class ProjectController {
     }
 
     /**
-     * Assign a person to project.
-     * path: /project
-     * method: post
+     * Get all persons assigned to project.
+     * path: /project_persons/:id
+     * method: get
     */
     async getPersonsProject(req: Request, res: Response): Promise<Response> {
         const query = `select getpersonsproject($1,'projectCursor');`;
@@ -152,6 +152,27 @@ export class ProjectController {
             });
         }
     }
+
+    /**
+     * Get all students assigned to project.
+     * path: /project/students/:id
+     * method: get
+    */
+   async getStudentsProject(req: Request, res: Response): Promise<Response> {
+    const query = `select getstudentsproject($1,'projectCursor');`;
+    const fetch = `FETCH ALL IN "projectCursor";`;
+    const client: PoolClient = await pool.connect();
+    try {
+        const id = [parseInt(req.params.id)];
+        const response = await Queries.simpleSelectWithParameter(query, id, fetch, client);
+        return res.status(200).json(response.rows);
+    } catch (error) {
+        await Queries.simpleError(client, error);
+        return res.status(500).json({
+            msg: 'Internal Server Error'
+        });
+    }
+}
 }
 
 const projectController = new ProjectController();
