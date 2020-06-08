@@ -137,29 +137,19 @@ $$ LANGUAGE plpgsql;
 
 
 
-CREATE OR REPLACE FUNCTION ganttexists(pdni varchar(50) , pid_project integer,  pid_period integer ) RETURNS integer AS $$
+CREATE OR REPLACE FUNCTION ganttexists(prel_code integer, pid_period integer ) RETURNS integer AS $$
 DECLARE
-    pruebaDni varchar(50);
+    pruebaGantt integer;
     res integer;
 BEGIN
     select id_gantt
-    into pruebaDni
-    from ( 
-      select gantt.id_gantt ,  gantt.id_period
-      from ( 
-        select rel_code
-        from public.person_x_project
-        where dni = pdni and id_project = pid_project
-      ) as coderel
-      inner join public.gantt as gantt
-      on gantt.rel_code =  coderel.rel_code
-    ) as info
-    where info.id_period =  pid_period;
-
-        if pruebaDni IS NOT NULL then
-            res := pruebaDni;
-        else
-            res := 0;
+    into pruebaGantt
+    from public.gantt
+    where id_period = pid_period and rel_code = prel_code;
+      if pruebaGantt IS NOT NULL then
+          res := pruebaGantt;
+      else
+          res := 0;
     end if;  
     RETURN res;
 END;

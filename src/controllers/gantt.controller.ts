@@ -292,11 +292,11 @@ export class GanttController {
      * method: get
      */
     async checkGanttExists(req: Request, res: Response): Promise<Response> {
-        const query = `select ganttexists($1,$2,$3);`;
+        const query = `select ganttexists($1,$2);`;
         const client: PoolClient = await pool.connect();
         try {
-            const id = [req.body.dni, req.body.id_project,  req.body.id_period];
-            const response = await Queries.simpleSelectNoCursor(query, id, client);
+            const values = [req.body.rel_code,req.body.id_period];
+            const response = await Queries.simpleSelectNoCursor(query, values, client);
             return res.status(200).json(response.rows[0]);
         } catch (error) {
 
