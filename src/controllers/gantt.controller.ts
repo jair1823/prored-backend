@@ -286,6 +286,29 @@ export class GanttController {
     }
 
 
+    /**
+     * See if a dni already exists in the database
+     * path: /person/exists/:id
+     * method: get
+     */
+    async checkGanttExists(req: Request, res: Response): Promise<Response> {
+        const query = `select ganttexists($1,$2,$3);`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const id = [req.body.dni, req.body.id_project,  req.body.id_period];
+            const response = await Queries.simpleSelectNoCursor(query, id, client);
+            return res.status(200).json(response.rows[0]);
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+
 
 }
 
