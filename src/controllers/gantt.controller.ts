@@ -158,19 +158,18 @@ export class GanttController {
      * path: /gantt/
      * method: post
     */
-    async createGantt(req: Request, res: Response): Promise<Response> {
-        const query = `SELECT creategantt($1,$2)`;
+   async createGantt(req: Request, res: Response): Promise<Response> {
+    const query = `SELECT creategantt($1,$2,'ganttCursor')`;
+    const fetch = `FETCH ALL IN "ganttCursor";`;
         const client: PoolClient = await pool.connect();
         try {
-            const values = [req.body.rel_code, req.params.id_period];
-            await Queries.simpleTransaction(query, values, client);
-
-            return res.json({
-                msg: "Gantt created Succesfully"
-            });
+            const values =  [req.body.rel_code, req.params.id_period];
+            const response = await Queries.insertWithReturn(query, values, fetch, client);
+            return res.json(
+                response.rows[0]
+            );
         } catch (error) {
             await Queries.simpleError(client, error);
-
             return res.status(500).json({
                 msg: 'Internal Server Error'
             });
