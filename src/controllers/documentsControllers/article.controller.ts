@@ -7,7 +7,7 @@ import path from 'path';
 
 export class ArticleController {
 
-        /**
+    /**
      * Create Article for a project.
      * path: /article
      * method: post

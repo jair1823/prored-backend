@@ -28,7 +28,10 @@ router.get('/article/project/:id', Article_Controller.getArticleProject);
 
 router.post('/paper',upload, Paper_Controller.insertPaper);
 router.post('/paper/nofile', Paper_Controller.insertPaperNoFile);
+router.put('/paper/:id', Paper_Controller.updatePaper);
 router.delete('/paper/:id', Paper_Controller.deletePaper);
+router.delete('/paper/file/:id', Paper_Controller.deletePaperFile);
+router.post('/paper/file/:id',upload, Paper_Controller.insertPaperFile);
 router.get('/paper/:id', Paper_Controller.getPaper);
 router.get('/paper/project/:id', Paper_Controller.getPaperProject);
 
