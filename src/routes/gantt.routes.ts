@@ -7,7 +7,7 @@ const router = Router();
 router.post('/period', Gantt_Controller.createPeriod);
 router.put('/period/:id', Gantt_Controller.updatePeriod);
 router.get('/period', Gantt_Controller.getPeriods);
-router.get('/period/exists', Gantt_Controller.checkPeriodExists);
+router.post('/period/exists', Gantt_Controller.checkPeriodExists);
 /*Gantt*/
 router.post('/gantt',Gantt_Controller.createGantt );
 router.get('/gantt/:id', Gantt_Controller.getGantts);
