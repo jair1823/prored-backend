@@ -19,7 +19,10 @@ router.get('/endorsement/project/:id', Endorsement_Controller.getEndorsementsPro
 
 router.post('/article',upload, Article_Controller.insertArticle);
 router.post('/article/nofile', Article_Controller.insertArticleNoFile);
+router.put('/article/:id', Article_Controller.updateArticle);
 router.delete('/article/:id', Article_Controller.deleteArticle);
+router.delete('/article/file/:id', Article_Controller.deleteArticleFile);
+router.post('/article/file/:id',upload, Article_Controller.insertArticleFile);
 router.get('/article/:id', Article_Controller.getArticle);
 router.get('/article/project/:id', Article_Controller.getArticleProject);
 

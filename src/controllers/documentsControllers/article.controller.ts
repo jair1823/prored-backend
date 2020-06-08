@@ -65,6 +65,102 @@ export class ArticleController {
     }
 
     /**
+     * Update Article.
+     * path: /article/:id
+     * method: put
+     */
+
+    async updateArticle(req: Request, res: Response): Promise<Response> {
+        const client: PoolClient = await pool.connect();
+        const update = `SELECT updatearticle($1,$2,$3,$4,$5,$6,$7);`;
+        try {
+            const values = [req.params.id, req.body.title,req.body.key_words,req.body.abstract,
+                            req.body.authors,req.body.magazine,req.body.url];
+            await Queries.simpleTransaction(update, values, client);
+            return res.status(200).json(
+                {
+                    msg: 'Article updated'
+                }
+            );
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Delete Article file.
+     * path: /article/file/:id
+     * method: delete
+     */
+
+    async deleteArticleFile(req: Request, res: Response): Promise<Response> {
+        const client: PoolClient = await pool.connect();
+        const deleteD = `SELECT deletearticlefile($1);`;
+        const query = `select getarticlefile($1,'articleCursor');`;
+        const fetch = `FETCH ALL IN "articleCursor";`;
+        try {
+            const id = [req.params.id];
+            await Queries.begin(client);
+            const response = await Queries.simpleSelectWithParameterContinous(query, id, fetch, client);
+            let message = "empty"
+            let resultado = response.rows[0];
+            if (resultado.file_path != null) {
+                const p = resultado.file_path;
+                console.log(p)
+                let fullPath = path.join(__dirname + '../../../..' + '/public/' + p);
+                fs.unlinkSync(fullPath);
+                await Queries.simpleTransaction(deleteD, id, client);
+                message = "Article file deleted";
+            }
+            return res.status(200).json(
+                {
+                    msg: message
+                }
+            );
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Insert article file.
+     * path: /article/file/:id
+     * method: post
+     */
+
+    async insertArticleFile(req: Request, res: Response): Promise<Response> {
+        const client: PoolClient = await pool.connect();
+        const insert = `SELECT insertarticlefile($1,$2,$3);`;
+        try {
+            let url = `${req.body.tabla}/${req.file.filename}`;
+            const values = [req.params.id, req.file.filename, url];
+            await Queries.simpleTransaction(insert, values, client);
+            return res.status(200).json(
+                {
+                    msg: 'Article file inserted'
+                }
+            );
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
      * Delete a Article from a project.
      * path: /article/:id
      * method: delete
