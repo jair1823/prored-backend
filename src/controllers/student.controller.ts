@@ -337,7 +337,6 @@ export class StudentController {
             let message = "empty"
             let resultado = response.rows[0];
             if (resultado != undefined) {
-                console.log("Entre")
                 const p = resultado.file_path;
                 let fullPath = path.join(__dirname + '../../..' + '/public/' + p);
                 fs.unlinkSync(fullPath);
