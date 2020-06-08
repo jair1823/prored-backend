@@ -163,7 +163,7 @@ export class GanttController {
     const fetch = `FETCH ALL IN "ganttCursor";`;
         const client: PoolClient = await pool.connect();
         try {
-            const values =  [req.body.rel_code, req.params.id_period];
+            const values =  [req.body.rel_code, req.body.id_period];
             const response = await Queries.insertWithReturn(query, values, fetch, client);
             return res.json(
                 response.rows[0]
