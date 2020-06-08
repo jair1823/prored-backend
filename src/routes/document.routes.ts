@@ -19,13 +19,19 @@ router.get('/endorsement/project/:id', Endorsement_Controller.getEndorsementsPro
 
 router.post('/article',upload, Article_Controller.insertArticle);
 router.post('/article/nofile', Article_Controller.insertArticleNoFile);
+router.put('/article/:id', Article_Controller.updateArticle);
 router.delete('/article/:id', Article_Controller.deleteArticle);
+router.delete('/article/file/:id', Article_Controller.deleteArticleFile);
+router.post('/article/file/:id',upload, Article_Controller.insertArticleFile);
 router.get('/article/:id', Article_Controller.getArticle);
 router.get('/article/project/:id', Article_Controller.getArticleProject);
 
 router.post('/paper',upload, Paper_Controller.insertPaper);
 router.post('/paper/nofile', Paper_Controller.insertPaperNoFile);
+router.put('/paper/:id', Paper_Controller.updatePaper);
 router.delete('/paper/:id', Paper_Controller.deletePaper);
+router.delete('/paper/file/:id', Paper_Controller.deletePaperFile);
+router.post('/paper/file/:id',upload, Paper_Controller.insertPaperFile);
 router.get('/paper/:id', Paper_Controller.getPaper);
 router.get('/paper/project/:id', Paper_Controller.getPaperProject);
 

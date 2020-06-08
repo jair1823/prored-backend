@@ -65,6 +65,102 @@ export class PaperController {
     }
 
     /**
+     * Update Paper.
+     * path: /paper/:id
+     * method: put
+     */
+
+    async updatePaper(req: Request, res: Response): Promise<Response> {
+        const client: PoolClient = await pool.connect();
+        const update = `SELECT updatepaper($1,$2,$3,$4,$5,$6,$7);`;
+        try {
+            const values = [req.params.id, req.body.paper_name,req.body.speaker,req.body.place,
+                req.body.type,req.body.country,req.body.date_assisted];
+            await Queries.simpleTransaction(update, values, client);
+            return res.status(200).json(
+                {
+                    msg: 'Paper updated'
+                }
+            );
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Delete Paper file.
+     * path: /paper/file/:id
+     * method: delete
+     */
+
+    async deletePaperFile(req: Request, res: Response): Promise<Response> {
+        const client: PoolClient = await pool.connect();
+        const deleteD = `SELECT deletepaperfile($1);`;
+        const query = `select getpaperfile($1,'paperCursor');`;
+        const fetch = `FETCH ALL IN "paperCursor";`;
+        try {
+            const id = [req.params.id];
+            await Queries.begin(client);
+            const response = await Queries.simpleSelectWithParameterContinous(query, id, fetch, client);
+            let message = "empty"
+            let resultado = response.rows[0];
+            if (resultado.file_path != null) {
+                const p = resultado.file_path;
+                console.log(p)
+                let fullPath = path.join(__dirname + '../../../..' + '/public/' + p);
+                fs.unlinkSync(fullPath);
+                await Queries.simpleTransaction(deleteD, id, client);
+                message = "Paper file deleted";
+            }
+            return res.status(200).json(
+                {
+                    msg: message
+                }
+            );
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Insert Paper file.
+     * path: /paper/file/:id
+     * method: post
+     */
+
+    async insertPaperFile(req: Request, res: Response): Promise<Response> {
+        const client: PoolClient = await pool.connect();
+        const insert = `SELECT insertpaperfile($1,$2,$3);`;
+        try {
+            let url = `${req.body.tabla}/${req.file.filename}`;
+            const values = [req.params.id, req.file.filename, url];
+            await Queries.simpleTransaction(insert, values, client);
+            return res.status(200).json(
+                {
+                    msg: 'Paper file inserted'
+                }
+            );
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
      * Delete a Paper from a project.
      * path: /paper/:id
      * method: delete

@@ -39,3 +39,4 @@ DROP TYPE IF EXISTS public.marital_status;
 DROP TYPE IF EXISTS public.endorsement_type;
 DROP TYPE IF EXISTS public.project_type;
 DROP TYPE IF EXISTS public.paper_type;
+DROP TYPE IF EXISTS public.person_type;

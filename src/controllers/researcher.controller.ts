@@ -120,11 +120,11 @@ export class ResearcherController {
      */
     async createResearcher(req: Request, res: Response): Promise<Response> {
         const client: PoolClient = await pool.connect();
-        const createPerson = `SELECT createperson($1,$2,$3,$4,$5,$6,$7);`;
+        const createPerson = `SELECT createperson($1,$2,$3,$4,$5,$6,$7,$8);`;
         const createResearcher = `SELECT createresearcher($1,$2);`;
         try {
             
-            const personValues = [req.body.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates, req.body.phone_number, req.body.email];
+            const personValues = [req.body.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates, req.body.phone_number, req.body.email, 'Investigador'];
             const researcherValues = [req.body.dni, req.body.id_inv_unit];
 
             await Queries.begin(client);

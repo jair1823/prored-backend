@@ -179,12 +179,13 @@ CREATE OR REPLACE FUNCTION createperson(
     plastname2 varchar(50),
     pborn_dates date,
     pphone varchar(40),
-    pmail varchar(60)
+    pmail varchar(60),
+    ptype person_type
     )
     RETURNS void AS $$
     BEGIN
-        INSERT INTO public.person( dni, name, lastname1, lastname2, born_dates, status, phone_number, email)
-            VALUES (pdni, pname, plastname1, plastname2, pborn_dates, true,pphone,pmail);
+        INSERT INTO public.person( dni, name, lastname1, lastname2, born_dates, status, phone_number, email,person_type)
+            VALUES (pdni, pname, plastname1, plastname2, pborn_dates, true,pphone,pmail,ptype);
     END;
 $$ LANGUAGE plpgsql;
 

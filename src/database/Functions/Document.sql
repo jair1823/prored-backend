@@ -91,6 +91,70 @@ $$ LANGUAGE plpgsql;
 
 --###########################################################################
 
+CREATE OR REPLACE FUNCTION updatearticle(
+  ida integer,
+  ptitle varchar(100),
+  pkey_words varchar(200),
+  pabstract text,
+  pauthors varchar(200),
+  pmagazine varchar(50),
+  purl varchar (200))
+RETURNS void AS $$
+BEGIN
+  UPDATE public.article SET
+    title = ptitle, 
+    key_words = pkey_words, 
+    abstract = pabstract, 
+    authors = pauthors, 
+    magazine = pmagazine, 
+    url = purl
+   WHERE id_article = ida;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION deletearticlefile(
+  ida integer)
+RETURNS void AS $$
+BEGIN
+  UPDATE public.article SET
+    filename = null, 
+    file_path = null
+   WHERE id_article = ida;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION insertarticlefile(
+  ida integer,
+  pfile varchar(100),
+  ppath varchar(200)) 
+RETURNS void AS $$
+BEGIN
+  UPDATE public.article SET
+    filename = pfile, 
+    file_path = ppath
+   WHERE id_article = ida;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getarticlefile(
+  ida integer, ref refcursor)
+RETURNS refcursor AS $$
+BEGIN
+    OPEN ref FOR
+   select filename, file_path from public.article
+   WHERE id_article = ida;
+   RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
 CREATE OR REPLACE FUNCTION deletearticle(id integer) 
 RETURNS void AS $$
 BEGIN
@@ -138,6 +202,70 @@ RETURNS void AS $$
 BEGIN
   INSERT INTO public.paper(id_project, paper_name, speaker, place, type, country, date_assisted, filename, file_path)
   values (idp, ppaper_name, pspeaker, pplace, ptype, pcountry, pdate, pfile,ppath);
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION updatepaper(
+  idp integer,
+  ppaper_name varchar(100),
+  pspeaker varchar(100),
+  pplace varchar(100),
+  ptype paper_type,
+  pcountry nationality,
+  pdate date)
+RETURNS void AS $$
+BEGIN
+  UPDATE public.paper SET
+    paper_name = ppaper_name, 
+    speaker = pspeaker, 
+    place = pplace, 
+    type = ptype, 
+    country = pcountry, 
+    date_assisted = pdate
+   WHERE id_paper = idp;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION deletepaperfile(
+  idp integer)
+RETURNS void AS $$
+BEGIN
+  UPDATE public.paper SET
+    filename = null, 
+    file_path = null
+   WHERE id_paper = idp;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION insertpaperfile(
+  idp integer,
+  pfile varchar(100),
+  ppath varchar(200)) 
+RETURNS void AS $$
+BEGIN
+  UPDATE public.paper SET
+    filename = pfile, 
+    file_path = ppath
+   WHERE id_paper = idp;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getpaperfile(
+  idp integer, ref refcursor)
+RETURNS refcursor AS $$
+BEGIN
+    OPEN ref FOR
+   select filename, file_path from public.paper
+   WHERE id_paper = idp;
+   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
 

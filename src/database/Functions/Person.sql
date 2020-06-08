@@ -15,3 +15,14 @@ BEGIN
     RETURN res;
 END;
 $$ LANGUAGE plpgsql;
+
+--########################################################################################
+
+CREATE OR REPLACE FUNCTION getPersons(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+  select dni,name,lastname1,lastname2,person_type from public.person
+	where status = true;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;

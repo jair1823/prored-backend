@@ -29,7 +29,23 @@ $$ LANGUAGE plpgsql;
 
 --########################################################################################
 
-
+CREATE OR REPLACE FUNCTION periodexists(pname varchar(50)) RETURNS boolean AS $$
+DECLARE
+    pruebaName varchar(50);
+    res boolean;
+BEGIN
+    select name
+    into pruebaName
+    from public.period
+    where name =  pname;
+        if pruebaName IS NOT NULL then
+            res := 1;
+        else
+            res := 0;
+    end if;  
+    RETURN res;
+END;
+$$ LANGUAGE plpgsql;
 
 
 -- Sección del gantt
