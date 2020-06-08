@@ -137,12 +137,11 @@ $$ LANGUAGE plpgsql;
 
 
 
-CREATE OR REPLACE FUNCTION ganttexists(pdni varchar(50) , pid_project integer,  pid_period integer ) RETURNS boolean AS $$
+CREATE OR REPLACE FUNCTION ganttexists(pdni varchar(50) , pid_project integer,  pid_period integer ) RETURNS integer AS $$
 DECLARE
     pruebaDni varchar(50);
-    res boolean;
+    res integer;
 BEGIN
-
     select id_gantt
     into pruebaDni
     from ( 
@@ -158,7 +157,7 @@ BEGIN
     where info.id_period =  pid_period;
 
         if pruebaDni IS NOT NULL then
-            res := 1;
+            res := pruebaDni;
         else
             res := 0;
     end if;  

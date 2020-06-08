@@ -7,3 +7,4 @@ DROP FUNCTION IF EXISTS creategantt_task;
 DROP FUNCTION IF EXISTS deletegantt_tasks;
 DROP FUNCTION IF EXISTS getgantt_tasks;
 DROP FUNCTION IF EXISTS periodexists;
+DROP FUNCTION IF EXISTS ganttexists;
