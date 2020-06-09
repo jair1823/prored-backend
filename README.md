@@ -1,4 +1,149 @@
-# Proyecto ProRed Api
+# Proyecto ProRed API - Manual 
+
+## Prerrequisitos para ejecución del API
+
+### Sistema Operativo
+
+El API se encuentra desarrollada en Express con una base de datos PostgreSQL. El API se desarrollo y probó en Linux, por lo que se debe de utilizar este sistema operativo.
+
+### Tecnologías
+#### Node JS
+
+Node Js es un entorno de ejecución para JavaScript el cual nos permitirá ejecutar el API y también instalar las dependencias necesarias. El API fue desarrollado con la versión 13.11.0 de node, por lo que esta es la necesaria para ejecutar los comandos del API. Para instalar Node se debe de ejecutar los siguientes comandos en la terminal:
+
+``` $ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash```
+
+Cerramos la terminal como nos indica.
+
+``` $ nvm install 13.11.0```
+
+Una vez ejecutado este comando ya tendremos Node instalado en nuestro sistema listo para ejecutarse.
+
+### PostgreSQL
+
+El motor de base de datos utilizado para el sistema de la ProRed es el de PostgreSQL en su versión 12, por lo que para poder hacer uso del sistema es necesario instalar el motor y además tener creada la base de datos que se usará. A continuación se detallan los pasos a seguir para su instalación.
+
+Primero debemos de agregar el repositorio donde se encuentran almacenados los datos del motor de base de datos. Para esto corremos los siguientes comandos:
+
+``` wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -```
+
+Luego
+
+``` echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee /etc/apt/sources.list.d/pgdg.list```
+
+Por último actualizamos los repositorios de nuestro sistema para que aparezcan los que acabamos de añadir.
+
+``` sudo apt update```
+
+Una vez realizado esto ya tenemos el repositorio agragado ahora basta con correr el siguiente comando para la instalación:
+
+``` sudo apt -y install postgresql-12 postgresql-client-12```
+
+Una vez que termine el proceso ya tendremos instalado PostgreSQL en nuestro sistema por lo que procedemos a crear la base de datos que alojará los datos del sistema. Para realizar esto ingresamos por medio de la terminal o por medio de un IDE a nuestro motor de base de datos y ejecutamos el siguiente comando:
+
+```` CREATE DATABASE prored ````
+
+Con esto ya tendremos creada la base de datos que será necesaria para ejecutar el sistema.
+
+## Descarga del repositorio
+
+El código fuente junto con los datos necesarios para inicializar la base de datos se encuentran almacenados dentro de un repositorio de GitHub. El link a este repositorio es el siguiente:
+
+[https://github.com/jair1823/prored-backend](https://github.com/jair1823/prored-backend)
+
+Para obtener el sistema podemos descargar el repositorio como un zip o correr el siguiente comando en nuestro sistema:
+
+``` git clone https://github.com/jair1823/prored-backend.git```
+
+Teniendo el repositorio descargado, procedemos a preparar nuestro sistema para ejecución.
+
+## Preparación para ejecución
+
+Una vez con el código fuente descargado, procedemos a realizar las labores de preparación necesarias para su ejecución. 
+
+### Variable de entorno
+Lo primero que debemos hacer es crea un archivo llamado <strong> .env </strong> en la base de la carpeta del API. Este archivo contendrá los datos de la base de datos y nuestro motor para el uso del API. Este archivo debe de tener la siguiente estructura:
+
+``` 
+# .env
+DB_USER=
+DB_PASSWORD=
+DB_HOST=
+DB_PORT=
+DB_DATABASE= 
+```
+Los datos que deben ir en este archivo son los siguientes:
+<ul>  
+<li>DB_USER : Nombre de usuario de nuestro motor de base de datos. Este debe de  ser el que tenga permisos de creación sobre la base de datos <strong>prored</strong></li>  
+<li>DB_PASSWORD : Esta es la contraseña para el usuario del punto anterior</li>  
+<li>DB_HOST : Host donde esta corriendo el motor de base de datos. Si es un ambiente local este debe ser <strong> localhost</strong>, si está corriendo en un sistema remoto este debe de ser la dirección IP del servidor.</li>  
+<li>DB_PORT : El puerto donde corre nuestro motor de base de datos. Por defecto PostgreSQL corre en el puerto <strong> 5432</strong></li>  
+<li>DB_DATABASE : Este es el nombre de nuestra base de datos. Como indicamos en la creación, esta es llamada <strong>prored</strong></li>
+</ul>
+
+### Instalación de dependencias
+
+Para poder ejecutar nuestro sistema debemos de instalar todas las dependencias que este tiene. Esto se puede realizar con un simple comando que se encarga de descargarlos todos. Este comando debe de ser ejecutado en la base de la carpeta que contiene el código fuente:
+
+``` npm install ```
+
+### Levantamiento de la base de datos
+
+Para poder comenzar a utilizar el sistema debemos de tener todas las tablas y funciones creadas en nuestro sistema. Para hacer esto debemos de correr el siguiente comando en la base de la carpeta que contiene el código fuente:
+
+``` npm run migrate ```
+
+Al terminar de ejecutarse, todas las tablas y funciones se encontraran creadas en nuestro sistema. En estos momentos todas las tablas se encuentran vacías, por lo que para inicializar con algunos datos las tablas se debe de correr el siguiente comando:
+
+``` npm run seeds ```
+
+Una vez realizados todos los pasos anteriores se tendrá listo el API para su entrada en funcionamiento.
+
+## Ejecución del API
+
+### Ejecución en modo de desarrollo
+
+Para ejecutar el API  y poder comenzar a utilizarla en modo de desarrollo se debe de ejecutar el siguiente comando en la base de la carpeta que contiene el código fuente:
+
+``` npm start ```
+
+Esto iniciara la compilación automática y el levantamiento del API.
+
+### Ejecución en modo de producción
+
+Para ejecutar el API  y poder comenzar a utilizarla en modo de producción, primero debemos de compilar a mano el sistema. Para hacer esto debemos de ejecutar el siguiente comando en la base de la carpeta que contiene el código fuente:
+
+```npm run build ```
+
+Una vez compilado, basta con correr el siguiente comando en la base de la carpeta que contiene el código fuente para levantar el servicio del API:
+
+``` node dist/index.js ```
+
+Con esto ya tendremos el API ejecutandose con la compilación de producción.
+
+## Estructura del código fuente
+
+La estructura del código funte dentro de la carpeta del APi se divide de la siguiente manera:
+*	<strong>node_modules</strong>
+Esta carpeta contiene todas las dependencias del proyecto, sin estas el proyecto no puede ser ejecutado
+*	<strong>dist</strong>
+Esta carpeta contiene los archivos compilados y listos para ejecución.
+*	<strong>public</strong>
+Esta carpeta puede no aparecer apenas se descargue el repositorio. Esto es porque esta carpeta contiene todos los archivos que los usuarios del sistema ingresen. Esta carpeta se creara automáticamente apenas un archivo sea subido al sistema. Dentro de esta carpeta se tienen distinstas carpetas que contienen cada tipo de archivo que se guarda en el sistema.  En caso de querer respaldar los archivos que se han subido se debe de copiar toda esta carpeta para así englobar todos los archivos que se han subido.
+*	<strong>src</strong>
+Esta carpeta contiene todo el código fuente de la aplicación. Aquí se detallan todos los contenidos de las subcarpetas internas:
+	*	<strong>controllers</strong>
+En esta carpeta se encuentran los controladores que manejan las peticiones hechas por el frontend. Para cada funcionalidad del sistema exite un controlador.
+	*	<strong>database</strong>
+En esta carpeta se encuentras todos lo que tiene que ver con la base de datos. Esto incluye los scripts de creación y borrado de la base de datos, así como todos los scripts de creación y borrado para las funciones que trabajan sobre la base de datos. En esta carpeta también se encuentra una carpeta que contiene las semillas que se utilizan para inicializar la base de datos con algunos registros.
+	*	<strong>lib</strong>
+En esta carpeta se encuentran archivos que realizan operaciones genéricas y reutilizables como por ejemplo el guardado de archivos en el servidor.
+	*	<strong>migrations</strong>
+En esta carpeta se encuentran los métodos que realizan la migración de la base de datos, en ellos se ejecutan los scripts de borrado y creado de toda la base de datos.
+	*	<strong>routes</strong>
+En esta carpeta se encuentran todos los archivos que contienen las rutas con las que se acceden a los métodos de los controladores. Existe un archivo por cada funcionalidad de la aplicación.
+	*	<strong>seeds</strong>
+En esta carpeta se encuentran los métodos que realizan las semillas de la base de datos, en ellos se ejecutan los scripts que insertan las filas a las tablas de la base de datos.
 
 ## Explicación de rutas de la API
 
@@ -232,5 +377,3 @@ Cada una de las rutas para los documentos, se encuentran asociadas al controlado
 | document.controller@deleteArticle          | /article/:id             | DELETE       | Función encargada de eliminar artículo                 |
 | document.controller@getArticle             | /article/:id             | GET          | Función encargada de obtener artículo                  |
 | document.controller@getArticleProject      | /article/project/:id     | GET          | Función encargada de obtener artículo por proyecto     |
-
-
