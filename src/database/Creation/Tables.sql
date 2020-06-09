@@ -279,7 +279,7 @@ create table public.gantt(
 create table public.gantt_task(
     id_task SERIAL PRIMARY KEY,
     id_gantt integer REFERENCES public.gantt(id_gantt),
-    task_name varchar(50),
+    task_name varchar(100),
     description varchar(200),
     start_date date,
     end_date date
