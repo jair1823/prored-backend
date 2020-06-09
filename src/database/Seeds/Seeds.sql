@@ -1,9 +1,8 @@
-INSERT INTO public.career(
-	career_code, name, degree,status)
+INSERT INTO public.career(name, degree,status)
 	VALUES 
-        (1, 'Administración de Empresas', 'Diplomado',true),
-        (2, 'Docencia', 'Licenciatura',true),
-        (3, 'Ingeniería Informática', 'Bachillerato',false);
+        ('Administración de Empresas', 'Diplomado',true),
+        ('Docencia', 'Licenciatura',true),
+        ('Ingeniería Informática', 'Bachillerato',false);
 
 
 INSERT INTO public.center(name,status)

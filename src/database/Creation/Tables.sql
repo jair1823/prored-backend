@@ -159,7 +159,7 @@ CREATE TYPE public.degree AS ENUM (
 );
 
 create table public.career(
-    career_code integer PRIMARY KEY,
+    career_code SERIAL PRIMARY KEY,
     name varchar(100),
     degree public.degree,
     status boolean
