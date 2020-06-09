@@ -243,7 +243,7 @@ export class GanttController {
     async updateGantt_Task(req: Request, res: Response): Promise<Response> {
         try {
             const listaGanttLine = req.body.gantt_list;
-            const id_gantt = req.params.id_gantt;
+            const id_gantt = req.params.id;
             deleteGantt_Task(id_gantt);
             createGantt_Task_Function(listaGanttLine)
             return res.json({
