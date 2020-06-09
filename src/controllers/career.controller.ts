@@ -84,10 +84,10 @@ export class CareerController {
      * method: post
      */
     async createCareer(req: Request, res: Response): Promise<Response> {
-        const query = `SELECT createcareer($1,$2,$3);`;
+        const query = `SELECT createcareer($1,$2);`;
         const client: PoolClient = await pool.connect();
         try {
-            const values = [parseInt(req.body.career_code), req.body.name, req.body.degree];
+            const values = [req.body.name, req.body.degree];
 
             await Queries.simpleTransaction(query, values, client);
 
