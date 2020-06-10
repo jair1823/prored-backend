@@ -60,7 +60,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION getpersonsproject(pidp integer, ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
-    select per.dni,per.name,per.lastname1,per.lastname2,proj.role
+    select per.dni,per.name,per.lastname1,per.lastname2,proj.role,per.status
         from public.person_x_project proj
     inner join public.person per on proj.dni = per.dni
     where proj.id_project = pidp;
