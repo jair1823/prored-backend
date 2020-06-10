@@ -47,7 +47,7 @@ create table public.researcher(
 
 CREATE TYPE public.project_type AS ENUM (
     'Estudiantes',
-    'Normal'
+    'Investigadores'
 );
 
 create table public.project(
