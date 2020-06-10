@@ -15,8 +15,9 @@ const DocumentDrops = readFileSync('src/database/Drops/DocumentDrops.sql').toStr
 const ProjectDrops = readFileSync('src/database/Drops/ProjectDrops.sql').toString();
 const ResearcherDrops = readFileSync('src/database/Drops/ResearcherDrops.sql').toString();
 const ActivityDrops = readFileSync('src/database/Drops/ActivityDrops.sql').toString();
-const TableDrops = readFileSync('src/database/Drops/TableDrops.sql').toString();
 const GanttDrops =  readFileSync('src/database/Drops/GanttDrops.sql').toString();
+const FilterDrops =  readFileSync('src/database/Drops/FilterDrops.sql').toString();
+const TableDrops = readFileSync('src/database/Drops/TableDrops.sql').toString();
 
 const EnumNationality = readFileSync('src/database/Creation/EnumNationality.sql').toString();
 const Tables = readFileSync('src/database/Creation/Tables.sql').toString();
@@ -36,7 +37,7 @@ const Document = readFileSync('src/database/Functions/Document.sql').toString();
 const Project = readFileSync('src/database/Functions/Project.sql').toString();
 const Activity = readFileSync('src/database/Functions/Activity.sql').toString();
 const Gantt  = readFileSync('src/database/Functions/Gantt.sql').toString();
-
+const Filter = readFileSync('src/database/Functions/Filter.sql').toString();
 
 /**
  * Secuencia en la que se ejecutan los drops de toda la base 
@@ -60,6 +61,7 @@ async function migration() {
         await pool.query(ResearcherDrops);
         await pool.query(ActivityDrops);
         await pool.query(GanttDrops);
+        await pool.query(FilterDrops);
         await pool.query(TableDrops);
 
 
@@ -83,6 +85,7 @@ async function migration() {
         await pool.query(Project);
         await pool.query(Activity);
         await pool.query(Gantt);
+        await pool.query(Filter);
 
         return;
     } catch (error) {
