@@ -95,6 +95,15 @@ $$ LANGUAGE plpgsql;
 
 --########################################################################################
 
+CREATE OR REPLACE FUNCTION updateactivitytype(id integer,n VARCHAR(50)) 
+RETURNS void AS $$
+BEGIN
+ UPDATE public.acti_type SET name = n WHERE id_acti_type = id;
+END;
+$$ LANGUAGE plpgsql;
+
+--########################################################################################
+
 CREATE OR REPLACE FUNCTION getactivitytypes(ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
