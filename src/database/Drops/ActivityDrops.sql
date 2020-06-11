@@ -8,3 +8,4 @@ DROP FUNCTION IF EXISTS getpersonsactivity;
 DROP FUNCTION IF EXISTS updateactivity;
 DROP FUNCTION IF EXISTS createactivitytype;
 DROP FUNCTION IF EXISTS getactivitytypes;
+DROP FUNCTION IF EXISTS updateactivitytype;

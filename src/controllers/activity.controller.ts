@@ -238,6 +238,32 @@ export class ActivityController {
             });
         }
     }
+
+    /**
+     * Update specific activity type.
+     * path: /activity/type/:id
+     * method: put
+    */
+    async updateActivityType(req: Request, res: Response): Promise<Response> {
+        const query = `SELECT updateactivitytype($1,$2)`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const values = [req.params.id,req.body.name];
+
+            await Queries.simpleTransaction(query, values, client);
+
+            return res.json({
+                msg: `Activity Type modified succesfully`
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
 }
 
 const activityController = new ActivityController();
