@@ -11,13 +11,22 @@ export class ActivityController {
      * method: post
      */
     async createActivity(req: Request, res: Response): Promise<Response> {
-        const query = `SELECT createactivity($1,$2,$3);`;
+        const query = `SELECT createactivity($1,$2,$3,'activityCursor');`;
+        const fetch = `FETCH ALL IN "activityCursor";`;
+        const assign = `SELECT assignpersontoactivity($1,$2)`;
         const client: PoolClient = await pool.connect();
         try {
+            await Queries.begin(client);
             const values = [req.body.name, req.body.id_acti_type, req.body.id_project];
 
-            await Queries.simpleTransaction(query, values, client);
+            const response = await Queries.insertWithReturnContinous(query, values, fetch, client);
 
+            const persons: any = req.body.persons;
+
+            persons.map(async (p: any) => {
+                await Queries.simpleTransactionContinous(assign, [p.dni, response.rows[0].id_activity], client);
+            });
+            await Queries.commit(client);
             return res.json({
                 msg: "Activity created Succesfully"
             });
@@ -36,22 +45,22 @@ export class ActivityController {
      * path: /activity/:id
      * method: put
     */
-   async updateActivity(req: Request, res: Response): Promise<Response> {
-    const query = `SELECT updateactivity($1,$2,$3,$4)`;
-    const client: PoolClient = await pool.connect();
-    try {
-        const values = [parseInt(req.params.id),req.body.name, req.body.id_acti_type, req.body.id_project];
-        await Queries.simpleTransaction(query, values, client);
-        return res.json({
-            msg: `Activity modified succesfully`
-        });
-    } catch (error) {
-        await Queries.simpleError(client, error);
-        return res.status(500).json({
-            msg: 'Internal Server Error'
-        });
+    async updateActivity(req: Request, res: Response): Promise<Response> {
+        const query = `SELECT updateactivity($1,$2,$3,$4)`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const values = [parseInt(req.params.id), req.body.name, req.body.id_acti_type, req.body.id_project];
+            await Queries.simpleTransaction(query, values, client);
+            return res.json({
+                msg: `Activity modified succesfully`
+            });
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
     }
-}
 
     /**
      * Get all activities.
@@ -176,6 +185,54 @@ export class ActivityController {
             return res.status(200).json(response.rows);
         } catch (error) {
             await Queries.simpleError(client, error);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Create new activity type.
+     * path: /activity/type
+     * method: post
+    */
+    async createActivityType(req: Request, res: Response): Promise<Response> {
+        const query = `SELECT createactivitytype($1)`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const values = [req.body.name];
+            await Queries.simpleTransaction(query, values, client);
+
+            return res.json({
+                msg: "Activity Type created Succesfully"
+            });
+        } catch (error) {
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Get all activity types.
+     * path: /type
+     * method: get
+    */
+    async getActivityType(req: Request, res: Response): Promise<Response> {
+        const query = `select getactivitytypes('acttypeCursor'); `;
+        const fetch = `FETCH ALL IN "acttypeCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
+
+            const response = await Queries.simpleSelect(query, fetch, client);
+
+            return res.status(200).json(response.rows);
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
             return res.status(500).json({
                 msg: 'Internal Server Error'
             });

@@ -1,7 +1,9 @@
-CREATE OR REPLACE FUNCTION createactivity(pname VARCHAR(100), pidtype integer,pidproject integer) 
-RETURNS void AS $$
+CREATE OR REPLACE FUNCTION createactivity(pname VARCHAR(100), pidtype integer,pidproject integer, ref refcursor)
+RETURNS refcursor AS $$
 BEGIN
-  INSERT INTO public.activity(name, id_acti_type, id_project) values (pname,pidtype,pidproject);
+  OPEN ref FOR
+  INSERT INTO public.activity(name, id_acti_type, id_project) values (pname,pidtype,pidproject) RETURNING id_activity;
+  RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -78,6 +80,25 @@ BEGIN
         from public.person_x_activity pact
     inner join public.person per on pact.dni = per.dni
     where pact.id_activity = pida;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--########################################################################################
+
+CREATE OR REPLACE FUNCTION createactivitytype(n VARCHAR(50)) 
+RETURNS void AS $$
+BEGIN
+  INSERT INTO public.acti_type(name) values (n);
+END;
+$$ LANGUAGE plpgsql;
+
+--########################################################################################
+
+CREATE OR REPLACE FUNCTION getactivitytypes(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    SELECT * FROM public.acti_type;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
