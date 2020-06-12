@@ -38,12 +38,46 @@ export class FilterController {
     async getStudentFilter(req: Request, res: Response): Promise<Response> {
         const query = `select studentfilter($1,$2,$3,'studentCursor');`;
         const fetch = `FETCH ALL IN "studentCursor";`;
+        const query2 = `select studentfilternocareer($1,$2,'studentCursor');`;
         const client: PoolClient = await pool.connect();
         try {
-            const values = [req.body.campus_code, req.body.career_code,req.body.status];
 
-            const response = await Queries.simpleSelectWithParameter(query, values, fetch, client);
+            let response : any;
+            if(req.body.career_code !== null){
+                const values = [req.body.campus_code, req.body.career_code,req.body.status];
+                await Queries.begin(client);
+                const result = await Queries.simpleSelectWithParameterContinous(query, values, fetch, client);
+                for(let i = 0;i<result.rowCount;i++){
+                    let res : string[] = [];
+                    const fetchCarees = `FETCH ALL IN "careersCursor${result.rows[i].dni}";`;
+                    let getCarees = `select getcareersbydni($1,'careersCursor${result.rows[i].dni}');`;
+                    let resultadocareer = await Queries.simpleSelectWithParameterContinous(getCarees, [result.rows[i].dni], fetchCarees, client);
+                    resultadocareer.rows.map(async (c:any) => {
+                        res.push(c.name)
+                    });
+                    result.rows[i]["career_name"] = res;
+                }
+                await Queries.rollback(client);
+                response = result;
+            }
+            else{
+                await Queries.begin(client);
+                const values = [req.body.campus_code,req.body.status];
 
+                const result = await Queries.simpleSelectWithParameterContinous(query2, values, fetch, client);
+                for(let i = 0;i<result.rowCount;i++){
+                    let res : string[] = [];
+                    const fetchCarees = `FETCH ALL IN "careersCursor${result.rows[i].dni}";`;
+                    let getCarees = `select getcareersbydni($1,'careersCursor${result.rows[i].dni}');`;
+                    let resultadocareer = await Queries.simpleSelectWithParameterContinous(getCarees, [result.rows[i].dni], fetchCarees, client);
+                    resultadocareer.rows.map(async (c:any) => {
+                        res.push(c.name)
+                    });
+                    result.rows[i]["career_name"] = res;
+                }
+                await Queries.rollback(client);
+                response = result;
+            }
             return res.status(200).json(response.rows);
         } catch (error) {
 

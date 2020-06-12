@@ -15,7 +15,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION studentfilter(pcampus varchar(30), pcareer integer,pstatus boolean, ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR
-    SELECT p.dni,p.name,p.lastname1,p.lastname2,p.status,c.name as campus_name, car.name as career_name
+    SELECT p.dni,p.name,p.lastname1,p.lastname2,p.status,c.name as campus_name
     FROM public.person p
     inner join student s on s.dni = p.dni
     inner join campus c on s.campus_code = c.campus_code
@@ -25,6 +25,37 @@ BEGIN
         and p.status = coalesce(pstatus,p.status);
   RETURN ref;
 END;
+$$ LANGUAGE plpgsql;
+
+--########################################################################################
+
+CREATE OR REPLACE FUNCTION studentfilternocareer(pcampus varchar(30),pstatus boolean, ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR
+    SELECT p.dni,p.name,p.lastname1,p.lastname2,p.status,c.name as campus_name
+    FROM public.person p
+    inner join student s on s.dni = p.dni
+    inner join campus c on s.campus_code = c.campus_code
+    where s.campus_code = coalesce(pcampus,s.campus_code) 
+        and p.status = coalesce(pstatus,p.status);
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getcareersbydni(pdni varchar(50), ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+
+    OPEN ref FOR select c.career_code, c.name, c.degree
+        from public.career c
+    inner join public.person_x_career pxc on c.career_code = pxc.career_code
+    where dni = pdni;
+
+    RETURN ref;
+
+    END;
 $$ LANGUAGE plpgsql;
 
 --########################################################################################
