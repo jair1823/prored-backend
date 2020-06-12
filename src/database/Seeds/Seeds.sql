@@ -2,7 +2,7 @@ INSERT INTO public.career(name, degree,status)
 	VALUES 
         ('Administración de Empresas', 'Diplomado',true),
         ('Docencia', 'Licenciatura',true),
-        ('Ingeniería Informática', 'Bachillerato',false);
+        ('Ingeniería Informática', 'Bachillerato',true);
 
 
 INSERT INTO public.center(name,status)
