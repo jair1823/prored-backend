@@ -4,6 +4,7 @@ import Endorsement_Controller from '../controllers/documentsControllers/endorsem
 import Project_Form_Controller from '../controllers/documentsControllers/project_form.controller'
 import Paper_Controller from '../controllers/documentsControllers/paper.controller'
 import List_Of_Assistance from '../controllers/documentsControllers/list_of_assistance.controller'
+import Photos_Controller from "../controllers/documentsControllers/photos.controller";
 import upload from "../lib/saveFile";
 
 const router = Router();
@@ -39,5 +40,10 @@ router.post('/list',upload, List_Of_Assistance.insertList);
 router.delete('/list/:id', List_Of_Assistance.deleteList);
 router.get('/list/:id', List_Of_Assistance.getList);
 router.get('/list/activity/:id', List_Of_Assistance.getListActivity);
+
+router.post("/photo/one", upload, Photos_Controller.insertPhotosAlone);
+router.delete("/photo/:id", Photos_Controller.deletePhoto);
+router.get("/photo/:id", Photos_Controller.getPhoto);
+router.get("/photo/activity/:id", Photos_Controller.getPhotosActivity);
 
 export default router;

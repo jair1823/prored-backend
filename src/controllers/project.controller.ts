@@ -22,10 +22,10 @@ export class ProjectController {
 
             const persons: any = req.body.persons;
 
-            persons.map(async (p:any) => {
-                await Queries.simpleTransactionContinous(assign, [p.dni,response.rows[0].id_project,p.role], client);
+            persons.map(async (p: any) => {
+                await Queries.simpleTransactionContinous(assign, [p.dni, response.rows[0].id_project, p.role], client);
             });
-            
+
             await Queries.commit(client);
             return res.json(
                 response.rows[0]
@@ -99,8 +99,8 @@ export class ProjectController {
             await Queries.simpleTransactionContinous(query, values, client);
             const persons: any = req.body.persons;
 
-            persons.map(async (p:any) => {
-                await Queries.simpleTransactionContinous(assign, [p.dni,parseInt(req.params.id),p.role], client);
+            persons.map(async (p: any) => {
+                await Queries.simpleTransactionContinous(assign, [p.dni, parseInt(req.params.id), p.role], client);
             });
             await Queries.commit(client);
             return res.json({
@@ -164,42 +164,42 @@ export class ProjectController {
      * path: /project_persons/:id
      * method: get
     */
-   async getPersonsNotInProject(req: Request, res: Response): Promise<Response> {
-    const query = `select getpersonsnotinproject($1,'projectCursor');`;
-    const fetch = `FETCH ALL IN "projectCursor";`;
-    const client: PoolClient = await pool.connect();
-    try {
-        const id = [parseInt(req.params.id)];
-        const response = await Queries.simpleSelectWithParameter(query, id, fetch, client);
-        return res.status(200).json(response.rows);
-    } catch (error) {
-        await Queries.simpleError(client, error);
-        return res.status(500).json({
-            msg: 'Internal Server Error'
-        });
+    async getPersonsNotInProject(req: Request, res: Response): Promise<Response> {
+        const query = `select getpersonsnotinproject($1,'projectCursor');`;
+        const fetch = `FETCH ALL IN "projectCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const id = [parseInt(req.params.id)];
+            const response = await Queries.simpleSelectWithParameter(query, id, fetch, client);
+            return res.status(200).json(response.rows);
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
     }
-}
 
     /**
      * Get all students assigned to project.
      * path: /project/students/:id
      * method: get
     */
-   async getStudentsProject(req: Request, res: Response): Promise<Response> {
-    const query = `select getstudentsproject($1,'projectCursor');`;
-    const fetch = `FETCH ALL IN "projectCursor";`;
-    const client: PoolClient = await pool.connect();
-    try {
-        const id = [parseInt(req.params.id)];
-        const response = await Queries.simpleSelectWithParameter(query, id, fetch, client);
-        return res.status(200).json(response.rows);
-    } catch (error) {
-        await Queries.simpleError(client, error);
-        return res.status(500).json({
-            msg: 'Internal Server Error'
-        });
+    async getStudentsProject(req: Request, res: Response): Promise<Response> {
+        const query = `select getstudentsproject($1,'projectCursor');`;
+        const fetch = `FETCH ALL IN "projectCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const id = [parseInt(req.params.id)];
+            const response = await Queries.simpleSelectWithParameter(query, id, fetch, client);
+            return res.status(200).json(response.rows);
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
     }
-}
 }
 
 const projectController = new ProjectController();
