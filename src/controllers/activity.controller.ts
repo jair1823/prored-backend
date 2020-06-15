@@ -27,9 +27,7 @@ export class ActivityController {
                 await Queries.simpleTransactionContinous(assign, [p.dni, response.rows[0].id_activity], client);
             });
             await Queries.commit(client);
-            return res.json({
-                msg: "Activity created Succesfully"
-            });
+            return res.json(response.rows[0]);
         } catch (error) {
 
             await Queries.simpleError(client, error);
@@ -47,10 +45,20 @@ export class ActivityController {
     */
     async updateActivity(req: Request, res: Response): Promise<Response> {
         const query = `SELECT updateactivity($1,$2,$3,$4)`;
+        const assign = `SELECT assignpersontoactivity($1,$2)`;
         const client: PoolClient = await pool.connect();
         try {
             const values = [parseInt(req.params.id), req.body.name, req.body.id_acti_type, req.body.id_project];
-            await Queries.simpleTransaction(query, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(query, values, client);
+
+            const persons: any = req.body.persons;
+
+            persons.map(async (p: any) => {
+                await Queries.simpleTransactionContinous(assign, [p.dni, parseInt(req.params.id)], client);
+            });
+
+            await Queries.commit(client);
             return res.json({
                 msg: `Activity modified succesfully`
             });
@@ -238,6 +246,27 @@ export class ActivityController {
             });
         }
     }
+
+    /**
+     * Get all persons not assigned to a specific activity.
+     * path: /activity/persons/not/:id
+     * method: get
+    */
+   async getPersonsNotInActivity(req: Request, res: Response): Promise<Response> {
+    const query = `select getpersonsnotinactivity($1,'activityCursor');`;
+    const fetch = `FETCH ALL IN "activityCursor";`;
+    const client: PoolClient = await pool.connect();
+    try {
+        const id = [parseInt(req.params.id)];
+        const response = await Queries.simpleSelectWithParameter(query, id, fetch, client);
+        return res.status(200).json(response.rows);
+    } catch (error) {
+        await Queries.simpleError(client, error);
+        return res.status(500).json({
+            msg: 'Internal Server Error'
+        });
+    }
+}
 
     /**
      * Update specific activity type.

@@ -21,12 +21,40 @@ export class PhotoController {
             const filesParsed = JSON.parse(files);
             const bodies = JSON.parse(req.body.data);
             await Queries.begin(client);
-            for(let i = 0; i < bodies.length;i++){
+            for (let i = 0; i < bodies.length; i++) {
                 let url = `${req.body.tabla}/${filesParsed[i].filename}`;
                 let values = [req.body.id_activity, bodies[i].date_taken, bodies[i].comment, filesParsed[i].filename, url];
                 await Queries.simpleTransactionContinous(insert, values, client);
             }
             await Queries.commit(client);
+            return res.status(200).json(
+                {
+                    msg: 'Photo inserted'
+                }
+            );
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Create Paper for a project.
+     * path: /paper/one
+     * method: post
+     */
+
+    async insertPhotosAlone(req: Request, res: Response): Promise<Response> {
+        const client: PoolClient = await pool.connect();
+        const insert = `SELECT createphoto($1,$2,$3,$4,$5);`;
+        try {
+            const url = `${req.body.tabla}/${req.file.filename}`;
+            let values = [req.body.id_activity, req.body.date_taken, req.body.comment, req.file.filename, url];
+            await Queries.simpleTransaction(insert, values, client);
             return res.status(200).json(
                 {
                     msg: 'Photo inserted'
