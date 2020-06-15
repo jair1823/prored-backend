@@ -323,6 +323,11 @@ Cada una de las rutas para el proyecto, se encuentran asociadas al controlador p
 | project.controller@getProjectbyId      | /project/:id         | GET          | Función encargada de obtener un proyecto específico       |
 | project.controller@assignPersonProject | /project/assign/     | POST         | Función encargada de  asignar personas al proyecto        |
 | project.controller@getPersonsProject   | /project_persons/:id | GET          | Función encargada de obtener los vinculados a un proyecto |
+| project.controller@getPersonsNotInProject   | /project_persons_not_in/:id | GET          | Función encargada de obtener los vinculados que no están en el proyecto seleccionado |
+| project.controller@getStudentsProject   | /project/students/:id | GET          | Función encargada de obtener los estudiantes de un proyecto seleccionado |
+
+
+
 
 
 
@@ -339,6 +344,9 @@ Cada una de las rutas para las actividades, se encuentran asociadas al controlad
 | project.controller@getActivitiesNoProject | /activity/alone       | GET          | Función encargada de obtener actividades independientes |
 | project.controller@assignPersonsActivity  | /activity/project/:id | GET          | Función encargada de obtener personas por actividad     |
 | project.controller@getActivitybyId        | /activity/:id         | GET          | Función encargada de obtener actividad específica       |
+| project.controller@createActivityType        | /type         | POST          | Función encargada de crear un tipo de actividad específica       |
+| project.controller@updateActivityType        | /type/:id         | PUT          | Función encargada de actualizar el tipo de actividad específica       |
+| project.controller@getActivityType        | /type       | GET          | Función encargada de obtener el tipo de actividad específica       |
 
 
 
@@ -357,6 +365,8 @@ Cada una de las rutas para el Gantt, se encuentran asociadas al controlador gant
 | gantt.controller@createGantt_Task | /gantt_task/    | POST         | Función encargada de crear tareas del gantt           |
 | gantt.controller@updateGantt_Task | /gantt_task/:id | PUT          | Función encargada de actualizar las tareas del gantt  |
 | gantt.controller@getGantt_Tasks   | /gantt_task/:id | GET          | Función encargada de obtener tareas de un gantt       |
+| gantt.controller@checkPeriodExists | /period/exists    | POST         | Función encargada de verificar si un periodo existe    |
+| gantt.controller@checkGanttExists | /gantt_exists/    | POST         | Función encargada de verificar si un Gantt exite           |
 
 
 
@@ -364,16 +374,60 @@ Cada una de las rutas para el Gantt, se encuentran asociadas al controlador gant
 
 Cada una de las rutas para los documentos, se encuentran asociadas al controlador activity.controller.
 
-| Método                                     | Ruta                     | HTTP Request | Descripción                                            |
-|--------------------------------------------|--------------------------|--------------|--------------------------------------------------------|
-| document.controller@insertProjectForm      | /project_form/           | POST         | Función encargada de insertar un form de proyecto      |
-| document.controller@deleteProjectForm      | /project_form/:id        | DELETE       | Función encargada de eliminar form de proyecto         |
-| document.controller@getProjectForm         | /project_form/:id        | GET          | Función encargada de obtener form de proyecto          |
-| document.controller@insertEndorsement      | /endorsement/            | POST         | Función encargada de insertar endorsement              |
-| document.controller@deleteEndorsement      | /endorsement/:id         | DELETE       | Función encargada de eliminar endorsement              |
-| document.controller@getEndorsement         | /endorsement/:id         | GET          | Función encargada de  obtener endorsement              |
-| document.controller@getEndorsementsProject | /endorsement/project/:id | GET          | Función encargada de obtener endorsements por proyecto |
-| document.controller@insertArticle          | /article/                | POST         | Función encargada de insertar artículo                 |
-| document.controller@deleteArticle          | /article/:id             | DELETE       | Función encargada de eliminar artículo                 |
-| document.controller@getArticle             | /article/:id             | GET          | Función encargada de obtener artículo                  |
-| document.controller@getArticleProject      | /article/project/:id     | GET          | Función encargada de obtener artículo por proyecto     |
+| Método                                     | Ruta                     | HTTP Request | Descripción                                                    |
+|--------------------------------------------|--------------------------|--------------|----------------------------------------------------------------|
+| documents.controller@insertProjectForm     | /project_form/           | POST         | Función encargada de insertar un form de proyecto              |
+| document.controller@deleteProjectForm      | /project_form/:id        | DELETE       | Función encargada de eliminar form de proyecto                 |
+| document.controller@getProjectForm         | /project_form/:id        | GET          | Función encargada de obtener form de proyecto                  |
+| document.controller@insertEndorsement      | /endorsement/            | POST         | Función encargada de insertar endorsement                      |
+| document.controller@deleteEndorsement      | /endorsement/:id         | DELETE       | Función encargada de eliminar endorsement                      |
+| document.controller@getEndorsement         | /endorsement/:id         | GET          | Función encargada de  obtener endorsement                      |
+| document.controller@getEndorsementsProject | /endorsement/project/:id | GET          | Función encargada de obtener endorsements por proyecto         |
+| document.controller@insertArticle          | /article/                | POST         | Función encargada de insertar artículo                         |
+| document.controller@insertArticleNoFile    | /article/nofile          | POST         | Función encargada de insertar artículo sin archivo             |
+| document.controller@updateArticle          | /article/:id             | PUT          | Función encargada de actualizar artículo                       |
+| document.controller@deleteArticle          | /article/:id             | DELETE       | Función encargada de eliminar artículo                         |
+| document.controller@deleteArticleFile      | /article/file/:id        | DELETE       | Función encargada de eliminar file del artículo                |
+| document.controller@insertArticleFile      | /article/file/:id        | POST         | Función encargada de insertar file del artículo                |
+| document.controller@getArticle             | /article/:id             | GET          | Función encargada de obtener artículo                          |
+| document.controller@getArticleProject      | /article/project/:id     | GET          | Función encargada de obtener artículo por proyecto             |
+| document.controller@insertPaper            | /paper/                  | POST         | Función encargada de insertar paper                            |
+| document.controller@insertPaperNoFile      | /paper/nofile            | POST         | Función encargada de insertar paper sin archivo                |
+| document.controller@updatePaper            | /paper/:id               | PUT          | Función encargada de actualizar paper                          |
+| document.controller@deletePaper            | /paper/:id               | DELETE       | Función encargada de eliminar paper                            |
+| document.controller@deletePaperFile        | /paper/file/:id          | DELETE       | Función encargada de eliminar file del paper                   |
+| document.controller@insertPaperFile        | /paper/file/:id          | POST         | Función encargada de insertar file del paper                   |
+| document.controller@getPaper               | /paper/:id               | GET          | Función encargada de obtener paper                             |
+| document.controller@getPaperProject        | /paper/project/:id       | GET          | Función encargada de obtener paper por proyecto                |
+| document.controller@insertList             | /list/                   | POST         | Función encargada de insertar lista de asistencia              |
+| document.controller@getList                | /list/:id                | GET          | Función encargada de obtener lista de asistencia               |
+| document.controller@deleteList             | /list/:id                | DELETE       | Función encargada de eliminar lista de asistencia              |
+| document.controller@getListActivity        | /list/ativity/:id        | GET          | Función encargada de obtener lista de asistencia por actividad |
+
+
+### Documento Múltiple 
+
+Cada una de las rutas para los documentos múltiples, se encuentran asociadas a Photos_Controller.controller.
+
+
+| Método                                                  | Ruta                              | HTTP Request | Descripción                                                             |
+|---------------------------------------------------------|-----------------------------------|--------------|-------------------------------------------------------------------------|
+| photos.controller@insertPhotos    | /photo   | POST          | Función encargada de  insertar fotos     |
+| photos.controller@deletePhoto | /photo/:id       | DELETE          | Función encargada de eliminar foto específica |
+| photos.controller@getPhoto  | /photo/:id   | GET         | Función encargada de  obtener foto                 |
+| photos.controller@getPhotosActivity  | /photo/activity/:id | GET          | Función encargada de  obtener fotos de Actividades        |
+
+
+
+
+### Filtros
+
+Cada una de las rutas para los filtros, se encuentran asociadas al controlador Filter.controller.
+
+| Método                                                  | Ruta                              | HTTP Request | Descripción                                                             |
+|---------------------------------------------------------|-----------------------------------|--------------|-------------------------------------------------------------------------|
+| filter.controller@getProjectsFilter    | /filter/project/              | POST          | Función encargada de  obtener consultas de Proyecto             |
+| filter.controller@getStudentFilter | /filter/student/        | POST          | Función encargada de  obtener consultas de Estudiante    |
+| filter.controller@getResearcherFilter  | /filter/researcher/              | POST         | Función encargada de  crear una unidad de investigación                 |
+| filter.controller@getActivityNoProjectFilter  | /filter/activity/no_project/         | POST          | Función encargada de  obtener consultas de Actividades no anexas a proyectos         |
+| filter.controller@getActivityFilter  | /filter/activity/project       | POST          | Función encargada de  obtener consultar de actividades en anexas a Proyectos        |
