@@ -284,3 +284,19 @@ create table public.gantt_task(
     start_date date,
     end_date date
 );
+
+
+create table public.budget_unit(
+    code_budget_unit SERIAL PRIMARY KEY,
+    name varchar(50),
+    status boolean
+);
+
+
+create table public.budget_sub_unit(
+    code_budget_subunit SERIAL PRIMARY KEY,
+    name varchar(50),
+    status boolean
+);
+
+
