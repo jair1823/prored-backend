@@ -1,0 +1,2 @@
+DROP FUNCTION IF EXISTS personexists;
+DROP FUNCTION IF EXISTS getPersons;

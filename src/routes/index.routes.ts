@@ -1,5 +1,4 @@
 import Network from './network.routes';
-import Academic_Unit from './academic_unit.routes';
 import Investigation_Unit from './investigation_unit.routes';
 import Center from './center.routes';
 import AssoCareer from './associated_career.routes';
@@ -7,9 +6,15 @@ import Career from './career.routes';
 import Language from './language.routes';
 import Directions from './directions.routes'
 import Campus from './campus.routes';
-
 import Student from './student.routes';
 import Consultas from './consultas.routes';
+import Researcher from './researcher.routes';
+import Project from './project.routes'
+import Activity from './activity.routes'
+import Document from './document.routes'
+import DocumentMultiple from './document_multiple.routes'
+import Gantt from './gantt.routes'
+import Filter from './filter.routes'
 /**
  * 
  * @param app variable que contiene la aplicacion de express
@@ -17,15 +22,21 @@ import Consultas from './consultas.routes';
  * funcion que agrega todas las rutas a la app de express
  */
 export function addRoutes(app: any) {
-    app.use(Network);
-    app.use(Center);
+    app.use('/network',Network);
+    app.use('/center',Center);
     app.use(AssoCareer);
-    app.use(Academic_Unit);
     app.use(Investigation_Unit);
-    app.use(Career);
-    app.use(Campus);
-    app.use(Language);
+    app.use('/career', Career);
+    app.use('/campus', Campus);
+    app.use('/language',Language);
     app.use(Directions);
     app.use(Student);
+    app.use(Researcher);
     app.use(Consultas);
+    app.use(Project);
+    app.use(Gantt);
+    app.use('/activity',Activity);
+    app.use(Document);
+    app.use(DocumentMultiple);
+    app.use('/filter',Filter);
 }

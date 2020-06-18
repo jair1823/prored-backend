@@ -1,681 +1,668 @@
 import { Request, Response } from 'express';
-import { QueryResult } from 'pg';
+import { PoolClient } from 'pg';
 import { pool } from '../database/connection';
+import Queries from '../database/Queries';
+import fs from 'fs';
+import path from 'path';
 
-/**
- * Get all enable students.
- * path: /student/
- * method: get
- */
-export const getStudents = async (req: Request, res: Response): Promise<Response> => {
-    const query = `select getstudents('studentsCursor');`;
-    const fetch = `FETCH ALL IN "studentsCursor";`;
-    const client = await pool.connect();
-    try {
+export class StudentController {
 
-        await client.query('BEGIN');
+    /**
+     * Get all enable students.
+     * path: /student/
+     * method: get
+    */
+    async getStudents(req: Request, res: Response): Promise<Response> {
+        const query = `select getstudents('studentsCursor');`;
+        const fetch = `FETCH ALL IN "studentsCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
 
-        await client.query(query)
-        const students: QueryResult = await client.query(fetch);
+            const response = await Queries.simpleSelect(query, fetch, client);
 
-        await client.query('ROLLBACK');
-        client.release();
+            return res.status(200).json(response.rows);
+        } catch (error) {
 
-        return res.json(students.rows);
-    } catch (error) {
-        console.log(error);
-        return res.send({
-            msg: 'Internal Server Error'
-        });
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
     }
-}
 
-/**
- * Get all students no matter status.
- * path: /student_all/
- * method: get
- */
-export const getStudentsAll = async (req: Request, res: Response): Promise<Response> => {
-    const query = `select getstudentsall('studentsCursor');`;
-    const fetch = `FETCH ALL IN "studentsCursor";`;
-    const client = await pool.connect();
-    try {
+    /**
+     * Get all students no matter status.
+     * path: /student_all/
+     * method: get
+     */
+    async getStudentsAll(req: Request, res: Response): Promise<Response> {
+        const query = `select getstudentsall('studentsCursor');`;
+        const fetch = `FETCH ALL IN "studentsCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
 
-        await client.query('BEGIN');
+            const response = await Queries.simpleSelect(query, fetch, client);
 
-        await client.query(query)
-        const students: QueryResult = await client.query(fetch);
+            return res.status(200).json(response.rows);
+        } catch (error) {
 
-        await client.query('ROLLBACK');
-        client.release();
+            await Queries.simpleError(client, error);
 
-        return res.json(students.rows);
-    } catch (error) {
-        console.log(error);
-        return res.send({
-            msg: 'Internal Server Error'
-        });
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
     }
-}
 
-/**
- * Get specific enable student.
- * path: /student/:dni
- * method: get
- */
-export const getStudentByDni = async (req: Request, res: Response): Promise<Response> => {
-    const getStudent = `select getstudentbydni($1,'studentCursor');`;
-    const fetchStudent = `FETCH ALL IN "studentCursor";`;
+    /**
+     * Get specific enable student.
+     * path: /student/:dni
+     * method: get
+     */
+    async getStudentByDni(req: Request, res: Response): Promise<Response> {
+        const getStudent = `select getstudentbydni($1,'studentCursor');`;
+        const fetchStudent = `FETCH ALL IN "studentCursor";`;
 
-    const getCarees = `select getcareersbydni($1,'careersCursor');`;
-    const fetchCarees = `FETCH ALL IN "careersCursor";`;
+        const getCarees = `select getcareersbydni($1,'careersCursor');`;
+        const fetchCarees = `FETCH ALL IN "careersCursor";`;
 
-    const getNetworks = `select getnetworksbydni($1,'networksCursor');`;
-    const fetchNetworks = `FETCH ALL IN "networksCursor";`;
+        const getNetworks = `select getnetworksbydni($1,'networksCursor');`;
+        const fetchNetworks = `FETCH ALL IN "networksCursor";`;
 
-    const getLanguages = `select getlanguagesbydni($1,'languagesCursor');`;
-    const fetchLanguages = `FETCH ALL IN "languagesCursor";`;
+        const getLanguages = `select getlanguagesbydni($1,'languagesCursor');`;
+        const fetchLanguages = `FETCH ALL IN "languagesCursor";`;
 
-    const getAssoCareer = `select getassociatedcareersbydni($1,'assoCareerCursor');`;
-    const fetchAssoCareer = `FETCH ALL IN "assoCareerCursor";`;
+        const getAssoCareer = `select getassociatedcareersbydni($1,'assoCareerCursor');`;
+        const fetchAssoCareer = `FETCH ALL IN "assoCareerCursor";`;
 
-    const getDirection = `select getdirectionbydni($1,'directionCursor');`;
-    const fetchDirection = `FETCH ALL IN "directionCursor";`;
+        const getDirection = `select getdirectionbydni($1,'directionCursor');`;
+        const fetchDirection = `FETCH ALL IN "directionCursor";`;
 
-    const client = await pool.connect();
-    try {
-        const dni = req.params.dni;
-        await client.query('BEGIN');
+        const client: PoolClient = await pool.connect();
+        try {
+            const dni = [req.params.dni];
+            await Queries.begin(client);
+            const student = await Queries.simpleSelectWithParameterContinous(getStudent, dni, fetchStudent, client);
+            const careers = await Queries.simpleSelectWithParameterContinous(getCarees, dni, fetchCarees, client);
+            const networks = await Queries.simpleSelectWithParameterContinous(getNetworks, dni, fetchNetworks, client);
+            const languages = await Queries.simpleSelectWithParameterContinous(getLanguages, dni, fetchLanguages, client);
+            const associated_careers = await Queries.simpleSelectWithParameterContinous(getAssoCareer, dni, fetchAssoCareer, client);
+            const direction = await Queries.simpleSelectWithParameterContinous(getDirection, dni, fetchDirection, client);
+            await Queries.rollback(client);
 
-        await client.query(getStudent, [dni]);
-        const student: QueryResult = await client.query(fetchStudent);
+            return res.status(200).json(
+                {
+                    'student': student.rows[0],
+                    'careers': careers.rows,
+                    'networks': networks.rows,
+                    'languages': languages.rows,
+                    'associated_careers': associated_careers.rows,
+                    'direction': direction.rows[0]
+                }
+            );
+        } catch (error) {
 
-        await client.query(getCarees, [dni]);
-        const careers: QueryResult = await client.query(fetchCarees);
+            await Queries.simpleError(client, error);
 
-        await client.query(getNetworks, [dni]);
-        const networks: QueryResult = await client.query(fetchNetworks);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
 
-        await client.query(getLanguages, [dni]);
-        const languages: QueryResult = await client.query(fetchLanguages);
+    /**
+     * Get specific student no matter status.
+     * path: /student_all/:dni
+     * method: get
+     */
+    async getStudentByDniAll(req: Request, res: Response): Promise<Response> {
+        const getStudent = `select getstudentbydniall($1,'studentCursor');`;
+        const fetchStudent = `FETCH ALL IN "studentCursor";`;
 
-        await client.query(getAssoCareer, [dni]);
-        const associated_careers: QueryResult = await client.query(fetchAssoCareer);
+        const getCarees = `select getcareersbydni($1,'careersCursor');`;
+        const fetchCarees = `FETCH ALL IN "careersCursor";`;
 
-        await client.query(getDirection, [dni]);
-        const direction: QueryResult = await client.query(fetchDirection);
+        const getNetworks = `select getnetworksbydni($1,'networksCursor');`;
+        const fetchNetworks = `FETCH ALL IN "networksCursor";`;
 
-        await client.query('ROLLBACK');
-        client.release();
+        const getLanguages = `select getlanguagesbydni($1,'languagesCursor');`;
+        const fetchLanguages = `FETCH ALL IN "languagesCursor";`;
 
-        return res.json(
-            {
-                'student': student.rows[0],
-                'careers': careers.rows,
-                'networks': networks.rows,
-                'languages': languages.rows,
-                'associated_careers': associated_careers.rows,
-                'direction': direction.rows[0]
+        const getAssoCareer = `select getassociatedcareersbydni($1,'assoCareerCursor');`;
+        const fetchAssoCareer = `FETCH ALL IN "assoCareerCursor";`;
+
+        const getDirection = `select getdirectionbydni($1,'directionCursor');`;
+        const fetchDirection = `FETCH ALL IN "directionCursor";`;
+
+        const client: PoolClient = await pool.connect();
+        try {
+            const dni = [req.params.dni];
+
+            await Queries.begin(client);
+            const student = await Queries.simpleSelectWithParameterContinous(getStudent, dni, fetchStudent, client);
+            const careers = await Queries.simpleSelectWithParameterContinous(getCarees, dni, fetchCarees, client);
+            const networks = await Queries.simpleSelectWithParameterContinous(getNetworks, dni, fetchNetworks, client);
+            const languages = await Queries.simpleSelectWithParameterContinous(getLanguages, dni, fetchLanguages, client);
+            const associated_careers = await Queries.simpleSelectWithParameterContinous(getAssoCareer, dni, fetchAssoCareer, client);
+            const direction = await Queries.simpleSelectWithParameterContinous(getDirection, dni, fetchDirection, client);
+            await Queries.rollback(client);
+
+            return res.status(200).json(
+                {
+                    'student': student.rows[0],
+                    'careers': careers.rows,
+                    'networks': networks.rows,
+                    'languages': languages.rows,
+                    'associated_careers': associated_careers.rows,
+                    'direction': direction.rows[0]
+                }
+            );
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Get all students basic information.
+     * path: /student_basic/
+     * method: get
+    */
+    async getStudentsBasic(req: Request, res: Response): Promise<Response> {
+        const query = `select getstudentsbasic('studentsCursor');`;
+        const fetch = `FETCH ALL IN "studentsCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
+
+            const response = await Queries.simpleSelect(query, fetch, client);
+
+            return res.status(200).json(response.rows);
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Create new student.
+     * path: /student/
+     * method: post
+     */
+    async createStudent(req: Request, res: Response): Promise<Response> {
+        const client: PoolClient = await pool.connect();
+        const createPerson = `SELECT createperson($1,$2,$3,$4,$5,$6,$7,$8);`;
+        const createStudent = `SELECT createstudent($1,$2,$3,$4,$5,$6,$7,$8);`;
+        const createStudentXcareer = `SELECT createstudentxcareer($1,$2);`;
+        const createStudentXlanguage = `SELECT createstudentxlanguage($1,$2);`;
+        const createStudentXassociated_career = `SELECT createstudentxassociatedcareer($1,$2);`;
+        const createStudentXnetworks = `SELECT createstudentxnetwork($1,$2);`;
+        try {
+
+            const personValues = [req.body.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates, req.body.phone_number, req.body.email,'Estudiante'];
+            const studentValues = [req.body.dni, req.body.id_district, req.body.marital_status,
+            req.body.campus_code, req.body.profile, req.body.address, req.body.nationality, req.body.emergency_contact];
+            
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(createPerson, personValues, client);
+            await Queries.simpleTransactionContinous(createStudent, studentValues, client);
+
+            const careers: [] = req.body.careers;
+            const languages: [] = req.body.languages;
+            const networks: [] = req.body.networks;
+            const associated_careers: [] = req.body.associated_careers;
+
+            careers.map(async (c) => {
+                await Queries.simpleTransactionContinous(createStudentXcareer, [personValues[0], c], client);
+            });
+
+            languages.map(async (l) => {
+                await Queries.simpleTransactionContinous(createStudentXlanguage, [personValues[0], l], client);
+            });
+
+            networks.map(async (n) => {
+                await Queries.simpleTransactionContinous(createStudentXnetworks, [personValues[0], n], client);
+            });
+
+            associated_careers.map(async (a) => {
+                await Queries.simpleTransactionContinous(createStudentXassociated_career, [personValues[0], a], client);
+            });
+
+            await Queries.commit(client);
+
+            return res.status(200).json(
+                {
+                    msg: 'Student created'
+                }
+            );
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Insert CV to student.
+     * path: /studentcv
+     * method: post
+     */
+
+    async insertCV(req: Request, res: Response): Promise<Response> {
+        const client: PoolClient = await pool.connect();
+        const insert = `SELECT insertCV($1,$2,$3);`;
+        try {
+            let url = `${req.body.tabla}/${req.file.filename}`;
+            const values = [req.body.dni, url, req.file.filename];
+            await Queries.simpleTransaction(insert, values, client);
+            return res.status(200).json(
+                {
+                    msg: 'CV inserted'
+                }
+            );
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Update CV to student.
+     * path: /studentcv
+     * method: put
+     */
+
+    async updateCV(req: Request, res: Response): Promise<Response> {
+        const client: PoolClient = await pool.connect();
+        // const deleteD = `SELECT deleteCV($1);`;
+        // const insert = `SELECT insertCV($1,$2,$3);`;
+        const update = `SELECT updateCV($1,$2,$3);`
+        try {
+            const p = req.body.path;
+            let fullPath = path.join(__dirname + '../../..' + '/public/' + p);
+            fs.unlinkSync(fullPath);
+            //const valuesD = [req.body.dni];
+            // await Queries.begin(client);
+            // await Queries.simpleTransactionContinous(deleteD, valuesD, client);
+            let url = `${req.body.tabla}/${req.file.filename}`;
+            const values = [req.body.dni, url, req.file.filename];
+            await Queries.simpleTransaction(update, values, client);
+            // await Queries.simpleTransactionContinous(insert, values, client);
+            // await Queries.commit(client);
+            return res.status(200).json(
+                {
+                    msg: 'CV updated'
+                }
+            );
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Delete CV from student.
+     * path: /studentcv/:dni
+     * method: delete
+     */
+
+    async deleteCV(req: Request, res: Response): Promise<Response> {
+        const client: PoolClient = await pool.connect();
+        const deleteD = `SELECT deleteCV($1);`;
+        const query = `select getcv($1,'studentCursor');`;
+        const fetch = `FETCH ALL IN "studentCursor";`;
+        try {
+            const dni = [req.params.dni];
+            await Queries.begin(client);
+            const response = await Queries.simpleSelectWithParameterContinous(query, dni, fetch, client);
+            let message = "empty"
+            let resultado = response.rows[0];
+            if (resultado != undefined) {
+                const p = resultado.file_path;
+                let fullPath = path.join(__dirname + '../../..' + '/public/' + p);
+                fs.unlinkSync(fullPath);
+                await Queries.simpleTransaction(deleteD, dni, client);
+                message = "CV deleted";
             }
+            return res.status(200).json(
+                {
+                    msg: message
+                }
+            );
+        } catch (error) {
 
+            await Queries.simpleError(client, error);
 
-        );
-    } catch (error) {
-
-        await client.query('ROLLBACK');
-        client.release();
-        console.log(error);
-
-        return res.send({
-            msg: 'Internal Server Error'
-        });
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
     }
-}
 
-/**
- * Get specific student no matter status.
- * path: /student_all/:dni
- * method: get
- */
-export const getStudentByDniAll = async (req: Request, res: Response): Promise<Response> => {
-    const getStudent = `select getstudentbydniall($1,'studentCursor');`;
-    const fetchStudent = `FETCH ALL IN "studentCursor";`;
-
-    const getCarees = `select getcareersbydni($1,'careersCursor');`;
-    const fetchCarees = `FETCH ALL IN "careersCursor";`;
-
-    const getNetworks = `select getnetworksbydni($1,'networksCursor');`;
-    const fetchNetworks = `FETCH ALL IN "networksCursor";`;
-
-    const getLanguages = `select getlanguagesbydni($1,'languagesCursor');`;
-    const fetchLanguages = `FETCH ALL IN "languagesCursor";`;
-
-    const getAssoCareer = `select getassociatedcareersbydni($1,'assoCareerCursor');`;
-    const fetchAssoCareer = `FETCH ALL IN "assoCareerCursor";`;
-
-    const getDirection = `select getdirectionbydni($1,'directionCursor');`;
-    const fetchDirection = `FETCH ALL IN "directionCursor";`;
-
-    const client = await pool.connect();
-    try {
-        const dni = req.params.dni;
-        await client.query('BEGIN');
-
-        await client.query(getStudent, [dni]);
-        const student: QueryResult = await client.query(fetchStudent);
-
-        await client.query(getCarees, [dni]);
-        const careers: QueryResult = await client.query(fetchCarees);
-
-        await client.query(getNetworks, [dni]);
-        const networks: QueryResult = await client.query(fetchNetworks);
-
-        await client.query(getLanguages, [dni]);
-        const languages: QueryResult = await client.query(fetchLanguages);
-
-        await client.query(getAssoCareer, [dni]);
-        const associated_careers: QueryResult = await client.query(fetchAssoCareer);
-
-        await client.query(getDirection, [dni]);
-        const direction: QueryResult = await client.query(fetchDirection);
-
-        await client.query('ROLLBACK');
-        client.release();
-
-        return res.json(
-            {
-                'student': student.rows[0],
-                'careers': careers.rows,
-                'networks': networks.rows,
-                'languages': languages.rows,
-                'associated_careers': associated_careers.rows,
-                'direction': direction.rows[0]
+    /**
+     * Get student cv.
+     * path: /studentcv/:dni
+     * method: get
+     */
+    async getStudentCV(req: Request, res: Response): Promise<Response> {
+        const query = `select getcv($1,'studentCursor');`;
+        const fetch = `FETCH ALL IN "studentCursor";`;
+        const client = await pool.connect();
+        try {
+            const dni = [req.params.dni];
+            const response = await Queries.simpleSelectWithParameter(query, dni, fetch, client);
+            const rows = response.rows[0];
+            if (rows === undefined) {
+                return res.json({
+                    msg: "empty"
+                });
             }
+            return res.json(rows);
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Update specific student.
+     * path: /student/:dni
+     * method: put
+     */
+    async updateStudent(req: Request, res: Response): Promise<Response> {
+        const updateStudent = `SELECT updatestudent($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14);`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const values = [
+                req.params.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates,
+                req.body.id_district, req.body.marital_status, req.body.campus_code,
+                req.body.profile, req.body.address, req.body.nationality, req.body.phone_number, req.body.email, req.body.emergency_contact
+            ];
+
+            await Queries.simpleTransaction(updateStudent, values, client);
+
+            return res.status(200).json(
+                {
+                    msg: 'Student updated'
+                }
+            );
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Update careers for student.
+     * path: /student/:dni/careers
+     * method: put
+     */
+    async updateCareersForStudent(req: Request, res: Response): Promise<Response> {
+        const createStudentXcareer = `SELECT createstudentxcareer($1,$2);`;
+        const deleteStudentXcareer = `SELECT deletestudentxcareer($1, $2);`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const toDelete: any = req.body.toDelete;
+            const toCreate: any = req.body.toCreate;
+            const dni = req.params.dni;
+            await Queries.begin(client);
+            toDelete.map(async (d: number) => {
+                await Queries.simpleTransactionContinous(deleteStudentXcareer, [dni, d], client);
+            });
+            toCreate.map(async (c: number) => {
+                await Queries.simpleTransactionContinous(createStudentXcareer, [dni, c], client);
+            });
+
+            await Queries.commit(client);
+
+            return res.status(200).json({
+                msg: 'Careers updated'
+            });
+
+        } catch (error) {
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Update languages for student.
+     * path: /student/:dni/languages
+     * method: put
+     */
+    async updateLanguagesForStudent(req: Request, res: Response): Promise<Response> {
+        const createStudentXlanguage = `SELECT createstudentxlanguage($1,$2);`;
+        const deleteStudentXlanguage = `SELECT deletestudentxlanguage($1,$2);`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const toDelete: any = req.body.toDelete;
+            const toCreate: any = req.body.toCreate;
+            const dni = req.params.dni;
+            await Queries.begin(client);
+            toDelete.map(async (d: number) => {
+                await Queries.simpleTransactionContinous(deleteStudentXlanguage, [dni, d], client);
+            });
+            toCreate.map(async (c: number) => {
+                await Queries.simpleTransactionContinous(createStudentXlanguage, [dni, c], client);
+            });
+
+            await Queries.commit(client);
+
+            return res.status(200).json({
+                msg: 'Langueges updated'
+            });
+
+        } catch (error) {
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
 
 
-        );
-    } catch (error) {
+    /**
+     * Update networks for student.
+     * path: /student/:dni/networks
+     * method: put
+     */
+    async updateNetworksForStudent(req: Request, res: Response): Promise<Response> {
+        const createStudentXnetworks = `SELECT createstudentxnetwork($1,$2);`;
+        const deleteStudentXnetwork = `SELECT deletestudentxnetwork($1,$2);`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const toDelete: any = req.body.toDelete;
+            const toCreate: any = req.body.toCreate;
+            const dni = req.params.dni;
+            await Queries.begin(client);
+            toDelete.map(async (d: number) => {
+                await Queries.simpleTransactionContinous(deleteStudentXnetwork, [dni, d], client);
+            });
+            toCreate.map(async (c: number) => {
+                await Queries.simpleTransactionContinous(createStudentXnetworks, [dni, c], client);
+            });
 
-        await client.query('ROLLBACK');
-        client.release();
-        console.log(error);
+            await Queries.commit(client);
 
-        return res.send({
-            msg: 'Internal Server Error'
-        });
+            return res.status(200).json({
+                msg: 'Networks updated'
+            });
+
+        } catch (error) {
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Update associated_careers for student.
+     * path: /student/:dni/associated_careers
+     * method: put
+     */
+    async updateAssoCareersForStudent(req: Request, res: Response): Promise<Response> {
+        const createStudentXassociated_career = `SELECT createstudentxassociatedcareer($1,$2);`;
+        const deleteStudentXassoCareer = `SELECT deletestudentxassociatedcareer($1, $2);`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const toDelete: any = req.body.toDelete;
+            const toCreate: any = req.body.toCreate;
+            const dni = req.params.dni;
+            await Queries.begin(client);
+            toDelete.map(async (d: number) => {
+                await Queries.simpleTransactionContinous(deleteStudentXassoCareer, [dni, d], client);
+            });
+            toCreate.map(async (c: number) => {
+                await Queries.simpleTransactionContinous(createStudentXassociated_career, [dni, c], client);
+            });
+
+            await Queries.commit(client);
+
+            return res.status(200).json({
+                msg: 'Associated Careers updated'
+            });
+
+        } catch (error) {
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Get specific student status.
+     * path: /student/:dni/status
+     * method: get
+     */
+    async getStudentStatus(req: Request, res: Response): Promise<Response> {
+        const query = `select getstudentstatus($1,'studentCursor');`;
+        const fetch = `FETCH ALL IN "studentCursor";`;
+        const client = await pool.connect();
+        try {
+            const dni = [req.params.dni];
+
+            const response = await Queries.simpleSelectWithParameter(query, dni, fetch, client);
+            return res.json(response.rows[0]);
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Disable specific student.
+     * path: /student/:dni/disable
+     * method: put
+     */
+    async disableStudent(req: Request, res: Response): Promise<Response> {
+        const disable = `SELECT disablestudent($1);`;
+        const client = await pool.connect();
+        try {
+            const values = [req.params.dni];
+
+            await Queries.simpleTransaction(disable, values, client);
+
+            return res.json({
+                msg: 'Studend disable'
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Enable specific student student.
+     * path: /student/:dni/enable
+     * method: put
+     */
+    async enableStudent(req: Request, res: Response): Promise<Response> {
+        const enable = `SELECT enablestudent($1);`;
+        const client = await pool.connect();
+        try {
+            const values = [req.params.dni];
+            await Queries.simpleTransaction(enable, values, client);
+
+            return res.json({
+                msg: 'Studend enable'
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Get student by specific profile
+     * path: /student/profile/:profile
+     * method: get
+     */
+    async getstudentbyprofile(req: Request, res: Response): Promise<Response> {
+        const getStudent = `select getstudentbyprofile($1,'studentCursor');`;
+        const fetchStudent = `FETCH ALL IN "studentCursor";`;
+
+        const client = await pool.connect();
+        try {
+            const personValues = [req.params.profile];
+
+            const response = await Queries.simpleSelectWithParameter(getStudent, personValues, fetchStudent, client);
+
+            return res.json(response.rows);
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
     }
 }
 
-/**
- * Create new student.
- * path: /student/
- * method: post
- */
-export const createStudent = async (req: Request, res: Response): Promise<Response> => {
-    const client = await pool.connect();
-    const createPerson = `SELECT createperson($1,$2,$3,$4,$5);`;
-    const createStudent = `SELECT createstudent($1,$2,$3,$4,$5,$6,$7);`;
-    const createStudentXcareer = `SELECT createstudentxcareer($1,$2);`;
-    const createStudentXlanguage = `SELECT createstudentxlanguage($1,$2);`;
-    const createStudentXassociated_career = `SELECT createstudentxassociatedcareer($1,$2);`;
-    const createStudentXnetworks = `SELECT createstudentxnetwork($1,$2);`;
-    try {
-
-        const personValues = [req.body.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates];
-        const studentValues = [req.body.dni, req.body.id_district, req.body.marital_status,
-        req.body.campus_code, req.body.profile, req.body.address, req.body.nationality
-        ];
-        await client.query('BEGIN');
-
-        await client.query(createPerson, personValues);
-        await client.query(createStudent, studentValues);
-
-        await client.query('COMMIT');
-
-        const careers: [] = req.body.careers;
-        const languages: [] = req.body.languages;
-        const networks: [] = req.body.networks;
-        const associated_careers: [] = req.body.associated_careers;
-
-        careers.map(async (c) => {
-            await client.query(createStudentXcareer, [personValues[0], c]);
-        });
-
-        languages.map(async (l) => {
-            await client.query(createStudentXlanguage, [personValues[0], l])
-        });
-        networks.map(async (n) => {
-            await client.query(createStudentXnetworks, [personValues[0], n])
-        });
-        associated_careers.map(async (a) => {
-            await client.query(createStudentXassociated_career, [personValues[0], a])
-        });
-
-        client.release();
-        return res.json(
-            {
-                msg: 'Student created'
-            }
-        );
-    } catch (error) {
-        console.log(error);
-        await client.query('ROLLBACK');
-        client.release();
-        return res.send({
-            msg: 'Internal Server Error'
-        });
-    }
-}
-
-/**
- * Update specific student.
- * path: /student/:dni
- * method: put
- */
-export const updateStudent = async (req: Request, res: Response): Promise<Response> => {
-    const updateStudent = `SELECT updatestudent($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11);`;
-    const client = await pool.connect();
-    try {
-        const values = [
-            req.params.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates,
-            req.body.id_district, req.body.marital_status, req.body.campus_code,
-            req.body.profile, req.body.address, req.body.nationality
-        ];
-        await client.query('BEGIN');
-        await client.query(updateStudent, values);
-        await client.query('COMMIT');
-
-        client.release();
-
-        return res.json(
-            {
-                msg: 'Student updated'
-            }
-        );
-    } catch (error) {
-        console.log(error);
-        await client.query('ROLLBACK');
-        client.release();
-        return res.send({
-            msg: 'Internal Server Error'
-        });
-    }
-}
-
-/**
- * Create student x career.
- * path: /student/:dni/career
- * method: post
- */
-export const addCareer = async (req: Request, res: Response): Promise<Response> => {
-    const createStudentXcareer = `SELECT createstudentxcareer($1,$2);`;
-    const client = await pool.connect();
-    try {
-        const values = [req.params.dni, req.body.career_code];
-
-        await client.query('BEGIN');
-        await client.query(createStudentXcareer, values);
-        await client.query('COMMIT');
-
-        client.release();
-
-        return res.status(200).json(
-            {
-                msg: 'Career added'
-            }
-        );
-    } catch (error) {
-
-        await client.query('ROLLBACK');
-        client.release();
-        console.log(error);
-
-        return res.send({
-            msg: 'Internal Server Error'
-        });
-    }
-}
-
-/**
- * Create student x language.
- * path: /student/:dni/language
- * method: post
- */
-export const addLanguage = async (req: Request, res: Response): Promise<Response> => {
-    const createStudentXlanguage = `SELECT createstudentxlanguage($1,$2);`;
-    const client = await pool.connect();
-    try {
-        const values = [req.params.dni, req.body.id_language];
-
-        await client.query('BEGIN');
-        await client.query(createStudentXlanguage, values);
-        await client.query('COMMIT');
-
-        client.release();
-
-        return res.status(200).json(
-            {
-                msg: 'Language added'
-            }
-        );
-    } catch (error) {
-
-        await client.query('ROLLBACK');
-        client.release();
-        console.log(error);
-
-        return res.send({
-            msg: 'Internal Server Error'
-        });
-    }
-}
-
-/**
- * Create student x network.
- * path: /student/:dni/network
- * method: post
- */
-export const addNetwork = async (req: Request, res: Response): Promise<Response> => {
-    const createStudentXnetworks = `SELECT createstudentxnetwork($1,$2);`;
-    const client = await pool.connect();
-    try {
-        const values = [req.params.dni, req.body.id_network];
-
-        await client.query('BEGIN');
-        await client.query(createStudentXnetworks, values);
-        await client.query('COMMIT');
-
-        client.release();
-
-        return res.status(200).json(
-            {
-                msg: 'Network added'
-            }
-        );
-    } catch (error) {
-
-        await client.query('ROLLBACK');
-        client.release();
-        console.log(error);
-
-        return res.send({
-            msg: 'Internal Server Error'
-        });
-    }
-
-}
-
-/**
- * Create student x associated career.
- * path: /student/:dni/associated_career
- * method: post
- */
-export const addAssociatedCareer = async (req: Request, res: Response): Promise<Response> => {
-    const createStudentXassociated_career = `SELECT createstudentxassociatedcareer($1,$2);`;
-    const client = await pool.connect();
-    try {
-        const values = [req.params.dni, req.body.id_associated_career];
-
-        await client.query('BEGIN');
-        await client.query(createStudentXassociated_career, values);
-        await client.query('COMMIT');
-
-        client.release();
-
-        return res.status(200).json(
-            {
-                msg: 'Associated Career added'
-            }
-        );
-    } catch (error) {
-
-        await client.query('ROLLBACK');
-        client.release();
-        console.log(error);
-
-        return res.send({
-            msg: 'Internal Server Error'
-        });
-    }
-}
-
-/**
- * Delete student x career.
- * path: /student/:dni/career
- * method: delete
- */
-export const removeCareer = async (req: Request, res: Response): Promise<Response> => {
-    const deleteStudentXcareer = `SELECT deletestudentxcareer($1, $2);`;
-    const client = await pool.connect();
-    try {
-        const values = [req.params.dni, req.body.career_code];
-
-        await client.query('BEGIN');
-        await client.query(deleteStudentXcareer, values);
-        await client.query('COMMIT');
-
-        client.release();
-        return res.status(200).json(
-            {
-                msg: 'Career removed'
-            }
-        );
-    } catch (error) {
-
-        await client.query('ROLLBACK');
-        client.release();
-        console.log(error);
-
-        return res.send({
-            msg: 'Internal Server Error'
-        });
-    }
-}
-
-/**
- * Delete student x language.
- * path: /student/:dni/language
- * method: delete
- */
-export const removeLanguage = async (req: Request, res: Response): Promise<Response> => {
-    const deleteStudentXlanguage = `SELECT deletestudentxlanguage($1,$2);`;
-    const client = await pool.connect();
-    try {
-        const values = [req.params.dni, req.body.id_language];
-
-        await client.query('BEGIN');
-        await client.query(deleteStudentXlanguage, values);
-        await client.query('COMMIT');
-
-        client.release();
-        return res.status(200).json(
-            {
-                msg: 'Language removed'
-            }
-        );
-    } catch (error) {
-
-        await client.query('ROLLBACK');
-        client.release();
-        console.log(error);
-
-        return res.send({
-            msg: 'Internal Server Error'
-        });
-    }
-}
-
-/**
- * Delete student x network.
- * path: /student/:dni/network
- * method: delete
- */
-export const removeNetwork = async (req: Request, res: Response): Promise<Response> => {
-    const deleteStudentXnetwork = `SELECT deletestudentxnetwork($1,$2);`;
-    const client = await pool.connect();
-    try {
-        const values = [req.params.dni, req.body.id_network];
-
-        await client.query('BEGIN');
-        await client.query(deleteStudentXnetwork, values);
-        await client.query('COMMIT');
-
-        client.release();
-        return res.status(200).json({
-            msg: 'Network removed'
-        });
-    } catch (error) {
-
-        await client.query('ROLLBACK');
-        client.release();
-        console.log(error);
-
-        return res.send({
-            msg: 'Internal Server Error'
-        });
-    }
-}
-
-/**
- * Delete student x associated career.
- * path: /student/:dni/associated_career
- * method: delete
- */
-export const removeAssociatedCareer = async (req: Request, res: Response): Promise<Response> => {
-    const deleteStudentXassoCareer = `SELECT deletestudentxassociatedcareer($1, $2);`;
-    const client = await pool.connect();
-    try {
-        const values = [req.params.dni, req.body.id_associated_career]
-
-        await client.query('BEGIN');
-        await client.query(deleteStudentXassoCareer, values);
-        await client.query('COMMIT');
-
-        client.release();
-        return res.status(200).json({
-            msg: 'Associated Career removed'
-        });
-    } catch (error) {
-
-        await client.query('ROLLBACK');
-        client.release();
-        console.log(error);
-
-        return res.send({
-            msg: 'Internal Server Error'
-        });
-    }
-}
-
-/**
- * Get specific student status.
- * path: /student/:dni/status
- * method: get
- */
-export const getStudentStatus = async (req: Request, res: Response): Promise<Response> => {
-    const query = `select getstudentstatus($1,'studentCursor');`;
-    const fetch = `FETCH ALL IN "studentCursor";`;
-    const client = await pool.connect();
-    try {
-        const dni = req.params.dni;
-        await client.query('BEGIN');
-
-        await client.query(query, [dni]);
-        const students: QueryResult = await client.query(fetch);
-
-        await client.query('ROLLBACK');
-        client.release();
-
-        return res.json(students.rows[0]);
-    } catch (error) {
-        console.log(error);
-        return res.send({
-            msg: 'Internal Server Error'
-        });
-    }
-}
-
-/**
- * Disable specific student.
- * path: /student/:dni/disable
- * method: put
- */
-export const disableStudent = async (req: Request, res: Response): Promise<Response> => {
-    const disable = `SELECT disablestudent($1);`;
-    const client = await pool.connect();
-    try {
-        const personValues = [req.params.dni];
-        await client.query('BEGIN');
-        await client.query(disable, personValues);
-        await client.query('COMMIT');
-        client.release();
-        return res.json({
-            msg: 'Studend disable'
-        });
-    } catch (error) {
-        console.log(error);
-        await client.query('ROLLBACK');
-        client.release();
-        return res.send({
-            msg: 'Internal Server Error'
-        });
-    }
-}
-
-/**
- * Enable specific student student.
- * path: /student/:dni/enable
- * method: put
- */
-export const enableStudent = async (req: Request, res: Response): Promise<Response> => {
-    const enable = `SELECT enablestudent($1);`;
-    const client = await pool.connect();
-    try {
-        const personValues = [req.params.dni];
-        await client.query('BEGIN');
-        await client.query(enable, personValues);
-        await client.query('COMMIT');
-        client.release();
-        return res.json({
-            msg: 'Studend enable'
-        });
-    } catch (error) {
-        console.log(error);
-        await client.query('ROLLBACK');
-        client.release();
-        return res.send({
-            msg: 'Internal Server Error'
-        });
-    }
-}
-
-/**
- * Get student by specific profile
- * path: /student/profile/:profile
- * method: get
- */
-export const getstudentbyprofile = async (req: Request, res: Response): Promise<Response> => {
-    const getStudent = `select getstudentbyprofile($1,'studentCursor');`;
-    const fetchStudent = `FETCH ALL IN "studentCursor";`;
-
-    const client = await pool.connect();
-    try {
-        const personValues = [req.params.profile];
-
-        await client.query('BEGIN');
-        await client.query(getStudent, personValues);
-        const student: QueryResult = await client.query(fetchStudent);
-        await client.query('ROLLBACK');
-
-        client.release();
-
-        return res.json(student.rows);
-    } catch (error) {
-        console.log(error);
-        await client.query('ROLLBACK');
-        client.release();
-        return res.send({
-            msg: 'Internal Server Error'
-        });
-    }
-}
+const studentController = new StudentController();
+export default studentController;

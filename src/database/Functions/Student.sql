@@ -1,12 +1,63 @@
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getstudents(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR select 
+p.dni, p.name, p.lastname1, p.lastname2,p.phone_number,p.email,
+TO_CHAR(p.born_dates,'YYYY-mm-dd') AS born_dates, d.id_district ,d.name as district, 
+c.campus_code, c.name as campus,
+s.marital_status, s.profile, s.address, s.nationality,s.emergency_contact,p.status
+
+from public.person p
+inner join public.student s on s.dni = p.dni
+inner join public.district d on d.id_district = s.id_district
+inner join public.campus c on c.campus_code = s.campus_code
+where p.status = true;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getstudentsall(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR select 
+p.dni, p.name, p.lastname1, p.lastname2,p.phone_number,p.email,
+TO_CHAR(p.born_dates,'YYYY-mm-dd') AS born_dates, d.id_district ,d.name as district, 
+c.campus_code, c.name as campus,
+s.marital_status, s.profile, s.address, s.nationality,s.emergency_contact,p.status
+
+from public.person p
+inner join public.student s on s.dni = p.dni
+inner join public.district d on d.id_district = s.id_district
+inner join public.campus c on c.campus_code = s.campus_code;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getstudentsbasic(ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR select 
+p.dni, p.name, p.lastname1, p.lastname2,p.status
+from public.person p
+inner join public.student s on s.dni = p.dni;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--#######################################################################
+
 CREATE OR REPLACE FUNCTION getstudentbydni(pdni varchar(50),ref refcursor)
     RETURNS refcursor AS $$
     BEGIN
 
     OPEN ref FOR select 
-        p.dni, p.name, p.lastname1, p.lastname2,
+        p.dni, p.name, p.lastname1, p.lastname2,p.phone_number,p.email,
         TO_CHAR(p.born_dates,'YYYY-mm-dd') AS born_dates, d.id_district ,d.name as district, 
         c.campus_code, c.name as campus,
-        s.marital_status, s.profile, s.address, s.nationality,p.status
+        s.marital_status, s.profile, s.address, s.nationality,s.emergency_contact,p.status
     from public.person p
     inner join public.student s on s.dni = p.dni
     inner join public.district d on d.id_district = s.id_district
@@ -25,10 +76,10 @@ CREATE OR REPLACE FUNCTION getstudentbydniall(pdni varchar(50),ref refcursor)
     BEGIN
 
     OPEN ref FOR select 
-        p.dni, p.name, p.lastname1, p.lastname2,
+        p.dni, p.name, p.lastname1, p.lastname2,p.phone_number,p.email,
         TO_CHAR(p.born_dates,'YYYY-mm-dd') AS born_dates, d.id_district ,d.name as district, 
         c.campus_code, c.name as campus,
-        s.marital_status, s.profile, s.address, s.nationality,p.status
+        s.marital_status, s.profile, s.address, s.nationality,s.emergency_contact,p.status
     from public.person p
     inner join public.student s on s.dni = p.dni
     inner join public.district d on d.id_district = s.id_district
@@ -126,12 +177,15 @@ CREATE OR REPLACE FUNCTION createperson(
     pname varchar(50),
     plastname1 varchar(50),
     plastname2 varchar(50),
-    pborn_dates date
+    pborn_dates date,
+    pphone varchar(40),
+    pmail varchar(60),
+    ptype person_type
     )
     RETURNS void AS $$
     BEGIN
-        INSERT INTO public.person( dni, name, lastname1, lastname2, born_dates, status)
-            VALUES (pdni, pname, plastname1, plastname2, pborn_dates, true);
+        INSERT INTO public.person( dni, name, lastname1, lastname2, born_dates, status, phone_number, email,person_type)
+            VALUES (pdni, pname, plastname1, plastname2, pborn_dates, true,pphone,pmail,ptype);
     END;
 $$ LANGUAGE plpgsql;
 
@@ -144,12 +198,55 @@ CREATE OR REPLACE FUNCTION createstudent(
     pcampus_code varchar(30),
     pprofile profile,
     paddress text,
-    pnationality nationality
+    pnationality nationality,
+    pemergency varchar(40)
     )
     RETURNS void AS $$
     BEGIN
-    INSERT INTO public.student(dni, id_district, marital_status, campus_code, profile, address, nationality)
-        VALUES (pdni, pid_district, pmarital_status, pcampus_code, pprofile, paddress, pnationality);
+    INSERT INTO public.student(dni, id_district, marital_status, campus_code, profile, address, nationality, emergency_contact)
+        VALUES (pdni, pid_district, pmarital_status, pcampus_code, pprofile, paddress, pnationality, pemergency);
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION insertCV(id VARCHAR(50), fp VARCHAR(400), n VARCHAR(300)) 
+RETURNS void AS $$
+BEGIN
+  INSERT INTO public.cv (dni, file_path, name) VALUES (id,fp,n);
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION deleteCV(id VARCHAR(50)) 
+RETURNS void AS $$
+BEGIN
+  DELETE FROM public.cv WHERE dni = id;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION updateCV(id VARCHAR(50),fp VARCHAR(400), n VARCHAR(300)) 
+RETURNS void AS $$
+BEGIN
+  UPDATE public.cv SET 
+    name = n,
+    file_path = fp
+  WHERE dni = id;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getcv(pdni varchar(50), ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+        OPEN ref FOR select *
+            from public.cv
+        where dni = pdni;
+        RETURN ref;
     END;
 $$ LANGUAGE plpgsql;
 
@@ -206,7 +303,10 @@ CREATE OR REPLACE FUNCTION updatestudent(
     pcampus_code varchar(30),
     pprofile profile,
     paddress text,
-    pnationality nationality
+    pnationality nationality,
+    pphone varchar(40),
+    pmail varchar(60),
+    pemergency varchar(40)
     )
     RETURNS void AS $$
     BEGIN
@@ -215,7 +315,9 @@ CREATE OR REPLACE FUNCTION updatestudent(
                 name=pname,
                 lastname1=plastname1,
                 lastname2=plastname2,
-                born_dates=pborn_dates
+                born_dates=pborn_dates,
+                phone_number=pphone, 
+                email=pmail
         WHERE dni = pdni;
         UPDATE public.student
             SET 
@@ -224,7 +326,8 @@ CREATE OR REPLACE FUNCTION updatestudent(
             campus_code=pcampus_code,
             profile=pprofile,
             address=paddress,
-            nationality=pnationality
+            nationality=pnationality,
+            emergency_contact=pemergency
         WHERE dni = pdni;
     END;
 $$ LANGUAGE plpgsql;

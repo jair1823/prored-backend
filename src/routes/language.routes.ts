@@ -1,10 +1,8 @@
 import { Router } from 'express';
+import Language_Controller from '../controllers/language.controller'
+
 const router = Router();
 
-import {
-    getLanguages
-} from '../controllers/language.controller';
-
-router.get('/language', getLanguages);
+router.get('/', Language_Controller.getLanguages);
 
 export default router;

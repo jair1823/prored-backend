@@ -1,37 +1,35 @@
 import { Request, Response } from 'express';
-import { QueryResult } from 'pg';
+import { PoolClient } from 'pg';
 import { pool } from '../database/connection';
+import Queries from '../database/Queries';
 
-/**
- * Get all language.
- * path: /language
- * method: get
- */
-export const getLanguages = async (req: Request, res: Response): Promise<Response> => {
+export class LanguageController {
 
-    const query = `select getlanguage('languagesCursor'); `;
-    const fetch = `FETCH ALL IN "languagesCursor";`;
-    const client = await pool.connect();
+    /**
+     * Get all language.
+     * path: /language
+     * method: get
+     */
+    async getLanguages (req: Request, res: Response): Promise<Response> {
 
-    try {
-        await client.query('BEGIN');
+        const query = `select getlanguage('languagesCursor'); `;
+        const fetch = `FETCH ALL IN "languagesCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
 
-        await client.query(query);
-        const centers: QueryResult = await client.query(fetch);
+            const response = await Queries.simpleSelect(query, fetch, client);
 
-        await client.query('ROLLBACK');
-        client.release();
-        return res.status(200).json(centers.rows);
-    } catch (error) {
+            return res.status(200).json(response.rows);
+        } catch (error) {
 
-        await client.query('ROLLBACK');
-        client.release();
-        console.log(error);
+            await Queries.simpleError(client, error);
 
-        return res.status(500).json(
-            {
-                msg: 'Internal server error'
-            }
-        );
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
     }
 }
+
+const languageController = new LanguageController();
+export default languageController;
