@@ -285,13 +285,11 @@ create table public.gantt_task(
     end_date date
 );
 
-
 create table public.budget_unit(
     code_budget_unit SERIAL PRIMARY KEY,
     name varchar(50),
     status boolean
 );
-
 
 create table public.budget_sub_unit(
     code_budget_subunit SERIAL PRIMARY KEY,
@@ -300,15 +298,15 @@ create table public.budget_sub_unit(
 );
 
 CREATE TYPE public.financial_item_type AS ENUM (
+    'Independiente',
     'Proyecto',
     'Actividad'
 );
 
-
 create table public.financial_item(
     id_financial_item SERIAL PRIMARY KEY,
     date_created date,
-    amount integer,
+    amount real,
     type public.financial_item_type,
     id_project integer REFERENCES public.project(id_project),
     id_activity integer REFERENCES public.activity(id_activity),
@@ -317,4 +315,9 @@ create table public.financial_item(
     code_subunit integer REFERENCES public.budget_sub_unit(code_budget_subunit)
 );
 
-
+create table public.financial_document(
+    id_financial_document SERIAL PRIMARY KEY,
+    id_financial_item integer REFERENCES public.financial_item(id_financial_item),
+    filename varchar(100),
+    file_path varchar(200)
+);

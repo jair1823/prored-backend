@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS public.gantt_task;
 DROP TABLE IF EXISTS public.gantt;
 DROP TABLE IF EXISTS public.period;
 DROP TABLE IF EXISTS public.cv;
+DROP TABLE IF EXISTS public.financial_document;
 DROP TABLE IF EXISTS public.financial_item;
 DROP TABLE IF EXISTS public.student;
 DROP TABLE IF EXISTS public.language;

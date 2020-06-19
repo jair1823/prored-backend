@@ -1,5 +1,3 @@
-
-
 import { Request, Response } from 'express';
 import { PoolClient } from 'pg';
 import { pool } from '../database/connection';
@@ -37,7 +35,7 @@ export class FinancialItemController {
         const fetch = `FETCH ALL IN "financialCursor";`;
         const client: PoolClient = await pool.connect();
         try {
-            const id = [req.body.id_project,req.body.id_activity];
+            const id = [req.body.id_project, req.body.id_activity];
             const response = await Queries.simpleSelectWithParameter(query, id, fetch, client);
             return res.status(200).json(response.rows);
         } catch (error) {
@@ -78,8 +76,8 @@ export class FinancialItemController {
         const query = `SELECT createfinancialitem($1,$2,$3,$4,$5,$6,$7,$8)`;
         const client: PoolClient = await pool.connect();
         try {
-            const values = [req.body.date,req.body.amount,req.body.type,req.body.idproject,
-                            req.body.idactivity,req.body.dni,req.body.unit,req.body.subunit];
+            const values = [req.body.date, req.body.amount, req.body.type, req.body.idproject,
+            req.body.idactivity, req.body.dni, req.body.unit, req.body.subunit];
             await Queries.simpleTransaction(query, values, client);
             return res.json({
                 msg: "Financial Item created Succesfully"
@@ -101,8 +99,8 @@ export class FinancialItemController {
         const query = `SELECT updatefinancialitem($1,$2,$3,$4,$5,$6,$7,$8,$9)`;
         const client: PoolClient = await pool.connect();
         try {
-            const values = [req.params.id , req.body.date ,req.body.amount ,req.body.type,
-                req.body.idproject ,req.body.idactivity ,req.body.dni ,req.body.punit, req.body.subunit   ];
+            const values = [req.params.id, req.body.date, req.body.amount, req.body.type,
+            req.body.idproject, req.body.idactivity, req.body.dni, req.body.punit, req.body.subunit];
             await Queries.simpleTransaction(query, values, client);
             return res.json({
                 msg: `Financial Item modified succesfully`

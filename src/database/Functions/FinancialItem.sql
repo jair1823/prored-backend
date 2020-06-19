@@ -1,9 +1,8 @@
-
 --  Financial Item  ########################################################################################################
 
 CREATE OR REPLACE FUNCTION createfinancialitem(
   pdate date,
-  pamount integer,
+  pamount real,
   ptype financial_item_type,
   pidproject integer,
   pidactivity integer,
@@ -22,7 +21,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION updatefinancialitem(
   pidfinancialitem integer,  
   pdate date, 
-  pamount integer,
+  pamount real,
   ptype financial_item_type,
   pidproject integer,
   pidactivity integer,
