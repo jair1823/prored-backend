@@ -3,7 +3,7 @@
 
 CREATE OR REPLACE FUNCTION createfinancialitem(
   pdate date,
-  pamount date,
+  pamount integer,
   ptype financial_item_type,
   pidproject integer,
   pidactivity integer,

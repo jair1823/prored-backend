@@ -98,7 +98,7 @@ export class FinancialItemController {
      * method: put
     */
     async updateFinancialItem(req: Request, res: Response): Promise<Response> {
-        const query = `SELECT updatebudgetunit($1,$2)`;
+        const query = `SELECT updatefinancialitem($1,$2,$3,$4,$5,$6,$7,$8,$9)`;
         const client: PoolClient = await pool.connect();
         try {
             const values = [req.params.id , req.body.date ,req.body.amount ,req.body.type,
