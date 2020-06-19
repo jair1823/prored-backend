@@ -19,6 +19,7 @@ const GanttDrops =  readFileSync('src/database/Drops/GanttDrops.sql').toString()
 const FilterDrops =  readFileSync('src/database/Drops/FilterDrops.sql').toString();
 const TableDrops = readFileSync('src/database/Drops/TableDrops.sql').toString();
 const BudgetDrops  = readFileSync('src/database/Drops/BudgetUnitDrops.sql').toString();
+const FinancialItemDrops = readFileSync('src/database/Drops/FinancialItemDrops.sql').toString();
 
 const EnumNationality = readFileSync('src/database/Creation/EnumNationality.sql').toString();
 const Tables = readFileSync('src/database/Creation/Tables.sql').toString();
@@ -40,6 +41,7 @@ const Activity = readFileSync('src/database/Functions/Activity.sql').toString();
 const Gantt  = readFileSync('src/database/Functions/Gantt.sql').toString();
 const Filter = readFileSync('src/database/Functions/Filter.sql').toString();
 const Budget  = readFileSync('src/database/Functions/BudgetUnit.sql').toString();
+const FinancialItem  = readFileSync('src/database/Functions/FinancialItem.sql').toString();
 
 /**
  * Secuencia en la que se ejecutan los drops de toda la base 
@@ -66,6 +68,7 @@ async function migration() {
         await pool.query(FilterDrops);
         await pool.query(TableDrops);
         await pool.query(BudgetDrops);
+        await pool.query(FinancialItemDrops)
 
 
         //Creacion de todas las tablas y tipos
@@ -90,6 +93,7 @@ async function migration() {
         await pool.query(Gantt);
         await pool.query(Filter);
         await pool.query(Budget);
+        await pool.query(FinancialItem)
 
         return;
     } catch (error) {
