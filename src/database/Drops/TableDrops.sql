@@ -43,4 +43,4 @@ DROP TYPE IF EXISTS public.endorsement_type;
 DROP TYPE IF EXISTS public.project_type;
 DROP TYPE IF EXISTS public.paper_type;
 DROP TYPE IF EXISTS public.person_type;
-DROP TYPE IF EXISTS public.financial_item_type CASCADE;
+DROP TYPE IF EXISTS public.financial_item_type;

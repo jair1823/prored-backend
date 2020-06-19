@@ -66,9 +66,10 @@ async function migration() {
         await pool.query(ActivityDrops);
         await pool.query(GanttDrops);
         await pool.query(FilterDrops);
-        await pool.query(TableDrops);
         await pool.query(BudgetDrops);
         await pool.query(FinancialItemDrops)
+        await pool.query(TableDrops); // Siempre debe ir al final
+
 
 
         //Creacion de todas las tablas y tipos
