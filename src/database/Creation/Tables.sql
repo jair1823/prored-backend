@@ -284,3 +284,37 @@ create table public.gantt_task(
     start_date date,
     end_date date
 );
+
+
+create table public.budget_unit(
+    code_budget_unit SERIAL PRIMARY KEY,
+    name varchar(50),
+    status boolean
+);
+
+
+create table public.budget_sub_unit(
+    code_budget_subunit SERIAL PRIMARY KEY,
+    name varchar(50),
+    status boolean
+);
+
+CREATE TYPE public.financial_item_type AS ENUM (
+    'Proyecto',
+    'Actividad'
+);
+
+
+create table public.financial_item(
+    id_financial_item SERIAL PRIMARY KEY,
+    date_created date,
+    amount integer,
+    type public.financial_item_type,
+    id_project integer REFERENCES public.project(id_project),
+    id_activity integer REFERENCES public.activity(id_activity),
+    student_dni varchar(50) REFERENCES public.student(dni),
+    code_unit integer REFERENCES public.budget_unit(code_budget_unit),
+    code_subunit integer REFERENCES public.budget_sub_unit(code_budget_subunit)
+);
+
+

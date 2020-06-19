@@ -143,3 +143,17 @@ INSERT INTO public.gantt_task(id_gantt, task_name, description, start_date, end_
                 (2 ,'Primera tarea Gantt2', 'Descripción2' , '2020-02-06', '2020-02-09');
 
 
+INSERT INTO public.budget_unit(name,status)
+	VALUES
+        ('BudgetUnit1',true),
+        ('BudgetUnit2',true),
+        ('BudgetUnit3',false);
+
+
+
+
+INSERT INTO public.budget_sub_unit(name,status)
+	VALUES
+        ('BudgetSubUnit1',true),
+        ('BudgetSubUnit2',true),
+        ('BudgetSubUnit3',false);
