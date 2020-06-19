@@ -29,3 +29,7 @@ DROP FUNCTION IF EXISTS createphoto;
 DROP FUNCTION IF EXISTS deletephoto;
 DROP FUNCTION IF EXISTS getphoto;
 DROP FUNCTION IF EXISTS getphotosactivity;
+DROP FUNCTION IF EXISTS createfinancialdocument;
+DROP FUNCTION IF EXISTS deletefinancialdocument;
+DROP FUNCTION IF EXISTS getfinancialdocument;
+DROP FUNCTION IF EXISTS getfinancialdocumentfromfinancialitem;

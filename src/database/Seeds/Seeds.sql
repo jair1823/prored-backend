@@ -142,18 +142,18 @@ INSERT INTO public.gantt_task(id_gantt, task_name, description, start_date, end_
                 (2 ,'Primera tarea Gantt2', 'Descripción2' , '2020-02-06', '2020-02-09'),
                 (2 ,'Primera tarea Gantt2', 'Descripción2' , '2020-02-06', '2020-02-09');
 
-
 INSERT INTO public.budget_unit(name,status)
 	VALUES
-        ('BudgetUnit1',true),
-        ('BudgetUnit2',true),
-        ('BudgetUnit3',false);
-
-
-
+                ('BudgetUnit1',true),
+                ('BudgetUnit2',true),
+                ('BudgetUnit3',false);
 
 INSERT INTO public.budget_sub_unit(name,status)
 	VALUES
-        ('BudgetSubUnit1',true),
-        ('BudgetSubUnit2',true),
-        ('BudgetSubUnit3',false);
+                ('BudgetSubUnit1',true),
+                ('BudgetSubUnit2',true),
+                ('BudgetSubUnit3',false);
+
+INSERT INTO public.financial_item(date_created, amount, type, id_project, id_activity, student_dni, code_unit, code_subunit)
+        values 
+                ('2020-02-02', 72000.5, 'Independiente', null, null, '116920331', 1, 2);

@@ -5,6 +5,7 @@ import Project_Form_Controller from '../controllers/documentsControllers/project
 import Paper_Controller from '../controllers/documentsControllers/paper.controller'
 import List_Of_Assistance from '../controllers/documentsControllers/list_of_assistance.controller'
 import Photos_Controller from "../controllers/documentsControllers/photos.controller";
+import Financial_Document_Controller from "../controllers/documentsControllers/financial_document.controller";
 import upload from "../lib/saveFile";
 
 const router = Router();
@@ -45,5 +46,10 @@ router.post("/photo/one", upload, Photos_Controller.insertPhotosAlone);
 router.delete("/photo/:id", Photos_Controller.deletePhoto);
 router.get("/photo/:id", Photos_Controller.getPhoto);
 router.get("/photo/activity/:id", Photos_Controller.getPhotosActivity);
+
+router.post("/finantial_document", upload, Financial_Document_Controller.insertFinantialDocument);
+router.delete("/finantial_document/:id", Financial_Document_Controller.deleteFinancialDocument);
+router.get("/finantial_document/:id", Financial_Document_Controller.getFinancialDocument);
+router.get("/finantial_document/item/:id", Financial_Document_Controller.getFinancialDocumentItem);
 
 export default router;
