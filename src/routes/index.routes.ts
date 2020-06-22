@@ -17,6 +17,7 @@ import Gantt from './gantt.routes'
 import Filter from './filter.routes'
 import Budget from './budget_unit.routes'
 import Financial from './financialitem.routes'
+import User from './user.routes'
 /**
  * 
  * @param app variable que contiene la aplicacion de express
@@ -43,4 +44,5 @@ export function addRoutes(app: any) {
     app.use(Financial);
     app.use(DocumentMultiple);
     app.use('/filter',Filter);
+    app.use(User);
 }

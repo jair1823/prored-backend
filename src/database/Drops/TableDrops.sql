@@ -34,6 +34,7 @@ DROP TABLE IF EXISTS public.province;
 DROP TABLE IF EXISTS public.person;
 DROP TABLE IF EXISTS public.budget_unit;
 DROP TABLE IF EXISTS public.budget_sub_unit;
+DROP TABLE IF EXISTS public.user;
 DROP TYPE IF EXISTS public.role;
 DROP TYPE IF EXISTS public.degree;
 DROP TYPE IF EXISTS public.network_type;
