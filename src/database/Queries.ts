@@ -28,6 +28,14 @@ class Queries {
     /**
      * 
      */
+    async simpleSelectNoCursorContinous(query: string, values: any, client: PoolClient): Promise<QueryResult> {
+        const response: QueryResult = await client.query(query, values);
+        return response;
+    }
+
+    /**
+     * 
+     */
     async simpleSelectWithParameter(query: string, values: any, fetch: string, client: PoolClient) {
         await client.query('BEGIN');
         await client.query(query, values);

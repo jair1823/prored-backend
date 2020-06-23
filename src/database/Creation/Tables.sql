@@ -327,9 +327,9 @@ create table public.user(
     name varchar(50),
     lastname1 varchar(50),
     lastname2 varchar(50),
-    email varchar(60),
+    email varchar(60) UNIQUE,
     password varchar(300),
     status boolean,
     reset_password_token text,
-    reset_password_expiration date
+    reset_password_expiration bigint
 );
