@@ -28,7 +28,7 @@ export class UserController {
                 <p><b>Contraseña Temporal: ${randPassword}</b></p>
                 <br></br>
                 <p>Para ingresar a su cuenta debe ir al siguiente link e ingresar los datos que se muestran en este correo.</p>
-                Link: <a href=""><b>http://${process.env.DOMAIN}/login</b></a>
+                Link: <a href="http://${process.env.DOMAIN}/iniciar-sesion"><b>http://${process.env.DOMAIN}/iniciar-sesion</b></a>
                 <br></br>
                 <p>Se recomienda que una vez que ingrese por primera vez a su cuenta cambie su contraseña por una más segura y definida por usted.</p>`;
             await mail(req.body.email, subject, text, html);
