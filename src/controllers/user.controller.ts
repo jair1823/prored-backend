@@ -131,7 +131,7 @@ export class UserController {
                 const html = `
                 <h3>Recibimos una solicitud de cambio de contraseña para tu cuenta del Sistema ProRed.</p>
                 <p>Este enlace expirará en 1 hora. Si no solicitaste un cambio de contraseña, ignora este correo y no se harán cambios en tu cuenta.</p> 
-                <h4>https://${process.env.DOMAIN}/restart-password/${token}</h4>`;
+                <h4>http://${process.env.DOMAIN}/reestablecer-contrasena/${token}</h4>`;
                 await mail(req.body.email, subject, text, html);
 
                 return res.status(200).json({ msg, emailSend: true });
