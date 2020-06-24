@@ -12,9 +12,26 @@ export class UserController {
         const query = `SELECT createuser($1,$2,$3,$4,$5);`;
         const client: PoolClient = await pool.connect();
         try {
-            const hash = bcrypt.hashSync(req.body.password, 10);
+            var randPassword = Array(10).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
+            console.log(randPassword)
+            const hash = bcrypt.hashSync(randPassword, 10);
             const values = [req.body.name, req.body.lastname1, req.body.lastname2, req.body.email, hash];
             await Queries.simpleTransaction(query, values, client);
+            const subject = 'Registro de usuario en Sistema ProRed'
+            const text = "";
+            const html = `
+                <h2>¡Hola ${req.body.name} ${req.body.lastname1} ${req.body.lastname2}!</h2>
+                <p>Se ha creado una cuenta para este correo en el Sistema de manejo de estudiantes de la ProRed</p>
+                <p>Los datos para poder ingresar a su cuenta son los siguientes:</p>
+                <br></br>
+                <p><b>Correo: ${req.body.email}</b></p>
+                <p><b>Contraseña Temporal: ${randPassword}</b></p>
+                <br></br>
+                <p>Para ingresar a su cuenta debe ir al siguiente link e ingresar los datos que se muestran en este correo.</p>
+                Link: <a href=""><b>http://${process.env.DOMAIN}/login</b></a>
+                <br></br>
+                <p>Se recomienda que una vez que ingrese por primera vez a su cuenta cambie su contraseña por una más segura y definida por usted.</p>`;
+            await mail(req.body.email, subject, text, html);
             return res.status(200).json({
                 msg: "User Created",
             });
