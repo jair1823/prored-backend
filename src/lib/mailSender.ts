@@ -23,7 +23,7 @@ async function sendMail(destiny: string, subject: string, text: string, html: st
         if (error) {
             console.log(error);
         } else {
-            console.log('email send')
+            console.log('Email sent')
         }
     });
 
