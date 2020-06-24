@@ -140,9 +140,9 @@ export class UserController {
                 const text = "";
                 const html = `
                 <h3>¡Hola! Recibimos una solicitud para reestablecer la contraseña de tu cuenta del Sistema ProRed</h3>
-                <p>PAra reestablecer tu contraseña accede al siguiente link y sigue los pasos que se te indican. Este enlace expirará en 1 hora. </p>
+                <p>Para reestablecer tu contraseña accede al siguiente link y sigue los pasos que se te indican. Este enlace expirará en 1 hora. </p>
                 </ br>
-                Link: <a http://${process.env.DOMAIN}/reestablecer-contrasena/${token}"><b>http://${process.env.DOMAIN}/reestablecer-contrasena/${token}</b></a>
+                Link: <a href="http://${process.env.DOMAIN}/reestablecer-contrasena/${token}"><b>http://${process.env.DOMAIN}/reestablecer-contrasena/${token}</b></a>
                 </ br>
                 <p>Si no solicitaste este cambio de contraseña, ignora este correo y no se harán cambios en tu cuenta.</p>`;
                 await mail(req.body.email, subject, text, html);
