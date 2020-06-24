@@ -125,33 +125,29 @@ export class UserController {
 
             const responseExist = await Queries.simpleSelectNoCursorContinous(query1, email, client);
             const exist = responseExist.rows[0].useremailexists;
-            console.log(exist)
             if (!exist) {
                 msg = "Correo no existe"
-                return res.status(200).json({ msg, emailSend: false });
+                return res.status(200).json({ msg, emailSent: false });
             } else {
                 const token = crypto.randomBytes(20).toString('hex');
                 const expires = Date.now() + 3600000;
-                console.log(token);
-                console.log(expires);
-                console.log(Date.now());
-
-                console.log(expires > Date.now());
-
                 const values = [req.body.email, token, expires];
                 await Queries.simpleTransaction(query2, values, client);
 
-                msg = 'send';
+                msg = 'sent';
 
-                const subject = 'Restablecer contraseña'
+                const subject = 'Cambio de contraseña'
                 const text = "";
                 const html = `
-                <h3>Recibimos una solicitud de cambio de contraseña para tu cuenta del Sistema ProRed.</p>
-                <p>Este enlace expirará en 1 hora. Si no solicitaste un cambio de contraseña, ignora este correo y no se harán cambios en tu cuenta.</p> 
-                <h4>http://${process.env.DOMAIN}/reestablecer-contrasena/${token}</h4>`;
+                <h3>¡Hola! Recibimos una solicitud para reestablecer la contraseña de tu cuenta del Sistema ProRed</h3>
+                <p>PAra reestablecer tu contraseña accede al siguiente link y sigue los pasos que se te indican. Este enlace expirará en 1 hora. </p>
+                </ br>
+                Link: <a http://${process.env.DOMAIN}/reestablecer-contrasena/${token}"><b>http://${process.env.DOMAIN}/reestablecer-contrasena/${token}</b></a>
+                </ br>
+                <p>Si no solicitaste este cambio de contraseña, ignora este correo y no se harán cambios en tu cuenta.</p>`;
                 await mail(req.body.email, subject, text, html);
 
-                return res.status(200).json({ msg, emailSend: true });
+                return res.status(200).json({ msg, emailSent: true });
             }
 
 
