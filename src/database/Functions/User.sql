@@ -17,9 +17,21 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION getpassword(pemail varchar(50),ref refcursor)  RETURNS refcursor AS $$
 BEGIN
     OPEN ref FOR
-        select password 
+        select id_user, password 
         from public.user 
         where email = pemail;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--########################################################################################
+
+CREATE OR REPLACE FUNCTION getpasswordid(pid integer,ref refcursor)  RETURNS refcursor AS $$
+BEGIN
+    OPEN ref FOR
+        select id_user, password 
+        from public.user 
+        where id_user = pid;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
