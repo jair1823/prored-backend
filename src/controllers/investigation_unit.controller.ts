@@ -56,7 +56,7 @@ export class InvestigationUnitController {
             const values = [req.body.name, req.body.description];
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: "Investigation Unit created Succesfully"
             });
         } catch (error) {
@@ -79,7 +79,7 @@ export class InvestigationUnitController {
         try {
             const values = [req.params.id, req.body.name, req.body.description];
             await Queries.simpleTransaction(query, values, client);
-            return res.json({
+            return res.status(200).json({
                 msg: `Investigation Unit modified succesfully`
             });
         } catch (error) {

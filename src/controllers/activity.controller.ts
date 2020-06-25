@@ -27,7 +27,7 @@ export class ActivityController {
                 await Queries.simpleTransactionContinous(assign, [p.dni, response.rows[0].id_activity], client);
             });
             await Queries.commit(client);
-            return res.json(response.rows[0]);
+            return res.status(200).json(response.rows[0]);
         } catch (error) {
 
             await Queries.simpleError(client, error);
@@ -59,7 +59,7 @@ export class ActivityController {
             });
 
             await Queries.commit(client);
-            return res.json({
+            return res.status(200).json({
                 msg: `Activity modified succesfully`
             });
         } catch (error) {
@@ -165,7 +165,7 @@ export class ActivityController {
 
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: "Person Assigned to activity Succesfully"
             });
         } catch (error) {
@@ -211,7 +211,7 @@ export class ActivityController {
             const values = [req.body.name];
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: "Activity Type created Succesfully"
             });
         } catch (error) {
@@ -281,7 +281,7 @@ export class ActivityController {
 
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: `Activity Type modified succesfully`
             });
         } catch (error) {

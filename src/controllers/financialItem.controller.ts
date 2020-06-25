@@ -79,7 +79,7 @@ export class FinancialItemController {
             const values = [req.body.date, req.body.amount, req.body.type, req.body.idproject,
             req.body.idactivity, req.body.dni, req.body.unit, req.body.subunit];
             await Queries.simpleTransaction(query, values, client);
-            return res.json({
+            return res.status(200).json({
                 msg: "Financial Item created Succesfully"
             });
         } catch (error) {
@@ -102,7 +102,7 @@ export class FinancialItemController {
             const values = [req.params.id, req.body.date, req.body.amount, req.body.type,
             req.body.idproject, req.body.idactivity, req.body.dni, req.body.punit, req.body.subunit];
             await Queries.simpleTransaction(query, values, client);
-            return res.json({
+            return res.status(200).json({
                 msg: `Financial Item modified succesfully`
             });
         } catch (error) {
@@ -112,9 +112,6 @@ export class FinancialItemController {
             });
         }
     }
-
-
-
 }
 
 const financial_item_controller = new FinancialItemController();

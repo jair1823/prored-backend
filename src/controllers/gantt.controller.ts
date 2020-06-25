@@ -4,7 +4,7 @@ import { pool } from '../database/connection';
 import Queries from '../database/Queries';
 
 /**
- * Delete a gannt Tasks.
+ * Delete a gannt Task.
 */
 
 async function deleteGantt_Task(id_gantt: any) {
@@ -16,14 +16,14 @@ async function deleteGantt_Task(id_gantt: any) {
         return true;
 
     } catch (error) {
-
         await Queries.simpleError(client, error);
-        console.log("Internal Server Error")
         return false;
     }
 }
 
-
+/**
+ * Create a gannt Tasks.
+*/
 async function createGantt_Task_Function(gantt_list: any) {
     const query = `SELECT creategantt_task($1,$2,$3,$4,$5);`;
     const client: PoolClient = await pool.connect();
@@ -37,23 +37,14 @@ async function createGantt_Task_Function(gantt_list: any) {
             ];
             await Queries.simpleTransactionContinous(query, values, client);
         }
-        // end for 
         await Queries.commit(client);
         console.log("Gantt Tasks created Succesfully")
         return true;
-
-
     } catch (error) {
-
         await Queries.simpleError(client, error);
-        console.log("Internal Server Error")
         return false;
     }
 }
-
-
-
-
 
 export class GanttController {
 
@@ -62,7 +53,6 @@ export class GanttController {
      * path: /period/
      * method: post
     */
-
     async createPeriod(req: Request, res: Response): Promise<Response> {
         const query = `SELECT createperiod($1)`;
         const client: PoolClient = await pool.connect();
@@ -70,7 +60,7 @@ export class GanttController {
             const values = [req.body.name];
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: "Period created Succesfully"
             });
         } catch (error) {
@@ -82,21 +72,18 @@ export class GanttController {
         }
     }
 
-
     /**
      * Update period.
      * path: /period/:id
      * method: put
     */
-
-
     async updatePeriod(req: Request, res: Response): Promise<Response> {
         const query = `SELECT updateperiod($1,$2)`;
         const client: PoolClient = await pool.connect();
         try {
             const values = [req.body.name, req.params.id];
             await Queries.simpleTransaction(query, values, client);
-            return res.json({
+            return res.status(200).json({
                 msg: `Period modified succesfully`
             });
         } catch (error) {
@@ -107,13 +94,11 @@ export class GanttController {
         }
     }
 
-
     /**
      * Get all periods.
      * path: /period/
      * method: get
     */
-
     async getPeriods(req: Request, res: Response): Promise<Response> {
         const query = `select getperiods('periodsCursor');`;
         const fetch = `FETCH ALL IN "periodsCursor";`;
@@ -152,7 +137,6 @@ export class GanttController {
         }
     }
 
-
     /**
      * Create gantt
      * path: /gantt/
@@ -165,7 +149,7 @@ export class GanttController {
         try {
             const values =  [req.body.rel_code, req.body.id_period];
             const response = await Queries.insertWithReturn(query, values, fetch, client);
-            return res.json(
+            return res.status(200).json(
                 response.rows[0]
             );
         } catch (error) {
@@ -181,7 +165,6 @@ export class GanttController {
      * path: /gantt/:id
      * method: get
      */
-
     async getGantts(req: Request, res: Response): Promise<Response> {
         const getResearcher = `select getgantts($1,'ganttsCursor');`;
         const fetchResearcher = `FETCH ALL IN "ganttsCursor";`;
@@ -203,7 +186,6 @@ export class GanttController {
      * path: /gantt_task/
      * method: post
     */
-
     async createGantt_Task(req: Request, res: Response): Promise<Response> {
         const query = `SELECT creategantt_task($1,$2,$3,$4,$5);`;
         const client: PoolClient = await pool.connect();
@@ -217,9 +199,8 @@ export class GanttController {
                 ];
                 await Queries.simpleTransactionContinous(query, values, client);
             }
-            // end for 
             await Queries.commit(client);
-            return res.json({
+            return res.status(200).json({
                 msg: "Gantt Tasks created Succesfully"
             });
         } catch (error) {
@@ -232,21 +213,18 @@ export class GanttController {
         }
     }
 
-
-
     /**
      * Update gantt tasks of a gantt
      * path: /gantt_task/
      * method: put
      */
-
     async updateGantt_Task(req: Request, res: Response): Promise<Response> {
         try {
             const listaGanttLine = req.body.gantt_list;
             const id_gantt = req.params.id;
             deleteGantt_Task(id_gantt);
             createGantt_Task_Function(listaGanttLine)
-            return res.json({
+            return res.status(200).json({
                 msg: "Gantt Tasks updated Succesfully"
             });
         } catch (error) {
@@ -257,16 +235,11 @@ export class GanttController {
         }
     }
 
-
-
-
     /**
      * Get gantt tasks of a gantt
      * path: /gantt_task/
      * method: get
      */
-
-
     async getGantt_Tasks(req: Request, res: Response): Promise<Response> {
         const getResearcher = `select getgantt_tasks($1,'ganttsCursor');`;
         const fetchResearcher = `FETCH ALL IN "ganttsCursor";`;
@@ -276,15 +249,12 @@ export class GanttController {
             const gantts = await Queries.simpleSelectWithParameter(getResearcher, values, fetchResearcher, client);
             return res.status(200).json(gantts.rows);
         } catch (error) {
-
             await Queries.simpleError(client, error);
-
             return res.status(500).json({
                 msg: 'Internal Server Error'
             });
         }
     }
-
 
     /**
      * See if a dni already exists in the database
@@ -307,9 +277,6 @@ export class GanttController {
             });
         }
     }
-
-
-
 }
 
 const ganttController = new GanttController();

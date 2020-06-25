@@ -89,7 +89,7 @@ export class CenterController {
             const values = [req.body.name];
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: "Center created Succesfully"
             });
         } catch (error) {
@@ -114,7 +114,7 @@ export class CenterController {
 
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: `Center modified succesfully`
             });
         } catch (error) {
@@ -140,7 +140,7 @@ export class CenterController {
 
             await Queries.simpleTransaction(query, id, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: `Campus deleted succesfuly`
             });
         } catch (error) {
@@ -167,7 +167,7 @@ export class CenterController {
 
             await Queries.simpleTransaction(disable, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: 'Center disabled'
             });
         } catch (error) {
@@ -192,7 +192,7 @@ export class CenterController {
             const values = [req.params.id];
             await Queries.simpleTransaction(enable, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: 'Center enabled'
             });
         } catch (error) {

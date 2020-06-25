@@ -78,7 +78,7 @@ export class BudgetSubUnitController {
         try {
             const values = [req.body.name];
             await Queries.simpleTransaction(query, values, client);
-            return res.json({
+            return res.status(200).json({
                 msg: "Budget Subunit created Succesfully"
             });
         } catch (error) {
@@ -101,7 +101,7 @@ export class BudgetSubUnitController {
             const values = [req.body.name, req.params.id];
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: `Budget Subunit modified succesfully`
             });
         } catch (error) {
@@ -126,7 +126,7 @@ export class BudgetSubUnitController {
         try {
             const values = [req.params.id];
             await Queries.simpleTransaction(disable, values, client);
-            return res.json({
+            return res.status(200).json({
                 msg: 'Budget Subunit disabled'
             });
         } catch (error) {
@@ -148,7 +148,7 @@ export class BudgetSubUnitController {
         try {
             const values = [req.params.id];
             await Queries.simpleTransaction(enable, values, client);
-            return res.json({
+            return res.status(200).json({
                 msg: 'Budget Subunit enabled'
             });
         } catch (error) {

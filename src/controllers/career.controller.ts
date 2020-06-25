@@ -91,7 +91,7 @@ export class CareerController {
 
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: "Career created Succesfully"
             });
         } catch (error) {
@@ -118,7 +118,7 @@ export class CareerController {
 
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: `Career modified succesfully`
             });
         } catch (error) {
@@ -144,7 +144,7 @@ export class CareerController {
 
             await Queries.simpleTransaction(query, id, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: `Career deleted succesfuly`
             });
         } catch (error) {
@@ -171,7 +171,7 @@ export class CareerController {
 
             await Queries.simpleTransaction(disable, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: 'Career disabled'
             });
         } catch (error) {
@@ -196,7 +196,7 @@ export class CareerController {
             const values = [req.params.id];
             await Queries.simpleTransaction(enable, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: 'Career enabled'
             });
         } catch (error) {

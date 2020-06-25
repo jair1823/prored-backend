@@ -372,11 +372,11 @@ export class StudentController {
             const response = await Queries.simpleSelectWithParameter(query, dni, fetch, client);
             const rows = response.rows[0];
             if (rows === undefined) {
-                return res.json({
+                return res.status(200).json({
                     msg: "empty"
                 });
             }
-            return res.json(rows);
+            return res.status(200).json(rows);
         } catch (error) {
             await Queries.simpleError(client, error);
             return res.status(500).json({
@@ -489,7 +489,6 @@ export class StudentController {
         }
     }
 
-
     /**
      * Update networks for student.
      * path: /student/:dni/networks
@@ -575,7 +574,7 @@ export class StudentController {
             const dni = [req.params.dni];
 
             const response = await Queries.simpleSelectWithParameter(query, dni, fetch, client);
-            return res.json(response.rows[0]);
+            return res.status(200).json(response.rows[0]);
         } catch (error) {
 
             await Queries.simpleError(client, error);
@@ -599,7 +598,7 @@ export class StudentController {
 
             await Queries.simpleTransaction(disable, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: 'Studend disable'
             });
         } catch (error) {
@@ -624,7 +623,7 @@ export class StudentController {
             const values = [req.params.dni];
             await Queries.simpleTransaction(enable, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: 'Studend enable'
             });
         } catch (error) {
@@ -652,7 +651,7 @@ export class StudentController {
 
             const response = await Queries.simpleSelectWithParameter(getStudent, personValues, fetchStudent, client);
 
-            return res.json(response.rows);
+            return res.status(200).json(response.rows);
         } catch (error) {
 
             await Queries.simpleError(client, error);
