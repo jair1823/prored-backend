@@ -87,11 +87,11 @@ export class EndorsementController {
             const response = await Queries.simpleSelectWithParameter(query, dni, fetch, client);
             const rows = response.rows[0];
             if (rows === undefined) {
-                return res.json({
+                return res.status(200).json({
                     msg: "empty"
                 });
             }
-            return res.json(rows);
+            return res.status(200).json(rows);
         } catch (error) {
             await Queries.simpleError(client, error);
             return res.status(500).json({
@@ -114,7 +114,7 @@ export class EndorsementController {
             const dni = [req.params.id];
             const response = await Queries.simpleSelectWithParameter(query, dni, fetch, client);
             const rows = response.rows;
-            return res.json(rows);
+            return res.status(200).json(rows);
         } catch (error) {
             await Queries.simpleError(client, error);
             return res.status(500).json({

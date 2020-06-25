@@ -31,7 +31,6 @@ export class ResearcherController {
      * path: /researcher_all/
      * method: get
      */
-
     async getResearchersAll(req: Request, res: Response): Promise<Response> {
         const query = `select getresearchersall('researchersCursor');`;
         const fetch = `FETCH ALL IN "researchersCursor";`;
@@ -52,13 +51,12 @@ export class ResearcherController {
      * path: /researcher_all/:dni
      * method: get
      */
-
     async getResearchersByIdAll(req: Request, res: Response): Promise<Response> {
         const query = `select getresearcherbydniall($1,'researchersCursor');`;
         const fetch = `FETCH ALL IN "researchersCursor";`;
         const client: PoolClient = await pool.connect();
         try {
-            const response = await Queries.simpleSelectWithParameter(query, [req.params.dni],fetch, client);
+            const response = await Queries.simpleSelectWithParameter(query, [req.params.dni], fetch, client);
             return res.status(200).json(response.rows[0]);
         } catch (error) {
             await Queries.simpleError(client, error);
@@ -98,21 +96,21 @@ export class ResearcherController {
      * path: /researcher_basic/
      * method: get
     */
-   async getResearchersBasic(req: Request, res: Response): Promise<Response> {
-    const query = `select getresearchersbasic('researchersCursor');`;
-    const fetch = `FETCH ALL IN "researchersCursor";`;
-    const client: PoolClient = await pool.connect();
-    try {
-        const response = await Queries.simpleSelect(query, fetch, client);
-        return res.status(200).json(response.rows);
-    } catch (error) {
-        await Queries.simpleError(client, error);
-        return res.status(500).json({
-            msg: 'Internal Server Error'
-        });
+    async getResearchersBasic(req: Request, res: Response): Promise<Response> {
+        const query = `select getresearchersbasic('researchersCursor');`;
+        const fetch = `FETCH ALL IN "researchersCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const response = await Queries.simpleSelect(query, fetch, client);
+            return res.status(200).json(response.rows);
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
     }
-}
-   
+
     /**
      * Create new researcher.
      * path: /researcher/
@@ -123,7 +121,7 @@ export class ResearcherController {
         const createPerson = `SELECT createperson($1,$2,$3,$4,$5,$6,$7,$8);`;
         const createResearcher = `SELECT createresearcher($1,$2);`;
         try {
-            
+
             const personValues = [req.body.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates, req.body.phone_number, req.body.email, 'Investigador'];
             const researcherValues = [req.body.dni, req.body.id_inv_unit];
 
@@ -157,7 +155,7 @@ export class ResearcherController {
         const client: PoolClient = await pool.connect();
         try {
             const values = [
-                req.body.dni, req.body.name, req.body.lastname1, req.body.lastname2, 
+                req.body.dni, req.body.name, req.body.lastname1, req.body.lastname2,
                 req.body.born_dates, req.body.phone_number, req.body.email, req.body.id_inv_unit
             ];
 

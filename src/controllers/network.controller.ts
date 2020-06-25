@@ -91,7 +91,7 @@ export class NetworkController {
             const values = [req.body.name, req.body.type];
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: "Network created Succesfully"
             });
         } catch (error) {
@@ -118,7 +118,7 @@ export class NetworkController {
 
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: `Network modified succesfully`
             });
         } catch (error) {
@@ -144,7 +144,7 @@ export class NetworkController {
 
             await Queries.simpleTransaction(query, id, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: `Network deleted succesfuly`
             });
         } catch (error) {
@@ -173,7 +173,7 @@ export class NetworkController {
 
             await Queries.simpleTransaction(disable, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: 'Network disabled'
             });
         } catch (error) {
@@ -198,7 +198,7 @@ export class NetworkController {
             const values = [req.params.id];
             await Queries.simpleTransaction(enable, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: 'Network enabled'
             });
         } catch (error) {

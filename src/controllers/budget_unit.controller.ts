@@ -77,7 +77,7 @@ export class BudgetUnitController {
         try {
             const values = [req.body.name];
             await Queries.simpleTransaction(query, values, client);
-            return res.json({
+            return res.status(200).json({
                 msg: "Budget Unit created Succesfully"
             });
         } catch (error) {
@@ -100,7 +100,7 @@ export class BudgetUnitController {
             const values = [req.body.name, req.params.id];
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: `Budget Unit modified succesfully`
             });
         } catch (error) {
@@ -125,7 +125,7 @@ export class BudgetUnitController {
         try {
             const values = [req.params.id];
             await Queries.simpleTransaction(disable, values, client);
-            return res.json({
+            return res.status(200).json({
                 msg: 'Budget Unit disabled'
             });
         } catch (error) {
@@ -147,7 +147,7 @@ export class BudgetUnitController {
         try {
             const values = [req.params.id];
             await Queries.simpleTransaction(enable, values, client);
-            return res.json({
+            return res.status(200).json({
                 msg: 'Budget Unit enabled'
             });
         } catch (error) {

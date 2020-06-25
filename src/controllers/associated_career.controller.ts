@@ -66,7 +66,7 @@ export class AssociatedCareerController {
 
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: "Associated Career created Succesfully"
             });
         } catch (error) {
@@ -92,7 +92,7 @@ export class AssociatedCareerController {
 
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: "Associated Career modified Succesfully"
             });
         } catch (error) {
@@ -118,7 +118,7 @@ export class AssociatedCareerController {
 
             await Queries.simpleTransaction(query, id, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: `Associated Career deleted succesfuly`
             });
         } catch (error) {
@@ -217,7 +217,7 @@ export class AssociatedCareerController {
 
             await Queries.simpleTransaction(disable, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: 'Associated Career disabled'
             });
         } catch (error) {
@@ -242,7 +242,7 @@ export class AssociatedCareerController {
             const values = [req.params.id];
             await Queries.simpleTransaction(enable, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: 'Associated Career enabled'
             });
         } catch (error) {
@@ -254,11 +254,6 @@ export class AssociatedCareerController {
             });
         }
     }
-
-
-
-
-
 }
 
 const associatedCareerController = new AssociatedCareerController();
