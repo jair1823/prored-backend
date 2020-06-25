@@ -12,5 +12,6 @@ router.post('/forgotPassword', User_Controller.forgotPassword);
 router.post('/validatePasswordToken', User_Controller.validatePasswordToken);
 router.post('/resetPassword', User_Controller.resetPassword);
 router.put('/updatePassword',TokenValidator, User_Controller.updatePassword);
+router.get('/validateToken',TokenValidator, User_Controller.validateToken);
 
 export default router;

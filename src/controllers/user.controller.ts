@@ -222,6 +222,19 @@ export class UserController {
             return res.status(500).json("Internal Server Error");
         }
     }
+
+    /**
+     * Just validate if token is a valid one
+     * path: /validateToken
+     * method: get
+     */
+    async validateToken(req: Request, res: Response): Promise<Response> {
+        try {
+            return res.status(200).json("Valid Token");
+        } catch (error) {
+            return res.status(500).json("Internal Server Error");
+        }
+    }
 }
 
 const userController = new UserController();
