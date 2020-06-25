@@ -85,8 +85,7 @@ export class UserController {
         const fetch = `FETCH ALL IN "passCursor";`;
         const client: PoolClient = await pool.connect();
         try {
-            const decoded:any = jwt.verify(req.body.token, String(process.env.MASTER_PW));
-            console.log(decoded)
+            const decoded = req.body.decoded;
             await Queries.begin(client);
             const pass = await Queries.simpleSelectWithParameterContinous(query, [decoded.id_user], fetch, client);
             let response: any = { msg: "Error" };
