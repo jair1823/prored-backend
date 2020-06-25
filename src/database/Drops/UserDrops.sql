@@ -5,3 +5,4 @@ DROP FUNCTION IF EXISTS userEmailExists;
 DROP FUNCTION IF EXISTS updateResetToken;
 DROP FUNCTION IF EXISTS validateToken;
 DROP FUNCTION IF EXISTS updatePassword;
+DROP FUNCTION IF EXISTS getpasswordid;

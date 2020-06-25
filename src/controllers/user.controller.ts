@@ -52,10 +52,40 @@ export class UserController {
             if (pass.rows[0] !== undefined) {
                 if (bcrypt.compareSync(req.body.password, pass.rows[0].password)) {
                     // Passwords match
-                    const token = jwt.sign({ email: emailBody }, String(process.env.MASTER_PW), { expiresIn: '1800s' });
+                    const token = jwt.sign({ id_user: pass.rows[0].id_user }, String(process.env.MASTER_PW), { expiresIn: '1800s' });
                     response = { token: token }
                 }
             }
+            return res.json(response);
+        } catch (error) {
+            console.log(error);
+            return res.send({
+                msg: "Internal Server Error",
+            });
+        }
+    }
+
+    async updatePassword(req: Request, res: Response): Promise<Response> {
+        const query = `select getpasswordid($1,'passCursor');`;
+        const update = `select updatePassword($1, $2);`;
+        const fetch = `FETCH ALL IN "passCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const decoded:any = jwt.verify(req.body.token, String(process.env.MASTER_PW));
+            console.log(decoded)
+            await Queries.begin(client);
+            const pass = await Queries.simpleSelectWithParameterContinous(query, [decoded.id_user], fetch, client);
+            let response: any = { msg: "Error" };
+            if (pass.rows[0] !== undefined) {
+                if (bcrypt.compareSync(req.body.oldPassword, pass.rows[0].password)) {
+                    // Passwords match
+                    const hash = bcrypt.hashSync(req.body.newPassword, 10);
+                    const values = [decoded.id_user, hash];
+                    await Queries.simpleTransactionContinous(update, values, client);
+                    response = { msg: "Password Updated" };
+                }
+            }
+            await Queries.commit(client);
             return res.json(response);
         } catch (error) {
             console.log(error);
