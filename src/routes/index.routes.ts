@@ -26,24 +26,24 @@ import TokenValidator from '../lib/tokenValidator';
  * funcion que agrega todas las rutas a la app de express
  */
 export function addRoutes(app: any) {
-    app.use('/network',Network);
-    app.use('/center',Center);
-    app.use(AssoCareer);
-    app.use(Investigation_Unit);
-    app.use('/career', Career);
-    app.use('/campus', Campus);
-    app.use('/language',Language);
-    app.use(Directions);
-    app.use(Student);
-    app.use(Researcher);
-    app.use(Consultas);
-    app.use(Project);
-    app.use(Gantt);
+    app.use('/network',TokenValidator,Network);
+    app.use('/center',TokenValidator,Center);
+    app.use(TokenValidator,AssoCareer);
+    app.use(TokenValidator,Investigation_Unit);
+    app.use('/career',TokenValidator, Career);
+    app.use('/campus',TokenValidator, Campus);
+    app.use('/language',TokenValidator,Language);
+    app.use(TokenValidator,Directions);
+    app.use(TokenValidator,Student);
+    app.use(TokenValidator,Researcher);
+    app.use(TokenValidator,Consultas);
+    app.use(TokenValidator,Project);
+    app.use(TokenValidator,Gantt);
     app.use('/activity',TokenValidator,Activity);
-    app.use(Document);
-    app.use(Budget);
-    app.use(Financial);
-    app.use(DocumentMultiple);
-    app.use('/filter',Filter);
+    app.use(TokenValidator,Document);
+    app.use(TokenValidator,Budget);
+    app.use(TokenValidator,Financial);
+    app.use(TokenValidator,DocumentMultiple);
+    app.use('/filter',TokenValidator,Filter);
     app.use(User);
 }
