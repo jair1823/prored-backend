@@ -18,6 +18,7 @@ import Filter from './filter.routes'
 import Budget from './budget_unit.routes'
 import Financial from './financialitem.routes'
 import User from './user.routes'
+import TokenValidator from '../lib/tokenValidator';
 /**
  * 
  * @param app variable que contiene la aplicacion de express
@@ -38,7 +39,7 @@ export function addRoutes(app: any) {
     app.use(Consultas);
     app.use(Project);
     app.use(Gantt);
-    app.use('/activity',Activity);
+    app.use('/activity',TokenValidator,Activity);
     app.use(Document);
     app.use(Budget);
     app.use(Financial);
