@@ -26,6 +26,7 @@ import TokenValidator from '../lib/tokenValidator';
  * funcion que agrega todas las rutas a la app de express
  */
 export function addRoutes(app: any) {
+    app.use(User);
     app.use('/network',TokenValidator,Network);
     app.use('/center',TokenValidator,Center);
     app.use(TokenValidator,AssoCareer);
@@ -45,5 +46,4 @@ export function addRoutes(app: any) {
     app.use(TokenValidator,Financial);
     app.use(TokenValidator,DocumentMultiple);
     app.use('/filter',TokenValidator,Filter);
-    app.use(User);
 }
