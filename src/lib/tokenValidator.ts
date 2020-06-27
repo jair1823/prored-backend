@@ -5,7 +5,7 @@ function verifyToken(req: any, res: any, next: any) {
   if (token) {
     jwt.verify(token, String(process.env.MASTER_PW), (err: any, decoded: any) => {
       if (err) {
-        return res.json({ mensaje: 'Token inválido' });
+        return res.status(401).json({ msg: 'Token inválido' });
       } else {
         console.log("Válido")
         req.body.decoded = decoded;
@@ -13,7 +13,7 @@ function verifyToken(req: any, res: any, next: any) {
       }
     });
   } else {
-    res.send({
+    res.status(401).json({
       msg: null
     });
   }
