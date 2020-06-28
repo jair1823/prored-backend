@@ -6,6 +6,7 @@ import Paper_Controller from '../controllers/documentsControllers/paper.controll
 import List_Of_Assistance from '../controllers/documentsControllers/list_of_assistance.controller'
 import Photos_Controller from "../controllers/documentsControllers/photos.controller";
 import Financial_Document_Controller from "../controllers/documentsControllers/financial_document.controller";
+import CV_Controller from "../controllers/documentsControllers/cv.controller";
 import upload from "../lib/saveFile";
 
 const router = Router();
@@ -51,5 +52,10 @@ router.post("/finantial_document", upload, Financial_Document_Controller.insertF
 router.delete("/finantial_document/:id", Financial_Document_Controller.deleteFinancialDocument);
 router.get("/finantial_document/:id", Financial_Document_Controller.getFinancialDocument);
 router.get("/finantial_document/item/:id", Financial_Document_Controller.getFinancialDocumentItem);
+
+router.post('/studentcv/', upload, CV_Controller.insertCV);
+router.put('/studentcv/', upload, CV_Controller.updateCV);
+router.delete('/studentcv/:dni', CV_Controller.deleteCV);
+router.get('/studentcv/:dni', CV_Controller.getStudentCV);
 
 export default router;
