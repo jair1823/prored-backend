@@ -7,7 +7,6 @@ function verifyToken(req: any, res: any, next: any) {
       if (err) {
         return res.status(401).json({ msg: 'Token inválido' });
       } else {
-        console.log("Válido")
         req.body.decoded = decoded;
         next();
       }
