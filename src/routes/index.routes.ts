@@ -27,6 +27,8 @@ import TokenValidator from '../lib/tokenValidator';
  */
 export function addRoutes(app: any) {
     app.use(User);
+    app.use(DocumentMultiple);
+    app.use(Document);
     app.use('/network',TokenValidator,Network);
     app.use('/center',TokenValidator,Center);
     app.use(TokenValidator,AssoCareer);
@@ -41,9 +43,7 @@ export function addRoutes(app: any) {
     app.use(TokenValidator,Project);
     app.use(TokenValidator,Gantt);
     app.use('/activity',TokenValidator,Activity);
-    app.use(TokenValidator,Document);
     app.use(TokenValidator,Budget);
     app.use(TokenValidator,Financial);
-    app.use(TokenValidator,DocumentMultiple);
     app.use('/filter',TokenValidator,Filter);
 }
