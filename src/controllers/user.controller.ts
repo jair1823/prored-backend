@@ -85,8 +85,7 @@ export class UserController {
         const fetch = `FETCH ALL IN "passCursor";`;
         const client: PoolClient = await pool.connect();
         try {
-            const decoded:any = jwt.verify(req.body.token, String(process.env.MASTER_PW));
-            console.log(decoded)
+            const decoded = req.body.decoded;
             await Queries.begin(client);
             const pass = await Queries.simpleSelectWithParameterContinous(query, [decoded.id_user], fetch, client);
             let response: any = { msg: "Error" };
@@ -220,6 +219,19 @@ export class UserController {
             });
         } catch (error) {
             await Queries.simpleError(client, error);
+            return res.status(500).json("Internal Server Error");
+        }
+    }
+
+    /**
+     * Just validate if token is a valid one
+     * path: /validateToken
+     * method: get
+     */
+    async validateToken(req: Request, res: Response): Promise<Response> {
+        try {
+            return res.status(200).json("Valid Token");
+        } catch (error) {
             return res.status(500).json("Internal Server Error");
         }
     }

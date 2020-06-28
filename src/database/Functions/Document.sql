@@ -427,3 +427,45 @@ CREATE OR REPLACE FUNCTION getfinancialdocumentfromfinancialitem(pid integer, re
         RETURN ref;
     END;
 $$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION insertCV(id VARCHAR(50), fp VARCHAR(400), n VARCHAR(300)) 
+RETURNS void AS $$
+BEGIN
+  INSERT INTO public.cv (dni, file_path, name) VALUES (id,fp,n);
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION deleteCV(id VARCHAR(50)) 
+RETURNS void AS $$
+BEGIN
+  DELETE FROM public.cv WHERE dni = id;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION updateCV(id VARCHAR(50),fp VARCHAR(400), n VARCHAR(300)) 
+RETURNS void AS $$
+BEGIN
+  UPDATE public.cv SET 
+    name = n,
+    file_path = fp
+  WHERE dni = id;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getcv(pdni varchar(50), ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+        OPEN ref FOR select *
+            from public.cv
+        where dni = pdni;
+        RETURN ref;
+    END;
+$$ LANGUAGE plpgsql;

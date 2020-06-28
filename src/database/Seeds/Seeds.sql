@@ -157,3 +157,6 @@ INSERT INTO public.budget_sub_unit(name,status)
 INSERT INTO public.financial_item(date_created, amount, type, id_project, id_activity, student_dni, code_unit, code_subunit)
         values 
                 ('2020-02-02', 72000.5, 'Independiente', null, null, '116920331', 1, 2);
+
+INSERT INTO public.user (name,lastname1,lastname2,email,password,status,reset_password_token,reset_password_expiration) VALUES 
+        ('Jair','Cordero','Barona','corderojair@hotmail.com','$2b$10$lr9S9h9EKeU5Em6bcxVJD.8My6zEyIGqXH.SgDzhqN3LZKFYxzSy.',true,NULL,NULL);

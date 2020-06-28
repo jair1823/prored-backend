@@ -33,3 +33,7 @@ DROP FUNCTION IF EXISTS createfinancialdocument;
 DROP FUNCTION IF EXISTS deletefinancialdocument;
 DROP FUNCTION IF EXISTS getfinancialdocument;
 DROP FUNCTION IF EXISTS getfinancialdocumentfromfinancialitem;
+DROP FUNCTION IF EXISTS insertCV;
+DROP FUNCTION IF EXISTS deleteCV;
+DROP FUNCTION IF EXISTS updateCV;
+DROP FUNCTION IF EXISTS getcv;
