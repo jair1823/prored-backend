@@ -1,17 +1,15 @@
-
-
 --  ####### Budget Unit  #######
 
-CREATE OR REPLACE FUNCTION createbudgetunit(n VARCHAR(50)) 
+CREATE OR REPLACE FUNCTION createbudgetunit(pid integer, n VARCHAR(100)) 
 RETURNS void AS $$
 BEGIN
-  INSERT INTO public.budget_unit(name,status) values(n,true);
+  INSERT INTO public.budget_unit(code_budget_unit,name,status) values(pid,n,true);
 END;
 $$ LANGUAGE plpgsql;
 
 --########################################################################################
 
-CREATE OR REPLACE FUNCTION updatebudgetunit(n VARCHAR(50),idc integer) 
+CREATE OR REPLACE FUNCTION updatebudgetunit(n VARCHAR(100),idc integer) 
 RETURNS void AS $$
 BEGIN
   UPDATE public.budget_unit SET name = n WHERE code_budget_unit = idc;
@@ -71,11 +69,6 @@ CREATE OR REPLACE FUNCTION enablebudgetunit(pid INTEGER)
     WHERE code_budget_unit = pid;
     END;
 $$ LANGUAGE plpgsql;
-
---###########################################################################
-
-
-
 
 --  ####### Budget SubUnit  #######
 

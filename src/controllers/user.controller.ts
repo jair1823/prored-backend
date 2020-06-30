@@ -63,7 +63,7 @@ export class UserController {
             if (pass.rows[0] !== undefined) {
                 if (bcrypt.compareSync(req.body.password, pass.rows[0].password)) {
                     // Passwords match
-                    const token = jwt.sign({ id_user: pass.rows[0].id_user }, String(process.env.MASTER_PW), { expiresIn: '1800s' });
+                    const token = jwt.sign({ id_user: pass.rows[0].id_user }, String(process.env.MASTER_PW), { expiresIn: '12h' });
                     response = { token: token }
                 }
             }

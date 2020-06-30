@@ -1,8 +1,9 @@
 INSERT INTO public.career(name, degree,status)
 	VALUES 
         ('Administración de Empresas', 'Diplomado',true),
-        ('Docencia', 'Licenciatura',true),
-        ('Ingeniería Informática', 'Bachillerato',true);
+        ('Ciencias Policiales', 'Bachillerato',true),
+        ('Maestría Profesional en Derechos Humanos', 'Maestría',true),
+        ('Doctorado en Derecho', 'Doctorado',true);
 
 
 INSERT INTO public.center(name,status)
@@ -118,16 +119,14 @@ INSERT INTO  public.person_x_project(dni , id_project, role )
                 ('116920331' , 1  , 'Investigador'),
                 ('402430534' , 1  , 'Investigador');
 
-
-
 -- Period
+
 INSERT INTO public.period(name)
         values
                 ('II Semestre 2020'),
                 ('I Semestre 2021');
 
 -- Gantt 
-
 
 INSERT INTO public.gantt(rel_code , id_period)
         values 
@@ -142,21 +141,11 @@ INSERT INTO public.gantt_task(id_gantt, task_name, description, start_date, end_
                 (2 ,'Primera tarea Gantt2', 'Descripción2' , '2020-02-06', '2020-02-09'),
                 (2 ,'Primera tarea Gantt2', 'Descripción2' , '2020-02-06', '2020-02-09');
 
-INSERT INTO public.budget_unit(name,status)
-	VALUES
-                ('BudgetUnit1',true),
-                ('BudgetUnit2',true),
-                ('BudgetUnit3',false);
-
-INSERT INTO public.budget_sub_unit(name,status)
-	VALUES
-                ('BudgetSubUnit1',true),
-                ('BudgetSubUnit2',true),
-                ('BudgetSubUnit3',false);
-
 INSERT INTO public.financial_item(date_created, amount, type, id_project, id_activity, student_dni, code_unit, code_subunit)
         values 
-                ('2020-02-02', 72000.5, 'Independiente', null, null, '116920331', 1, 2);
+                ('2020-02-02', 72000.5, 'Independiente', null, null, '116920331', 10102, 2);
 
-INSERT INTO public.user (name,lastname1,lastname2,email,password,status,reset_password_token,reset_password_expiration) VALUES 
-        ('Jair','Cordero','Barona','corderojair@hotmail.com','$2b$10$lr9S9h9EKeU5Em6bcxVJD.8My6zEyIGqXH.SgDzhqN3LZKFYxzSy.',true,NULL,NULL);
+INSERT INTO public.user (name,lastname1,lastname2,email,password,status,reset_password_token,reset_password_expiration) 
+        VALUES 
+                ('Jair','Cordero','Barona','corderojair@hotmail.com','$2b$10$lr9S9h9EKeU5Em6bcxVJD.8My6zEyIGqXH.SgDzhqN3LZKFYxzSy.',true,NULL,NULL),
+                ('ProRed','ProRed','ProRed','prored@uned.ac.cr','$2b$10$4zGIZUxqY6RCXHr.WqTpnuVjK2yI0kNdCIhUHPa/W7AnM6BsSwMXW',true,NULL,NULL); --Prored2020

@@ -1,6 +1,6 @@
 --########################################################################################
 
-CREATE OR REPLACE FUNCTION createproject(id_inv integer,n varchar(50),cd varchar(50), pt project_type, ref refcursor) 
+CREATE OR REPLACE FUNCTION createproject(id_inv integer,n varchar(100),cd varchar(50), pt project_type, ref refcursor) 
  RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR
@@ -33,7 +33,7 @@ $$ LANGUAGE plpgsql;
 
 --########################################################################################
 
-CREATE OR REPLACE FUNCTION updateproject(idp integer, id_inv integer,n varchar(50),cd varchar(50), pt project_type) 
+CREATE OR REPLACE FUNCTION updateproject(idp integer, id_inv integer,n varchar(100),cd varchar(50), pt project_type) 
 RETURNS void AS $$
 BEGIN
   UPDATE public.project 

@@ -86,17 +86,11 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
-
-
-
-
 ---Seccion Gantt Task 
-
 
 CREATE OR REPLACE FUNCTION creategantt_task(
     pid_gantt integer,
-    ptask_name VARCHAR(50),
+    ptask_name VARCHAR(100),
     pdescription VARCHAR(200),
     pstart  date, 
     pend date
@@ -108,6 +102,7 @@ CREATE OR REPLACE FUNCTION creategantt_task(
     END;
 $$ LANGUAGE plpgsql;
 
+--==========================================================================================
 
 CREATE OR REPLACE FUNCTION deletegantt_tasks( pid_gantt integer  )
     RETURNS void AS $$
@@ -117,7 +112,7 @@ CREATE OR REPLACE FUNCTION deletegantt_tasks( pid_gantt integer  )
     END;
 $$ LANGUAGE plpgsql;
 
-
+--==========================================================================================
 
 CREATE OR REPLACE FUNCTION getgantt_tasks(pid_gantt integer , ref refcursor) RETURNS refcursor AS $$
 BEGIN
@@ -129,13 +124,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
-
-
 --==========================================================================================
-
-
-
 
 CREATE OR REPLACE FUNCTION ganttexists(prel_code integer, pid_period integer ) RETURNS integer AS $$
 DECLARE
@@ -154,8 +143,3 @@ BEGIN
     RETURN res;
 END;
 $$ LANGUAGE plpgsql;
-
-
-
---==========================================================================================
-

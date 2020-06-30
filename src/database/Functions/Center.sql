@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION createcenter(n VARCHAR(50)) 
+CREATE OR REPLACE FUNCTION createcenter(n VARCHAR(100)) 
 RETURNS void AS $$
 BEGIN
   INSERT INTO public.center(name,status) values(n,true);
@@ -7,7 +7,7 @@ $$ LANGUAGE plpgsql;
 
 --########################################################################################
 
-CREATE OR REPLACE FUNCTION updatecenter(n VARCHAR(50),idc integer) 
+CREATE OR REPLACE FUNCTION updatecenter(n VARCHAR(100),idc integer) 
 RETURNS void AS $$
 BEGIN
   UPDATE public.center SET name = n WHERE id_center = idc;

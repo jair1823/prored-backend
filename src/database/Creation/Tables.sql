@@ -36,7 +36,7 @@ create table public.district(
 
 create table public.investigation_unit(
     id_inv_unit SERIAL PRIMARY KEY,
-    name varchar(50),
+    name varchar(110),
     description text
 );
 
@@ -53,7 +53,7 @@ CREATE TYPE public.project_type AS ENUM (
 create table public.project(
     id_project SERIAL PRIMARY KEY,
     id_inv_unit integer REFERENCES public.investigation_unit(id_inv_unit),
-    name varchar(50),
+    name varchar(110),
     code_manage varchar(50),
     project_type public.project_type
 );
@@ -65,7 +65,7 @@ create table public.acti_type(
 
 create table public.activity(
     id_activity SERIAL PRIMARY KEY,
-    name varchar(50),
+    name varchar(100),
     id_acti_type integer REFERENCES public.acti_type(id_acti_type),
     id_project integer REFERENCES public.project(id_project)
 );
@@ -124,7 +124,7 @@ create table public.paper(
     id_paper SERIAL PRIMARY KEY,
     id_project integer REFERENCES public.project(id_project),
     paper_name varchar(100),
-    speaker varchar(50),
+    speaker varchar(100),
     place varchar(100),
     type public.paper_type,
     country public.nationality,
@@ -160,14 +160,14 @@ CREATE TYPE public.degree AS ENUM (
 
 create table public.career(
     career_code SERIAL PRIMARY KEY,
-    name varchar(100),
+    name varchar(110),
     degree public.degree,
     status boolean
 );
 
 create table public.campus(
     campus_code varchar(30) PRIMARY KEY,
-    name varchar(50),
+    name varchar(100),
     status boolean
 );
 
@@ -180,7 +180,7 @@ CREATE TYPE public.network_type AS ENUM (
 
 create table public.network(
     id_network SERIAL PRIMARY KEY,
-    name varchar(50),
+    name varchar(100),
     network_type public.network_type,
     status boolean
     
@@ -188,14 +188,14 @@ create table public.network(
 
 create table public.center(
     id_center SERIAL PRIMARY KEY,
-    name varchar(50),
+    name varchar(100),
     status boolean
 );
 
 create table public.associated_career(
     id_associated_career SERIAL PRIMARY KEY,
     id_center integer REFERENCES public.center(id_center),
-    name varchar(50),
+    name varchar(110),
     status boolean
 );
 
@@ -286,14 +286,14 @@ create table public.gantt_task(
 );
 
 create table public.budget_unit(
-    code_budget_unit SERIAL PRIMARY KEY,
-    name varchar(50),
+    code_budget_unit integer PRIMARY KEY,
+    name varchar(100),
     status boolean
 );
 
 create table public.budget_sub_unit(
     code_budget_subunit SERIAL PRIMARY KEY,
-    name varchar(50),
+    name varchar(100),
     status boolean
 );
 
@@ -327,7 +327,7 @@ create table public.user(
     name varchar(50),
     lastname1 varchar(50),
     lastname2 varchar(50),
-    email varchar(60) UNIQUE,
+    email varchar(100) UNIQUE,
     password varchar(300),
     status boolean,
     reset_password_token text,

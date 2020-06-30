@@ -72,10 +72,10 @@ export class BudgetUnitController {
      * method: post
     */
     async createBudgetUnit(req: Request, res: Response): Promise<Response> {
-        const query = `SELECT createbudgetunit($1)`;
+        const query = `SELECT createbudgetunit($1,$2)`;
         const client: PoolClient = await pool.connect();
         try {
-            const values = [req.body.name];
+            const values = [req.body.id, req.body.name];
             await Queries.simpleTransaction(query, values, client);
             return res.status(200).json({
                 msg: "Budget Unit created Succesfully"
