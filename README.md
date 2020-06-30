@@ -474,7 +474,17 @@ Cada una de las rutas para los items financieros, se encuentran asociadas al con
 
 Cada una de las rutas para los usuarios, se encuentran asociadas al controlador user.controller.
 
-
+| Método                                | Ruta                   | HTTP Request | Descripción                                                   |
+|---------------------------------------|------------------------|--------------|---------------------------------------------------------------|
+| user.controller@createUser            | /user                  | POST         | Función encargada de crear un usuario                         |
+| user.controller@checkUserEmailExists  | /user/email/exists     | POST         | Función encargada de verificar si un correo existe            |
+| user.controller@authenticateUser      | /user/authenticate     | POST         | Función encargada de autenticar el inicio de sesión           |
+| user.controller@getUsers              | /user                  | GET          | Función encargada de obtener usuarios                         |
+| user.controller@forgotPassword        | /forgotPassword        | POST         | Función encargada de ejecutar proceso de recuperar contraseña |
+| user.controller@validatePasswordToken | /validatePasswordToken | POST         | Función encargada de validar la contraseña                    |
+| user.controller@resetPassword         | /resetPassword         | POST         | Función encargada de reiniciar la contraseña                  |
+| user.controller@updatePassword        | /updatePassword        | PUT          | Función encargada de actualizar la contraseña                 |
+| user.controller@validateToken         | /validateToken         | GET          | Función encargada de validar el token                         |
 
 
 
