@@ -403,7 +403,10 @@ Cada una de las rutas para los documentos, se encuentran asociadas al controlado
 | document.controller@getList                | /list/:id                | GET          | Función encargada de obtener lista de asistencia               |
 | document.controller@deleteList             | /list/:id                | DELETE       | Función encargada de eliminar lista de asistencia              |
 | document.controller@getListActivity        | /list/ativity/:id        | GET          | Función encargada de obtener lista de asistencia por actividad |
-
+| document.controller@insertFinantialDocument             | /finantial_document                   | POST         | Función encargada de insertar un item financiero              |
+| document.controller@deleteFinancialDocument                | /finantial_document/:id                | DELETE          | Función encargada de eliminar el documento financiero               |
+| document.controller@getFinancialDocument             | /finantial_document/:id                | GET       | Función encargada de obtener un documento financiero   | 
+| document.controller@getFinancialDocumentItem        |    /finantial_document/item/:id     | GET          | Función encargada de obtener un documento financiero específico |
 
 ### Documento Múltiple 
 
@@ -431,3 +434,55 @@ Cada una de las rutas para los filtros, se encuentran asociadas al controlador F
 | filter.controller@getResearcherFilter  | /filter/researcher/              | POST         | Función encargada de  crear una unidad de investigación                 |
 | filter.controller@getActivityNoProjectFilter  | /filter/activity/no_project/         | POST          | Función encargada de  obtener consultas de Actividades no anexas a proyectos         |
 | filter.controller@getActivityFilter  | /filter/activity/project       | POST          | Función encargada de  obtener consultar de actividades en anexas a Proyectos        |
+
+
+### Partidas y subpartidas
+Cada una de las rutas para las partidas, se encuentran asociadas al controlador budget_unit.controller.
+
+| Método                                           | Ruta                        | HTTP Request | Descripción                                                      |
+|--------------------------------------------------|-----------------------------|--------------|------------------------------------------------------------------|
+| budget_unit.controller@getBudgetUnit             | /budget_unit/               | GET          | Función encargada de crear partida presupuestaria                |
+| budget_unit.controller@getBudgetUnitEnable       | /budget_unit/enabled        | GET          | Función encargada de obtener partida presupuestaria activadas    |
+| budget_unit.controller@getBudgetUnitbyId         | /budget_unit/:id            | GET          | Función encargada de obtener una partida específica              |
+| budget_unit.controller@createBudgetUnit          | /budget_unit/               | POST         | Función encargada de crear una partida presupuestaria            |
+| budget_unit.controller@updateBudgetUnit          | /budget_unit/:id            | PUT          | Función encargada de editar una partida específica               |
+| budget_unit.controller@disableBudgetUnit         | /budget_unit/:id/disable    | PUT          | Función encargada de desahabilitar una partida                   |
+| budget_unit.controller@enableBudgetUnit          | /budget_unit/:id/enable     | PUT          | Función encargada de habilitar una partida                       |
+| budget_subunit.controller@getBudgetSubUnit       | /budget_subunit/            | GET          | Función encargada de obtener una subpartida                      |
+| budget_subunit.controller@getBudgetSubUnitEnable | /budget_subunit/enabled     | GET          | Función encargada de obtener subpartidas activas                 |
+| budget_subunit.controller@getBudgetSubUnitbyId   | /budget_subunit/:id         | GET          | Función encargada de obtener una subpartida                      |
+| budget_subunit.controller@createBudgetSubUnit    | /budget_subunit/            | POST         | Función encargada de crear una subpartida presupuestaria         |
+| budget_subunit.controller@updateBudgetSubUnit    | /budget_subunit/:id         | PUT          | Función encargada de actualizar una subpartida presupuestaria    |
+| budget_subunit.controller@disableBudgetSubUnit   | /budget_subunit/:id/disable | PUT          | Función encargada de deshabilitar una subpartida presupuestaria  |
+| budget_subunit.controller@enableBudgetSubUnit    | /budget_subunit/:id/enable  | PUT          | Función encargada de habilitar una subpartida presupuestaria     |
+
+
+### Item Financiero
+
+Cada una de las rutas para los items financieros, se encuentran asociadas al controlador budget_unit.controller.
+
+| Método                                            | Ruta                        | HTTP Request | Descripción                                                                    |
+|---------------------------------------------------|-----------------------------|--------------|--------------------------------------------------------------------------------|
+| financialItem.controller@getFinancialItem         | /financial_item/            | GET          | Función encargada de obtener item financiero                                   |
+| financialItem.controller@getFinancialItemSpecific | /financial_item/specific/   | GET          | Función encargada de obtener item financiero por id de actividad y de proyecto |
+| financialItem.controller@getFinancialItembyId     | /financial_item/:id         | GET          | Función encargada de obtener un item financiero específico                     |
+| financialItem.controller@createFinancialItem      | /financial_item/            | POST         | Función encargada de crear un item financiero                                  |
+| financialItem.controller@updateFinancialItem      | /financial_item/:id         | PUT          | Función encargada de editar un item financiero                                 |
+
+
+### Usuarios 
+
+Cada una de las rutas para los usuarios, se encuentran asociadas al controlador user.controller.
+
+
+
+
+
+
+
+
+
+
+
+
+
