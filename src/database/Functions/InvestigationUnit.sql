@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION createinvestigation_unit(n VARCHAR(50),des TEXT) 
+CREATE OR REPLACE FUNCTION createinvestigation_unit(n VARCHAR(110),des TEXT) 
 RETURNS void AS $$
 BEGIN
   INSERT INTO public.investigation_unit (name, description) VALUES (n,des);
@@ -7,7 +7,7 @@ $$ LANGUAGE plpgsql;
 
 --########################################################################################
 
-CREATE OR REPLACE FUNCTION updateinvestigation_unit(idi integer,n VARCHAR(50), des TEXT) 
+CREATE OR REPLACE FUNCTION updateinvestigation_unit(idi integer,n VARCHAR(110), des TEXT) 
 RETURNS void AS $$
 BEGIN
 	UPDATE public.investigation_unit 

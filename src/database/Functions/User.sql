@@ -2,7 +2,7 @@ CREATE OR REPLACE FUNCTION createuser(
     pname varchar(50),
     plastname1 varchar(50),
     plastname2 varchar(50),
-    pmail varchar(60),
+    pmail varchar(100),
     ppass varchar(300)
     )
     RETURNS void AS $$
@@ -14,7 +14,7 @@ $$ LANGUAGE plpgsql;
 
 --########################################################################################
 
-CREATE OR REPLACE FUNCTION getpassword(pemail varchar(50),ref refcursor)  RETURNS refcursor AS $$
+CREATE OR REPLACE FUNCTION getpassword(pemail varchar(100),ref refcursor)  RETURNS refcursor AS $$
 BEGIN
     OPEN ref FOR
         select id_user, password 
@@ -50,9 +50,9 @@ $$ LANGUAGE plpgsql;
 
 --########################################################################################
 
-CREATE OR REPLACE FUNCTION userEmailExists(pemail varchar(60)) RETURNS boolean AS $$
+CREATE OR REPLACE FUNCTION userEmailExists(pemail varchar(100)) RETURNS boolean AS $$
 DECLARE
-    testEmail varchar(60);
+    testEmail varchar(100);
     res boolean;
 BEGIN
     select email
@@ -70,7 +70,7 @@ $$ LANGUAGE plpgsql;
 
 --########################################################################################
 
-CREATE OR REPLACE FUNCTION updateResetToken(pemail varchar(60), ptoken text, pdate bigint) 
+CREATE OR REPLACE FUNCTION updateResetToken(pemail varchar(100), ptoken text, pdate bigint) 
 RETURNS void AS $$
 BEGIN
   UPDATE public.user 

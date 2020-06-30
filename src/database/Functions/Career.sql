@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION createcareer(n VARCHAR(100), dg degree) 
+CREATE OR REPLACE FUNCTION createcareer(n VARCHAR(110), dg degree) 
 RETURNS void AS $$
 BEGIN
   INSERT INTO public.career( name, degree, status) values (n,dg,true);
@@ -7,7 +7,7 @@ $$ LANGUAGE plpgsql;
 
 --########################################################################################
 
-CREATE OR REPLACE FUNCTION updatecareer(n VARCHAR(100), dg degree, ccode integer) 
+CREATE OR REPLACE FUNCTION updatecareer(n VARCHAR(110), dg degree, ccode integer) 
 RETURNS void AS $$
 BEGIN
   UPDATE public.career SET name = n, degree = dg WHERE career_code = ccode;

@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION createassociated_career(n VARCHAR(50), idc integer) 
+CREATE OR REPLACE FUNCTION createassociated_career(n VARCHAR(110), idc integer) 
 RETURNS void AS $$
 BEGIN
   INSERT INTO public.associated_career(name,id_center, status) values(n,idc, true);
@@ -7,7 +7,7 @@ $$ LANGUAGE plpgsql;
 
 --########################################################################################
 
-CREATE OR REPLACE FUNCTION updateassociated_career(n VARCHAR(50), idac integer) 
+CREATE OR REPLACE FUNCTION updateassociated_career(n VARCHAR(110), idac integer) 
 RETURNS void AS $$
 BEGIN
   UPDATE public.associated_career SET name = n WHERE id_associated_career = idac;
