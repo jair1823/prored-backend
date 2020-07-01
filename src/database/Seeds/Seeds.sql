@@ -29,11 +29,11 @@ INSERT INTO public.network(name, network_type,status)
         ('OMS', 'ONG',true),
         ('DanzaTEC', 'Grupo Artístico',false);
 
-INSERT INTO public.investigation_unit(name,description)
+INSERT INTO public.investigation_unit(name,description,status)
 	VALUES
-        ('Laboratorio de computación','Lab dedicado a programación'),
-        ('Laboratorio de física','Lab dedicado a la física'),
-        ('Centro de enseñanza','Facultad dedicada a la investigación de mejores prácticas de docencia');
+        ('Laboratorio de computación','Lab dedicado a programación',true),
+        ('Laboratorio de física','Lab dedicado a la física',true),
+        ('Centro de enseñanza','Facultad dedicada a la investigación de mejores prácticas de docencia',true);
 
 -----------------------------------------------------------------------
 --Avanzado
@@ -90,9 +90,9 @@ INSERT INTO public.project(id_inv_unit, name, code_manage, project_type)
 ----------------------------------------------------------------------------
 --Tipo Actividad
 
-INSERT INTO public.acti_type(name)
+INSERT INTO public.acti_type(name,status)
 	VALUES
-        ('Taller');
+        ('Taller',true);
 
 ----------------------------------------------------------------------------
 --Actividad

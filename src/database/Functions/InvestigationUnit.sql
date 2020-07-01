@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION createinvestigation_unit(n VARCHAR(110),des TEXT) 
 RETURNS void AS $$
 BEGIN
-  INSERT INTO public.investigation_unit (name, description) VALUES (n,des);
+  INSERT INTO public.investigation_unit (name, description,status) VALUES (n,des,true);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -45,4 +45,26 @@ BEGIN
     SELECT * FROM public.investigation_unit where id_inv_unit = pid;
   RETURN ref;
 END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION disableinvestigationunit(pid varchar(50))
+    RETURNS void AS $$
+    BEGIN
+    UPDATE public.investigation_unit
+        SET status=false
+    WHERE id_inv_unit = pid;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION enableinvestigationunit(pid varchar(50))
+    RETURNS void AS $$
+    BEGIN
+    UPDATE public.investigation_unit
+        SET status=true
+    WHERE id_inv_unit = pid;
+    END;
 $$ LANGUAGE plpgsql;
