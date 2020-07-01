@@ -15,5 +15,7 @@ router.get('/project/:id', Activity_Controller.getActivitybyProjectId);
 router.get('/persons/:id', Activity_Controller.getPersonsActivity);
 router.get('/persons/not/:id', Activity_Controller.getPersonsNotInActivity);
 router.get('/:id', Activity_Controller.getActivitybyId);
+router.put('/:id/enable', Activity_Controller.enableActivityType);
+router.put('/:id/disable', Activity_Controller.disableActivityType);
 
 export default router;

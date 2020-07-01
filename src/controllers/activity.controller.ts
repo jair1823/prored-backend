@@ -293,6 +293,58 @@ export class ActivityController {
             });
         }
     }
+
+
+    /**
+     * Disable specific Activity Type.
+     * path: /investigation_unit/:id/disable
+     * method: put
+     */
+    async disableActivityType(req: Request, res: Response): Promise<Response> {
+        const disable = `SELECT disableactivitytype($1);`;
+        const client = await pool.connect();
+        try {
+            const values = [req.params.id];
+
+            await Queries.simpleTransaction(disable, values, client);
+
+            return res.status(200).json({
+                msg: 'Activity Type disabled'
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Enable specific Activity Type.
+     * path: /investigation_unit/:id/enable
+     * method: put
+     */
+    async enableActivityType(req: Request, res: Response): Promise<Response> {
+        const enable = `SELECT enableactivitytype($1);`;
+        const client = await pool.connect();
+        try {
+            const values = [req.params.id];
+            await Queries.simpleTransaction(enable, values, client);
+
+            return res.status(200).json({
+                msg: 'Activity Type enabled'
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
 }
 
 const activityController = new ActivityController();

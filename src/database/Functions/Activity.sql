@@ -89,7 +89,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION createactivitytype(n VARCHAR(50)) 
 RETURNS void AS $$
 BEGIN
-  INSERT INTO public.acti_type(name) values (n);
+  INSERT INTO public.acti_type(name,status) values (n,true);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -126,4 +126,26 @@ BEGIN
   where pp.id_activity = pidp);
   RETURN ref;
 END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION disableactivitytype(pid varchar(50))
+    RETURNS void AS $$
+    BEGIN
+    UPDATE public.acti_type
+        SET status=false
+    WHERE id_acti_type = pid;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION enableactivitytype(pid varchar(50))
+    RETURNS void AS $$
+    BEGIN
+    UPDATE public.acti_type
+        SET status=true
+    WHERE id_acti_type = pid;
+    END;
 $$ LANGUAGE plpgsql;

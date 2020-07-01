@@ -157,8 +157,6 @@ export class CampusController {
         }
     }
 
-
-
     /**
      * Disable specific campus.
      * path: /campus/:id/disable

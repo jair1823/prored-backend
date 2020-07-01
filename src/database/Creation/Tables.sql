@@ -37,7 +37,8 @@ create table public.district(
 create table public.investigation_unit(
     id_inv_unit SERIAL PRIMARY KEY,
     name varchar(110),
-    description text
+    description text,
+    status boolean
 );
 
 create table public.researcher(
@@ -60,7 +61,8 @@ create table public.project(
 
 create table public.acti_type(
     id_acti_type SERIAL PRIMARY KEY,
-    name varchar(50)
+    name varchar(50),
+    status boolean
 );
 
 create table public.activity(
