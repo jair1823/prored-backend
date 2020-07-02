@@ -143,3 +143,21 @@ CREATE OR REPLACE FUNCTION enablebudgetsubunit(pid INTEGER)
 $$ LANGUAGE plpgsql;
 
 --###########################################################################
+
+CREATE OR REPLACE FUNCTION budgetUnitExists(pid integer) RETURNS boolean AS $$
+DECLARE
+    testID integer;
+    res boolean;
+BEGIN
+    select code_budget_unit
+    into testID
+    from public.budget_unit
+    where code_budget_unit =  pid;
+        if testID IS NOT NULL then
+            res := 1;
+        else
+            res := 0;
+    end if;  
+    RETURN res;
+END;
+$$ LANGUAGE plpgsql;

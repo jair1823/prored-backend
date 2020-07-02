@@ -7,6 +7,7 @@ DROP FUNCTION IF EXISTS updatebudgetunit;
 DROP FUNCTION IF EXISTS getbudgetunits;
 DROP FUNCTION IF EXISTS getbudgetunitsenable;
 DROP FUNCTION IF EXISTS getbudgetunitbyid;
+DROP FUNCTION IF EXISTS budgetUnitExists;
 DROP FUNCTION IF EXISTS disablebudgetunit;
 DROP FUNCTION IF EXISTS enablebudgetunit;
 

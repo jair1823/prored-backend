@@ -158,6 +158,23 @@ export class BudgetUnitController {
         }
     }
 
+    /**
+     * See if a budget unit code already exists in the database
+     * path: /budget_unit/:id/exists
+     * method: get
+     */
+    async checkBudgetUnitExists(req: Request, res: Response): Promise<Response> {
+        const query = `select budgetUnitExists($1);`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const email = [req.params.id];
+            const response = await Queries.simpleSelectNoCursor(query, email, client);
+            return res.status(200).json(response.rows[0]);
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json("Internal Server Error");
+        }
+    }
 }
 
 const budgetUnitController = new BudgetUnitController();
