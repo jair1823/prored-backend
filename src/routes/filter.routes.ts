@@ -8,5 +8,6 @@ router.post('/student', Filter.getStudentFilter);
 router.post('/researcher', Filter.getResearcherFilter);
 router.post('/activity/no_project', Filter.getActivityNoProjectFilter);
 router.post('/activity/project', Filter.getActivityFilter);
+router.post('/financial_item', Filter.getFiancialItemFilter);
 
 export default router;

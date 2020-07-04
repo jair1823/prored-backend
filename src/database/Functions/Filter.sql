@@ -99,3 +99,62 @@ BEGIN
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
+
+--########################################################################################
+
+CREATE OR REPLACE FUNCTION financialItemFilterIndependent(pdni varchar(50), ptype financial_item_type, pcode integer, psubcode integer, ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR
+  select f.date_created, f."type",p."name" ,p.lastname1 ,p.lastname2 ,bu."name" as budgetName,bsu."name" as subUnitName
+      from financial_item f
+      inner join person p on p.dni = f.student_dni
+      inner join budget_unit bu on bu.code_budget_unit = f.code_unit 
+      inner join budget_sub_unit bsu on bsu.code_budget_subunit = f.code_subunit
+      where f.student_dni = coalesce(pdni,f.student_dni)
+        and f.code_unit = coalesce(pcode,f.code_unit)
+          and f.code_subunit = coalesce(psubcode,f.code_subunit)
+          and f.id_project is null
+          and f.id_activity is null
+          and f."type" = coalesce(ptype,f."type");
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--########################################################################################
+
+CREATE OR REPLACE FUNCTION financialItemFilterActivity(pdni varchar(50),ptype financial_item_type, pcode integer, psubcode integer,pid integer, ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR
+  select f.date_created, f."type", acti."name" as activityName,p."name" ,p.lastname1 ,p.lastname2 ,bu."name" as budgetName,bsu."name" as subUnitName
+      from financial_item f
+      inner join person p on p.dni = f.student_dni
+      inner join budget_unit bu on bu.code_budget_unit = f.code_unit 
+      inner join budget_sub_unit bsu on bsu.code_budget_subunit = f.code_subunit 
+      inner join activity acti on acti.id_activity = f.id_activity 
+      where f.student_dni = coalesce(pdni,f.student_dni)
+        and f.code_unit = coalesce(pcode,f.code_unit)
+          and f.code_subunit = coalesce(psubcode,f.code_subunit)
+          and f.id_activity = coalesce(pid,f.id_activity)
+          and f.id_activity = coalesce(pid,f.id_activity);
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--########################################################################################
+
+CREATE OR REPLACE FUNCTION financialItemFilterProject(pdni varchar(50),ptype financial_item_type, pcode integer, psubcode integer,pid integer, ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR
+  select f.date_created, f."type",prj."name"  as projectName,p."name" ,p.lastname1 ,p.lastname2, bu."name" as budgetName,bsu."name" as subUnitName
+      from financial_item f
+      inner join person p on p.dni = f.student_dni
+      inner join budget_unit bu on bu.code_budget_unit = f.code_unit
+      inner join budget_sub_unit bsu on bsu.code_budget_subunit = f.code_subunit 
+      inner join project prj on prj.id_project = f.id_project
+      where f.student_dni = coalesce(pdni,f.student_dni)
+        and f.code_unit = coalesce(pcode,f.code_unit)
+          and f.code_subunit = coalesce(psubcode,f.code_subunit)
+          and f.id_project = coalesce(pid,f.id_project);
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
