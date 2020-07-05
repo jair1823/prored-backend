@@ -312,7 +312,7 @@ create table public.financial_item(
     type public.financial_item_type,
     id_project integer REFERENCES public.project(id_project),
     id_activity integer REFERENCES public.activity(id_activity),
-    student_dni varchar(50) REFERENCES public.student(dni),
+    dni varchar(50) REFERENCES public.student(dni),
     code_unit integer REFERENCES public.budget_unit(code_budget_unit),
     code_subunit integer REFERENCES public.budget_sub_unit(code_budget_subunit)
 );

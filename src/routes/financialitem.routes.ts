@@ -11,7 +11,3 @@ router.post('/financial_item/', Financial_Controller.createFinancialItem);
 router.put('/financial_item/:id', Financial_Controller.updateFinancialItem);
 
 export default router;
-
-
-
-

@@ -181,19 +181,19 @@ export class FilterController {
             let values;
             switch(req.body.type){
                 case "Independiente":
-                    values = [req.body.startDate, req.body.endDate,req.body.student_dni, req.body.type, req.body.budget_code,req.body.budget_subunit_code];
+                    values = [req.body.startDate, req.body.endDate,req.body.dni, req.body.type, req.body.budget_code,req.body.budget_subunit_code];
                     response = await Queries.simpleSelectWithParameter(query, values, fetch, client);
                     break;
                 case "Proyecto":
-                    values = [req.body.startDate, req.body.endDate,req.body.student_dni, req.body.type, req.body.budget_code,req.body.budget_subunit_code,req.body.id_project];
+                    values = [req.body.startDate, req.body.endDate,req.body.dni, req.body.type, req.body.budget_code,req.body.budget_subunit_code,req.body.id_project];
                     response = await Queries.simpleSelectWithParameter(query2, values, fetch, client);
                     break;
                 case "Actividad":
-                    values = [req.body.startDate, req.body.endDate,req.body.student_dni, req.body.type, req.body.budget_code,req.body.budget_subunit_code,req.body.id_activity];
+                    values = [req.body.startDate, req.body.endDate,req.body.dni, req.body.type, req.body.budget_code,req.body.budget_subunit_code,req.body.id_activity];
                     response = await Queries.simpleSelectWithParameter(query3, values, fetch, client);
                     break;
                 default:
-                    values = [req.body.startDate, req.body.endDate,req.body.student_dni, req.body.budget_code,req.body.budget_subunit_code];
+                    values = [req.body.startDate, req.body.endDate,req.body.dni, req.body.budget_code,req.body.budget_subunit_code];
                     response = await Queries.simpleSelectWithParameter(query4, values, fetch, client);
                     break;
             }

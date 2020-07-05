@@ -141,7 +141,7 @@ INSERT INTO public.gantt_task(id_gantt, task_name, description, start_date, end_
                 (2 ,'Primera tarea Gantt2', 'Descripción2' , '2020-02-06', '2020-02-09'),
                 (2 ,'Primera tarea Gantt2', 'Descripción2' , '2020-02-06', '2020-02-09');
 
-INSERT INTO public.financial_item(date_created, amount, type, id_project, id_activity, student_dni, code_unit, code_subunit)
+INSERT INTO public.financial_item(date_created, amount, type, id_project, id_activity, dni, code_unit, code_subunit)
         values 
                 ('2020-02-02', 72000.5, 'Independiente', null, null, '116920331', 10102, 2),
                 ('2020-03-02', 2222.5, 'Proyecto', 1, null, '116920331', 10102, 2),
