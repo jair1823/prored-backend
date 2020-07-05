@@ -50,7 +50,8 @@ CREATE OR REPLACE FUNCTION getfinancialitem(ref refcursor)
 RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR
-  select     
+  select
+    id_financial_item,
     TO_CHAR(date_created,'YYYY-mm-dd') AS date_created,
     amount,
     type,
@@ -70,7 +71,8 @@ CREATE OR REPLACE FUNCTION getfinancialitembyid( pid integer , ref refcursor)
 RETURNS refcursor AS $$
 BEGIN
    OPEN ref FOR
-   select id_financial_item,
+   select 
+    id_financial_item,
     TO_CHAR(date_created,'YYYY-mm-dd') AS date_created,
     amount,
     type,
@@ -93,7 +95,8 @@ CREATE OR REPLACE FUNCTION getfinancialitembyprojectactivity(
 RETURNS refcursor AS $$
 BEGIN
    OPEN ref FOR
-   select     
+   select
+    id_financial_item,
     TO_CHAR(date_created,'YYYY-mm-dd') AS date_created,
     amount,
     type,
