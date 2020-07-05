@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION createfinancialitem(
   psubunit integer)
 RETURNS void AS $$
 BEGIN
-  INSERT INTO public.financial_item(date_created, amount, type, id_project, id_activity, student_dni, code_unit, code_subunit)
+  INSERT INTO public.financial_item(date_created, amount, type, id_project, id_activity, dni, code_unit, code_subunit)
   values (pdate, pamount, ptype, pidproject, pidactivity, pdni, punit, psubunit);
 END;
 $$ LANGUAGE plpgsql;
@@ -37,7 +37,7 @@ BEGIN
     type = ptype, 
     id_project = pidproject, 
     id_activity = pidactivity, 
-    student_dni = pdni,
+    dni = pdni,
     code_unit = punit    ,
     code_subunit = psubunit
    WHERE id_financial_item = pidfinancialitem;
@@ -50,7 +50,16 @@ CREATE OR REPLACE FUNCTION getfinancialitem(ref refcursor)
 RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR
-  select *  from public.financial_item;
+  select     
+    TO_CHAR(date_created,'YYYY-mm-dd') AS date_created,
+    amount,
+    type,
+    id_project,
+    id_activity,
+    dni,
+    code_unit,
+    code_subunit
+  from public.financial_item;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
@@ -61,7 +70,16 @@ CREATE OR REPLACE FUNCTION getfinancialitembyid( pid integer , ref refcursor)
 RETURNS refcursor AS $$
 BEGIN
    OPEN ref FOR
-   select *  from public.financial_item
+   select id_financial_item,
+    TO_CHAR(date_created,'YYYY-mm-dd') AS date_created,
+    amount,
+    type,
+    id_project,
+    id_activity,
+    dni,
+    code_unit,
+    code_subunit
+    from public.financial_item
    where id_financial_item = pid;
    RETURN ref;
 END;
@@ -75,7 +93,16 @@ CREATE OR REPLACE FUNCTION getfinancialitembyprojectactivity(
 RETURNS refcursor AS $$
 BEGIN
    OPEN ref FOR
-   select *  from public.financial_item
+   select     
+    TO_CHAR(date_created,'YYYY-mm-dd') AS date_created,
+    amount,
+    type,
+    id_project,
+    id_activity,
+    dni,
+    code_unit,
+    code_subunit 
+   from public.financial_item
    where id_project = coalesce(pidproject, id_project )  and id_activity = coalesce(pidactivity, id_activity );
    RETURN ref;
 END;

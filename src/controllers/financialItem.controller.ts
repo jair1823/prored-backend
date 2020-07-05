@@ -76,8 +76,8 @@ export class FinancialItemController {
         const query = `SELECT createfinancialitem($1,$2,$3,$4,$5,$6,$7,$8)`;
         const client: PoolClient = await pool.connect();
         try {
-            const values = [req.body.date, req.body.amount, req.body.type, req.body.idproject,
-            req.body.idactivity, req.body.dni, req.body.unit, req.body.subunit];
+            const values = [req.body.date_created, req.body.amount, req.body.type, req.body.id_project,
+            req.body.id_activity, req.body.dni, req.body.code_unit, req.body.code_subunit];
             await Queries.simpleTransaction(query, values, client);
             return res.status(200).json({
                 msg: "Financial Item created Succesfully"
@@ -99,8 +99,8 @@ export class FinancialItemController {
         const query = `SELECT updatefinancialitem($1,$2,$3,$4,$5,$6,$7,$8,$9)`;
         const client: PoolClient = await pool.connect();
         try {
-            const values = [req.params.id, req.body.date, req.body.amount, req.body.type,
-            req.body.idproject, req.body.idactivity, req.body.dni, req.body.punit, req.body.subunit];
+            const values = [req.params.id, req.body.date_created, req.body.amount, req.body.type, req.body.id_project,
+            req.body.id_activity, req.body.dni, req.body.code_unit, req.body.code_subunit];
             await Queries.simpleTransaction(query, values, client);
             return res.status(200).json({
                 msg: `Financial Item modified succesfully`
