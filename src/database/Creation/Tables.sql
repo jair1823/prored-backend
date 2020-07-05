@@ -288,7 +288,7 @@ create table public.gantt_task(
 );
 
 create table public.budget_unit(
-    code_budget_unit integer PRIMARY KEY,
+    code_budget_unit integer PRIMARY KEY UNIQUE,
     name varchar(100),
     status boolean
 );

@@ -163,6 +163,50 @@ export class FilterController {
             });
         }
     }
+
+    /**
+     * Get financial item with filters.
+     * path: /filter/financial_item
+     * method: post
+     */
+    async getFiancialItemFilter(req: Request, res: Response): Promise<Response> {
+        const query = `select financialItemFilterIndependent($1,$2,$3,$4,$5,$6,'financialCursor');`;
+        const query2 = `select financialItemFilterActivity($1,$2,$3,$4,$5,$6,$7,'financialCursor');`;
+        const query3 = `select financialItemFilterProject($1,$2,$3,$4,$5,$6,$7,'financialCursor');`;
+        const query4 = `select financialItemFilterAll($1,$2,$3,$4,$5,'financialCursor');`;
+        const fetch = `FETCH ALL IN "financialCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
+            let response:any;
+            let values;
+            switch(req.body.type){
+                case "Independiente":
+                    values = [req.body.startDate, req.body.endDate,req.body.student_dni, req.body.type, req.body.budget_code,req.body.budget_subunit_code];
+                    response = await Queries.simpleSelectWithParameter(query, values, fetch, client);
+                    break;
+                case "Proyecto":
+                    values = [req.body.startDate, req.body.endDate,req.body.student_dni, req.body.type, req.body.budget_code,req.body.budget_subunit_code,req.body.id_project];
+                    response = await Queries.simpleSelectWithParameter(query2, values, fetch, client);
+                    break;
+                case "Actividad":
+                    values = [req.body.startDate, req.body.endDate,req.body.student_dni, req.body.type, req.body.budget_code,req.body.budget_subunit_code,req.body.id_activity];
+                    response = await Queries.simpleSelectWithParameter(query3, values, fetch, client);
+                    break;
+                default:
+                    values = [req.body.startDate, req.body.endDate,req.body.student_dni, req.body.budget_code,req.body.budget_subunit_code];
+                    response = await Queries.simpleSelectWithParameter(query4, values, fetch, client);
+                    break;
+            }
+            return res.status(200).json(response.rows);
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
 }
 
 const filterController = new FilterController();
