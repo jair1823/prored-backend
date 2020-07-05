@@ -7,3 +7,4 @@ DROP FUNCTION IF EXISTS studentfilternocareer;
 DROP FUNCTION IF EXISTS financialItemFilterIndependent;
 DROP FUNCTION IF EXISTS financialItemFilterActivity;
 DROP FUNCTION IF EXISTS financialItemFilterProject;
+DROP FUNCTION IF EXISTS financialItemFilterAll;
