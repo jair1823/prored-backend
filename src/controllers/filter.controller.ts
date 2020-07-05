@@ -171,8 +171,8 @@ export class FilterController {
      */
     async getFiancialItemFilter(req: Request, res: Response): Promise<Response> {
         const query = `select financialItemFilterIndependent($1,$2,$3,$4,$5,$6,'financialCursor');`;
-        const query2 = `select financialItemFilterActivity($1,$2,$3,$4,$5,$6,$7,'financialCursor');`;
-        const query3 = `select financialItemFilterProject($1,$2,$3,$4,$5,$6,$7,'financialCursor');`;
+        const query2 = `select financialItemFilterProject($1,$2,$3,$4,$5,$6,$7,'financialCursor');`;
+        const query3 = `select financialItemFilterActivity($1,$2,$3,$4,$5,$6,$7,'financialCursor');`;
         const query4 = `select financialItemFilterAll($1,$2,$3,$4,$5,'financialCursor');`;
         const fetch = `FETCH ALL IN "financialCursor";`;
         const client: PoolClient = await pool.connect();
