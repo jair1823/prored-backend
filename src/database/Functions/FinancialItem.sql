@@ -8,13 +8,18 @@ CREATE OR REPLACE FUNCTION createfinancialitem(
   pidactivity integer,
   pdni varchar(50),
   punit integer, 
-  psubunit integer)
-RETURNS void AS $$
+  psubunit integer,
+  ref refcursor)
+RETURNS refcursor AS $$
 BEGIN
-  INSERT INTO public.financial_item(date_created, amount, type, id_project, id_activity, dni, code_unit, code_subunit)
-  values (pdate, pamount, ptype, pidproject, pidactivity, pdni, punit, psubunit);
+  OPEN ref FOR
+  INSERT INTO public.financial_item(date_created, amount, type, id_project, id_activity, dni, code_unit, code_subunit) 
+  values (pdate, pamount, ptype, pidproject, pidactivity, pdni, punit, psubunit) RETURNING id_financial_item;
+  RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
+
+
 
 --###########################################################################
 
