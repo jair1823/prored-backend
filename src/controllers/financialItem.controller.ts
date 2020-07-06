@@ -58,7 +58,7 @@ export class FinancialItemController {
         try {
             const id = [parseInt(req.params.id)];
             const response = await Queries.simpleSelectWithParameter(query, id, fetch, client);
-            return res.status(200).json(response.rows);
+            return res.status(200).json(response.rows[0]);
         } catch (error) {
             await Queries.simpleError(client, error);
             return res.status(500).json({
@@ -73,14 +73,18 @@ export class FinancialItemController {
      * method: post
     */
     async createFinancialItem(req: Request, res: Response): Promise<Response> {
-        const query = `SELECT createfinancialitem($1,$2,$3,$4,$5,$6,$7,$8)`;
+        const query = `SELECT createfinancialitem($1,$2,$3,$4,$5,$6,$7,$8,'financialCursor')`;
+        const fetch = `FETCH ALL IN "projectCursor";`;
         const client: PoolClient = await pool.connect();
         try {
+            await Queries.begin(client);
             const values = [req.body.date_created, req.body.amount, req.body.type, req.body.id_project,
             req.body.id_activity, req.body.dni, req.body.code_unit, req.body.code_subunit];
-            await Queries.simpleTransaction(query, values, client);
+            const response = await Queries.insertWithReturnContinous(query, values, fetch, client);
+            await Queries.commit(client);
             return res.status(200).json({
-                msg: "Financial Item created Succesfully"
+                msg: "Financial Item created Succesfully",
+                id_financial_item: response.rows[0]
             });
         } catch (error) {
             await Queries.simpleError(client, error);
