@@ -28,7 +28,8 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION getcenters(ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
-    SELECT * FROM center;
+    SELECT * FROM center
+    order by status desc;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
@@ -77,6 +78,3 @@ CREATE OR REPLACE FUNCTION enablecenter(pid INTEGER)
 $$ LANGUAGE plpgsql;
 
 --###########################################################################
-
-
-

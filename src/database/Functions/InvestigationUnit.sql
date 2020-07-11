@@ -32,7 +32,8 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION getinvestigationunits(ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
-    SELECT * FROM public.investigation_unit;
+    SELECT * FROM public.investigation_unit
+    order by status desc;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;

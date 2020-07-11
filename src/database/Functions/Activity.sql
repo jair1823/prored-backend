@@ -107,7 +107,8 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION getactivitytypes(ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
-    SELECT * FROM public.acti_type;
+    SELECT * FROM public.acti_type
+    order by status desc;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;

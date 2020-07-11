@@ -28,7 +28,8 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION getnetworks(ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
-    SELECT * FROM network;
+    SELECT * FROM network
+    order by status desc;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
