@@ -28,7 +28,8 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION getasocareer(ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
-    SELECT * FROM public.associated_career;
+    SELECT * FROM public.associated_career
+    order by status desc;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;

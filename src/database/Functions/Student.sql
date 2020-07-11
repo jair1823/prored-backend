@@ -30,7 +30,8 @@ s.marital_status, s.profile, s.address, s.nationality,s.emergency_contact,p.stat
 from public.person p
 inner join public.student s on s.dni = p.dni
 inner join public.district d on d.id_district = s.id_district
-inner join public.campus c on c.campus_code = s.campus_code;
+inner join public.campus c on c.campus_code = s.campus_code
+order by p.status desc;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
@@ -42,7 +43,8 @@ BEGIN
   OPEN ref FOR select 
 p.dni, p.name, p.lastname1, p.lastname2,p.status
 from public.person p
-inner join public.student s on s.dni = p.dni;
+inner join public.student s on s.dni = p.dni
+order by p.status desc;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;

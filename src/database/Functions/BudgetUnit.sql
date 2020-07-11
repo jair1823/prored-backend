@@ -22,7 +22,8 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION getbudgetunits(ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
-    SELECT * FROM budget_unit;
+    SELECT * FROM budget_unit
+    order by status desc;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
@@ -94,7 +95,8 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION getbudgetsubunits(ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
-    SELECT * FROM budget_sub_unit;
+    SELECT * FROM budget_sub_unit
+    order by status desc;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;

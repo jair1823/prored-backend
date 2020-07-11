@@ -28,7 +28,8 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION getcampuses(ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
-    SELECT * FROM campus;
+    SELECT * FROM campus
+    order by status desc;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
