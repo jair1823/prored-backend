@@ -74,7 +74,7 @@ export class FinancialItemController {
     */
     async createFinancialItem(req: Request, res: Response): Promise<Response> {
         const query = `SELECT createfinancialitem($1,$2,$3,$4,$5,$6,$7,$8,'financialCursor')`;
-        const fetch = `FETCH ALL IN "projectCursor";`;
+        const fetch = `FETCH ALL IN "financialCursor";`;
         const client: PoolClient = await pool.connect();
         try {
             await Queries.begin(client);
@@ -84,7 +84,7 @@ export class FinancialItemController {
             await Queries.commit(client);
             return res.status(200).json({
                 msg: "Financial Item created Succesfully",
-                id_financial_item: response.rows[0]
+                ...response.rows[0]
             });
         } catch (error) {
             await Queries.simpleError(client, error);
