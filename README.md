@@ -66,11 +66,16 @@ Lo primero que debemos hacer es crea un archivo llamado <strong> .env </strong> 
 
 ``` 
 # .env
+
 DB_USER=
 DB_PASSWORD=
 DB_HOST=
 DB_PORT=
-DB_DATABASE= 
+DB_DATABASE=
+MASTER_PW=
+EMAIL_USER=
+EMAIL_PASSWORD=
+DOMAIN=localhost:3000/#
 ```
 Los datos que deben ir en este archivo son los siguientes:
 <ul>  
@@ -79,6 +84,10 @@ Los datos que deben ir en este archivo son los siguientes:
 <li>DB_HOST : Host donde esta corriendo el motor de base de datos. Si es un ambiente local este debe ser <strong> localhost</strong>, si está corriendo en un sistema remoto este debe de ser la dirección IP del servidor.</li>  
 <li>DB_PORT : El puerto donde corre nuestro motor de base de datos. Por defecto PostgreSQL corre en el puerto <strong> 5432</strong></li>  
 <li>DB_DATABASE : Este es el nombre de nuestra base de datos. Como indicamos en la creación, esta es llamada <strong>prored</strong></li>
+<li>MASTER_PW : Esta es la contraseña maestra con la que se generarán los tokens de acceso <strong>prored</strong></li>
+<li>EMAIL_USER : Este es el correo que se usará para hacer el envio de correos a usuarios <strong>prored</strong></li>
+<li>EMAIL_PASSWORD : Esta es la contraseña del correo anterior <strong>prored</strong></li>
+<li>DOMAIN : Este es el dominio/url base de la aplicación. Para desarrollo se usa la url que viene en este ejemplo. <strong>prored</strong></li>
 </ul>
 
 ### Instalación de dependencias
