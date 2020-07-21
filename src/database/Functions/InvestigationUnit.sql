@@ -50,7 +50,7 @@ $$ LANGUAGE plpgsql;
 
 --###########################################################################
 
-CREATE OR REPLACE FUNCTION disableinvestigationunit(pid varchar(50))
+CREATE OR REPLACE FUNCTION disableinvestigationunit(pid INTEGER)
     RETURNS void AS $$
     BEGIN
     UPDATE public.investigation_unit
@@ -61,7 +61,7 @@ $$ LANGUAGE plpgsql;
 
 --###########################################################################
 
-CREATE OR REPLACE FUNCTION enableinvestigationunit(pid varchar(50))
+CREATE OR REPLACE FUNCTION enableinvestigationunit(pid INTEGER)
     RETURNS void AS $$
     BEGIN
     UPDATE public.investigation_unit
