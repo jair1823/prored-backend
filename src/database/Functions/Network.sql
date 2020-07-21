@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION createnetwork(n VARCHAR(50), nt network_type) 
+CREATE OR REPLACE FUNCTION createnetwork(n VARCHAR(100), nt network_type) 
 RETURNS void AS $$
 BEGIN
   INSERT INTO public.network (name,network_type,status) VALUES (n, nt,true);
@@ -7,7 +7,7 @@ $$ LANGUAGE plpgsql;
 
 --########################################################################################
 
-CREATE OR REPLACE FUNCTION updatenetwork(n VARCHAR(50), nt network_type,idn integer) 
+CREATE OR REPLACE FUNCTION updatenetwork(n VARCHAR(100), nt network_type,idn integer) 
 RETURNS void AS $$
 BEGIN
   UPDATE public.network SET name = n, network_type = nt WHERE id_network = idn;
@@ -28,7 +28,8 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION getnetworks(ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
-    SELECT * FROM network;
+    SELECT * FROM network
+    order by status desc;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;

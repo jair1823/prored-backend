@@ -18,6 +18,9 @@ const ActivityDrops = readFileSync('src/database/Drops/ActivityDrops.sql').toStr
 const GanttDrops =  readFileSync('src/database/Drops/GanttDrops.sql').toString();
 const FilterDrops =  readFileSync('src/database/Drops/FilterDrops.sql').toString();
 const TableDrops = readFileSync('src/database/Drops/TableDrops.sql').toString();
+const BudgetDrops  = readFileSync('src/database/Drops/BudgetUnitDrops.sql').toString();
+const FinancialItemDrops = readFileSync('src/database/Drops/FinancialItemDrops.sql').toString();
+const UserDrops = readFileSync('src/database/Drops/UserDrops.sql').toString();
 
 const EnumNationality = readFileSync('src/database/Creation/EnumNationality.sql').toString();
 const Tables = readFileSync('src/database/Creation/Tables.sql').toString();
@@ -38,6 +41,9 @@ const Project = readFileSync('src/database/Functions/Project.sql').toString();
 const Activity = readFileSync('src/database/Functions/Activity.sql').toString();
 const Gantt  = readFileSync('src/database/Functions/Gantt.sql').toString();
 const Filter = readFileSync('src/database/Functions/Filter.sql').toString();
+const Budget  = readFileSync('src/database/Functions/BudgetUnit.sql').toString();
+const FinancialItem  = readFileSync('src/database/Functions/FinancialItem.sql').toString();
+const User  = readFileSync('src/database/Functions/User.sql').toString();
 
 /**
  * Secuencia en la que se ejecutan los drops de toda la base 
@@ -62,7 +68,11 @@ async function migration() {
         await pool.query(ActivityDrops);
         await pool.query(GanttDrops);
         await pool.query(FilterDrops);
-        await pool.query(TableDrops);
+        await pool.query(BudgetDrops);
+        await pool.query(FinancialItemDrops);
+        await pool.query(UserDrops);
+        await pool.query(TableDrops); // Siempre debe ir al final
+
 
 
         //Creacion de todas las tablas y tipos
@@ -86,6 +96,9 @@ async function migration() {
         await pool.query(Activity);
         await pool.query(Gantt);
         await pool.query(Filter);
+        await pool.query(Budget);
+        await pool.query(FinancialItem);
+        await pool.query(User);
 
         return;
     } catch (error) {

@@ -30,7 +30,8 @@ s.marital_status, s.profile, s.address, s.nationality,s.emergency_contact,p.stat
 from public.person p
 inner join public.student s on s.dni = p.dni
 inner join public.district d on d.id_district = s.id_district
-inner join public.campus c on c.campus_code = s.campus_code;
+inner join public.campus c on c.campus_code = s.campus_code
+order by p.status desc;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
@@ -42,7 +43,8 @@ BEGIN
   OPEN ref FOR select 
 p.dni, p.name, p.lastname1, p.lastname2,p.status
 from public.person p
-inner join public.student s on s.dni = p.dni;
+inner join public.student s on s.dni = p.dni
+order by p.status desc;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
@@ -205,48 +207,6 @@ CREATE OR REPLACE FUNCTION createstudent(
     BEGIN
     INSERT INTO public.student(dni, id_district, marital_status, campus_code, profile, address, nationality, emergency_contact)
         VALUES (pdni, pid_district, pmarital_status, pcampus_code, pprofile, paddress, pnationality, pemergency);
-    END;
-$$ LANGUAGE plpgsql;
-
---###########################################################################
-
-CREATE OR REPLACE FUNCTION insertCV(id VARCHAR(50), fp VARCHAR(400), n VARCHAR(300)) 
-RETURNS void AS $$
-BEGIN
-  INSERT INTO public.cv (dni, file_path, name) VALUES (id,fp,n);
-END;
-$$ LANGUAGE plpgsql;
-
---###########################################################################
-
-CREATE OR REPLACE FUNCTION deleteCV(id VARCHAR(50)) 
-RETURNS void AS $$
-BEGIN
-  DELETE FROM public.cv WHERE dni = id;
-END;
-$$ LANGUAGE plpgsql;
-
---###########################################################################
-
-CREATE OR REPLACE FUNCTION updateCV(id VARCHAR(50),fp VARCHAR(400), n VARCHAR(300)) 
-RETURNS void AS $$
-BEGIN
-  UPDATE public.cv SET 
-    name = n,
-    file_path = fp
-  WHERE dni = id;
-END;
-$$ LANGUAGE plpgsql;
-
---###########################################################################
-
-CREATE OR REPLACE FUNCTION getcv(pdni varchar(50), ref refcursor)
-    RETURNS refcursor AS $$
-    BEGIN
-        OPEN ref FOR select *
-            from public.cv
-        where dni = pdni;
-        RETURN ref;
     END;
 $$ LANGUAGE plpgsql;
 

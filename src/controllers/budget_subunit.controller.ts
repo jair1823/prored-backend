@@ -1,28 +1,25 @@
+
 import { Request, Response } from 'express';
 import { PoolClient } from 'pg';
 import { pool } from '../database/connection';
 import Queries from '../database/Queries';
 
-export class CenterController {
+export class BudgetSubUnitController {
 
     /**
-     * Get all centers.
-     * path: /center/
+     * Get all budget sub units.
+     * path: /budget_subunit/
      * method: get
     */
-    async getCenter(req: Request, res: Response): Promise<Response> {
-        const query = `select getcenters('centersCursor'); `;
-        const fetch = `FETCH ALL IN "centersCursor";`;
+    async getBudgetSubUnit(req: Request, res: Response): Promise<Response> {
+        const query = `select getbudgetsubunits('budgetCursor');`;
+        const fetch = `FETCH ALL IN "budgetCursor";`;
         const client: PoolClient = await pool.connect();
         try {
-
             const response = await Queries.simpleSelect(query, fetch, client);
-
             return res.status(200).json(response.rows);
         } catch (error) {
-
             await Queries.simpleError(client, error);
-
             return res.status(500).json({
                 msg: 'Internal Server Error'
             });
@@ -30,23 +27,19 @@ export class CenterController {
     }
 
     /**
-     * Get all centers.
-     * path: /center/
+     * Get all budget subunits enable.
+     * path: /budgetsubunit_enable/
      * method: get
     */
-    async getCenterEnable(req: Request, res: Response): Promise<Response> {
-        const query = `select getcentersEnable('centersCursor'); `;
-        const fetch = `FETCH ALL IN "centersCursor";`;
+    async getBudgetSubUnitEnable(req: Request, res: Response): Promise<Response> {
+        const query = `select getbudgetsubunitsenable('budgetCursor'); `;
+        const fetch = `FETCH ALL IN "budgetCursor";`;
         const client: PoolClient = await pool.connect();
         try {
-
             const response = await Queries.simpleSelect(query, fetch, client);
-
             return res.status(200).json(response.rows);
         } catch (error) {
-
             await Queries.simpleError(client, error);
-
             return res.status(500).json({
                 msg: 'Internal Server Error'
             });
@@ -54,23 +47,20 @@ export class CenterController {
     }
 
     /**
-     * Get specific center.
-     * path: /center/:id
+     * Get specific budget subunit.
+     * path: /budget_subunit/:id
      * method: get
     */
-    async getCenterbyId(req: Request, res: Response): Promise<Response> {
-        const query = `select getcenterbyid($1, 'centersCursor'); `;
-        const fetch = `FETCH ALL IN "centersCursor";`;
+    async getBudgetSubUnitbyId(req: Request, res: Response): Promise<Response> {
+        const query = `select getbudgetsubunitbyid($1, 'budgetCursor'); `;
+        const fetch = `FETCH ALL IN "budgetCursor";`;
         const client: PoolClient = await pool.connect();
         try {
             const id = [parseInt(req.params.id)];
             const response = await Queries.simpleSelectWithParameter(query, id, fetch, client);
-
             return res.status(200).json(response.rows);
         } catch (error) {
-
             await Queries.simpleError(client, error);
-
             return res.status(500).json({
                 msg: 'Internal Server Error'
             });
@@ -78,23 +68,21 @@ export class CenterController {
     }
 
     /**
-     * Create new center.
-     * path: /center/
+     * Create new budgetunit.
+     * path: /budget_unit/
      * method: post
     */
-    async createCenter(req: Request, res: Response): Promise<Response> {
-        const query = `SELECT createcenter($1)`;
+    async createBudgetSubUnit(req: Request, res: Response): Promise<Response> {
+        const query = `SELECT createbudgetsubunit($1)`;
         const client: PoolClient = await pool.connect();
         try {
             const values = [req.body.name];
             await Queries.simpleTransaction(query, values, client);
-
             return res.status(200).json({
-                msg: "Center created Succesfully"
+                msg: "Budget Subunit created Succesfully"
             });
         } catch (error) {
             await Queries.simpleError(client, error);
-
             return res.status(500).json({
                 msg: 'Internal Server Error'
             });
@@ -102,46 +90,19 @@ export class CenterController {
     }
 
     /**
-     * Update specific center.
-     * path: /center/:id
+     * Update specific budget subunit.
+     * path: /budget_subunit/:id
      * method: put
     */
-    async updateCenter(req: Request, res: Response): Promise<Response> {
-        const query = `SELECT updatecenter($1,$2)`;
+    async updateBudgetSubUnit(req: Request, res: Response): Promise<Response> {
+        const query = `SELECT updatebudgetsubunit($1,$2)`;
         const client: PoolClient = await pool.connect();
         try {
             const values = [req.body.name, req.params.id];
-
             await Queries.simpleTransaction(query, values, client);
 
             return res.status(200).json({
-                msg: `Center modified succesfully`
-            });
-        } catch (error) {
-
-            await Queries.simpleError(client, error);
-
-            return res.status(500).json({
-                msg: 'Internal Server Error'
-            });
-        }
-    }
-
-    /**
-     * Delete specific center.
-     * path: /center/:id
-     * method: delete
-    */
-    async deleteCenter(req: Request, res: Response): Promise<Response> {
-        const query = `SELECT deletecenter($1)`;
-        const client: PoolClient = await pool.connect();
-        try {
-            const id = [parseInt(req.params.id)];
-
-            await Queries.simpleTransaction(query, id, client);
-
-            return res.status(200).json({
-                msg: `Campus deleted succesfuly`
+                msg: `Budget Subunit modified succesfully`
             });
         } catch (error) {
 
@@ -155,25 +116,21 @@ export class CenterController {
 
 
     /**
-     * Disable specific center.
-     * path: /center/:pid/disable
+     * Disable specific budget subunit.
+     * path: /budget_subunit/:pid/disable
      * method: put
     */
-    async disableCenter(req: Request, res: Response): Promise<Response> {
-        const disable = `SELECT disablecenter($1);`;
+    async disableBudgetSubUnit(req: Request, res: Response): Promise<Response> {
+        const disable = `SELECT disablebudgetsubunit($1);`;
         const client = await pool.connect();
         try {
             const values = [req.params.id];
-
             await Queries.simpleTransaction(disable, values, client);
-
             return res.status(200).json({
-                msg: 'Center disabled'
+                msg: 'Budget Subunit disabled'
             });
         } catch (error) {
-
             await Queries.simpleError(client, error);
-
             return res.status(500).json({
                 msg: 'Internal Server Error'
             });
@@ -181,24 +138,21 @@ export class CenterController {
     }
 
     /**
-     * Enable specific center.
-     * path: /center/:id/enable
+     * Enable specific budget subunit.
+     * path: /budget_subunit/:id/enable
      * method: put
      */
-    async enableCenter(req: Request, res: Response): Promise<Response> {
-        const enable = `SELECT enablecenter($1);`;
+    async enableBudgetSubUnit(req: Request, res: Response): Promise<Response> {
+        const enable = `SELECT enablebudgetsubunit($1);`;
         const client = await pool.connect();
         try {
             const values = [req.params.id];
             await Queries.simpleTransaction(enable, values, client);
-
             return res.status(200).json({
-                msg: 'Center enabled'
+                msg: 'Budget Subunit enabled'
             });
         } catch (error) {
-
             await Queries.simpleError(client, error);
-
             return res.status(500).json({
                 msg: 'Internal Server Error'
             });
@@ -207,5 +161,6 @@ export class CenterController {
 
 }
 
-const centerController = new CenterController();
-export default centerController;
+const budgetSubUnitController = new BudgetSubUnitController();
+export default budgetSubUnitController;
+

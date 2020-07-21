@@ -385,3 +385,87 @@ CREATE OR REPLACE FUNCTION getphotosactivity(pid integer, ref refcursor)
         RETURN ref;
     END;
 $$ LANGUAGE plpgsql;
+
+--Financial Document ########################################################################################################
+
+CREATE OR REPLACE FUNCTION createfinancialdocument(idfi integer, pfile varchar(100),ppath varchar(200)) 
+RETURNS void AS $$
+BEGIN
+  INSERT INTO public.financial_document(id_financial_item, filename, file_path) values (idfi,pfile,ppath);
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION deletefinancialdocument(id integer) 
+RETURNS void AS $$
+BEGIN
+  DELETE FROM public.financial_document WHERE id_financial_document = id;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getfinancialdocument(pid integer, ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+        OPEN ref FOR select *
+            from public.financial_document
+        where id_financial_document = pid;
+        RETURN ref;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getfinancialdocumentfromfinancialitem(pid integer, ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+        OPEN ref FOR select *
+            from public.financial_document
+        where id_financial_item = pid;
+        RETURN ref;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION insertCV(id VARCHAR(50), fp VARCHAR(400), n VARCHAR(300)) 
+RETURNS void AS $$
+BEGIN
+  INSERT INTO public.cv (dni, file_path, name) VALUES (id,fp,n);
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION deleteCV(id VARCHAR(50)) 
+RETURNS void AS $$
+BEGIN
+  DELETE FROM public.cv WHERE dni = id;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION updateCV(id VARCHAR(50),fp VARCHAR(400), n VARCHAR(300)) 
+RETURNS void AS $$
+BEGIN
+  UPDATE public.cv SET 
+    name = n,
+    file_path = fp
+  WHERE dni = id;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getcv(pdni varchar(50), ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+        OPEN ref FOR select *
+            from public.cv
+        where dni = pdni;
+        RETURN ref;
+    END;
+$$ LANGUAGE plpgsql;

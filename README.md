@@ -66,11 +66,16 @@ Lo primero que debemos hacer es crea un archivo llamado <strong> .env </strong> 
 
 ``` 
 # .env
+
 DB_USER=
 DB_PASSWORD=
 DB_HOST=
 DB_PORT=
-DB_DATABASE= 
+DB_DATABASE=
+MASTER_PW=
+EMAIL_USER=
+EMAIL_PASSWORD=
+DOMAIN=localhost:3000/#
 ```
 Los datos que deben ir en este archivo son los siguientes:
 <ul>  
@@ -79,6 +84,10 @@ Los datos que deben ir en este archivo son los siguientes:
 <li>DB_HOST : Host donde esta corriendo el motor de base de datos. Si es un ambiente local este debe ser <strong> localhost</strong>, si está corriendo en un sistema remoto este debe de ser la dirección IP del servidor.</li>  
 <li>DB_PORT : El puerto donde corre nuestro motor de base de datos. Por defecto PostgreSQL corre en el puerto <strong> 5432</strong></li>  
 <li>DB_DATABASE : Este es el nombre de nuestra base de datos. Como indicamos en la creación, esta es llamada <strong>prored</strong></li>
+<li>MASTER_PW : Esta es la contraseña maestra con la que se generarán los tokens de acceso <strong>prored</strong></li>
+<li>EMAIL_USER : Este es el correo que se usará para hacer el envio de correos a usuarios <strong>prored</strong></li>
+<li>EMAIL_PASSWORD : Esta es la contraseña del correo anterior <strong>prored</strong></li>
+<li>DOMAIN : Este es el dominio/url base de la aplicación. Para desarrollo se usa la url que viene en este ejemplo. <strong>prored</strong></li>
 </ul>
 
 ### Instalación de dependencias
@@ -403,7 +412,10 @@ Cada una de las rutas para los documentos, se encuentran asociadas al controlado
 | document.controller@getList                | /list/:id                | GET          | Función encargada de obtener lista de asistencia               |
 | document.controller@deleteList             | /list/:id                | DELETE       | Función encargada de eliminar lista de asistencia              |
 | document.controller@getListActivity        | /list/ativity/:id        | GET          | Función encargada de obtener lista de asistencia por actividad |
-
+| document.controller@insertFinantialDocument             | /finantial_document                   | POST         | Función encargada de insertar un item financiero              |
+| document.controller@deleteFinancialDocument                | /finantial_document/:id                | DELETE          | Función encargada de eliminar el documento financiero               |
+| document.controller@getFinancialDocument             | /finantial_document/:id                | GET       | Función encargada de obtener un documento financiero   | 
+| document.controller@getFinancialDocumentItem        |    /finantial_document/item/:id     | GET          | Función encargada de obtener un documento financiero específico |
 
 ### Documento Múltiple 
 
@@ -431,3 +443,65 @@ Cada una de las rutas para los filtros, se encuentran asociadas al controlador F
 | filter.controller@getResearcherFilter  | /filter/researcher/              | POST         | Función encargada de  crear una unidad de investigación                 |
 | filter.controller@getActivityNoProjectFilter  | /filter/activity/no_project/         | POST          | Función encargada de  obtener consultas de Actividades no anexas a proyectos         |
 | filter.controller@getActivityFilter  | /filter/activity/project       | POST          | Función encargada de  obtener consultar de actividades en anexas a Proyectos        |
+
+
+### Partidas y subpartidas
+Cada una de las rutas para las partidas, se encuentran asociadas al controlador budget_unit.controller.
+
+| Método                                           | Ruta                        | HTTP Request | Descripción                                                      |
+|--------------------------------------------------|-----------------------------|--------------|------------------------------------------------------------------|
+| budget_unit.controller@getBudgetUnit             | /budget_unit/               | GET          | Función encargada de crear partida presupuestaria                |
+| budget_unit.controller@getBudgetUnitEnable       | /budget_unit/enabled        | GET          | Función encargada de obtener partida presupuestaria activadas    |
+| budget_unit.controller@getBudgetUnitbyId         | /budget_unit/:id            | GET          | Función encargada de obtener una partida específica              |
+| budget_unit.controller@createBudgetUnit          | /budget_unit/               | POST         | Función encargada de crear una partida presupuestaria            |
+| budget_unit.controller@updateBudgetUnit          | /budget_unit/:id            | PUT          | Función encargada de editar una partida específica               |
+| budget_unit.controller@disableBudgetUnit         | /budget_unit/:id/disable    | PUT          | Función encargada de desahabilitar una partida                   |
+| budget_unit.controller@enableBudgetUnit          | /budget_unit/:id/enable     | PUT          | Función encargada de habilitar una partida                       |
+| budget_subunit.controller@getBudgetSubUnit       | /budget_subunit/            | GET          | Función encargada de obtener una subpartida                      |
+| budget_subunit.controller@getBudgetSubUnitEnable | /budget_subunit/enabled     | GET          | Función encargada de obtener subpartidas activas                 |
+| budget_subunit.controller@getBudgetSubUnitbyId   | /budget_subunit/:id         | GET          | Función encargada de obtener una subpartida                      |
+| budget_subunit.controller@createBudgetSubUnit    | /budget_subunit/            | POST         | Función encargada de crear una subpartida presupuestaria         |
+| budget_subunit.controller@updateBudgetSubUnit    | /budget_subunit/:id         | PUT          | Función encargada de actualizar una subpartida presupuestaria    |
+| budget_subunit.controller@disableBudgetSubUnit   | /budget_subunit/:id/disable | PUT          | Función encargada de deshabilitar una subpartida presupuestaria  |
+| budget_subunit.controller@enableBudgetSubUnit    | /budget_subunit/:id/enable  | PUT          | Función encargada de habilitar una subpartida presupuestaria     |
+
+
+### Item Financiero
+
+Cada una de las rutas para los items financieros, se encuentran asociadas al controlador budget_unit.controller.
+
+| Método                                            | Ruta                        | HTTP Request | Descripción                                                                    |
+|---------------------------------------------------|-----------------------------|--------------|--------------------------------------------------------------------------------|
+| financialItem.controller@getFinancialItem         | /financial_item/            | GET          | Función encargada de obtener item financiero                                   |
+| financialItem.controller@getFinancialItemSpecific | /financial_item/specific/   | GET          | Función encargada de obtener item financiero por id de actividad y de proyecto |
+| financialItem.controller@getFinancialItembyId     | /financial_item/:id         | GET          | Función encargada de obtener un item financiero específico                     |
+| financialItem.controller@createFinancialItem      | /financial_item/            | POST         | Función encargada de crear un item financiero                                  |
+| financialItem.controller@updateFinancialItem      | /financial_item/:id         | PUT          | Función encargada de editar un item financiero                                 |
+
+
+### Usuarios 
+
+Cada una de las rutas para los usuarios, se encuentran asociadas al controlador user.controller.
+
+| Método                                | Ruta                   | HTTP Request | Descripción                                                   |
+|---------------------------------------|------------------------|--------------|---------------------------------------------------------------|
+| user.controller@createUser            | /user                  | POST         | Función encargada de crear un usuario                         |
+| user.controller@checkUserEmailExists  | /user/email/exists     | POST         | Función encargada de verificar si un correo existe            |
+| user.controller@authenticateUser      | /user/authenticate     | POST         | Función encargada de autenticar el inicio de sesión           |
+| user.controller@getUsers              | /user                  | GET          | Función encargada de obtener usuarios                         |
+| user.controller@forgotPassword        | /forgotPassword        | POST         | Función encargada de ejecutar proceso de recuperar contraseña |
+| user.controller@validatePasswordToken | /validatePasswordToken | POST         | Función encargada de validar la contraseña                    |
+| user.controller@resetPassword         | /resetPassword         | POST         | Función encargada de reiniciar la contraseña                  |
+| user.controller@updatePassword        | /updatePassword        | PUT          | Función encargada de actualizar la contraseña                 |
+| user.controller@validateToken         | /validateToken         | GET          | Función encargada de validar el token                         |
+
+
+
+
+
+
+
+
+
+
+

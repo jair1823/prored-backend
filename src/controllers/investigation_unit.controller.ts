@@ -56,7 +56,7 @@ export class InvestigationUnitController {
             const values = [req.body.name, req.body.description];
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: "Investigation Unit created Succesfully"
             });
         } catch (error) {
@@ -79,11 +79,62 @@ export class InvestigationUnitController {
         try {
             const values = [req.params.id, req.body.name, req.body.description];
             await Queries.simpleTransaction(query, values, client);
-            return res.json({
+            return res.status(200).json({
                 msg: `Investigation Unit modified succesfully`
             });
         } catch (error) {
             await Queries.simpleError(client, error);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Disable specific Investigation Unit.
+     * path: /investigation_unit/:id/disable
+     * method: put
+     */
+    async disableInvestigation_Unit(req: Request, res: Response): Promise<Response> {
+        const disable = `SELECT disableinvestigationunit($1);`;
+        const client = await pool.connect();
+        try {
+            const values = [req.params.id];
+
+            await Queries.simpleTransaction(disable, values, client);
+
+            return res.status(200).json({
+                msg: 'Investigation Unit disable'
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Enable specific Investigation Unit.
+     * path: /investigation_unit/:id/enable
+     * method: put
+     */
+    async enableInvestigation_Unit(req: Request, res: Response): Promise<Response> {
+        const enable = `SELECT enableinvestigationunit($1);`;
+        const client = await pool.connect();
+        try {
+            const values = [req.params.id];
+            await Queries.simpleTransaction(enable, values, client);
+
+            return res.status(200).json({
+                msg: 'Investigation Unit enable'
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
             return res.status(500).json({
                 msg: 'Internal Server Error'
             });

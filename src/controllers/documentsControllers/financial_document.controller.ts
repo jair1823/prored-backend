@@ -5,30 +5,30 @@ import Queries from '../../database/Queries'
 import fs from 'fs';
 import path from 'path';
 
-export class ProjectFormController {
+export class FinancialDocumentController {
 
     /**
-     * Create a Project Form from a project.
-     * path: /project_form
+     * Create a financial document from a financial item.
+     * path: /finantial_document
      * method: post
      */
 
-    async insertProjectForm(req: Request, res: Response): Promise<Response> {
+    async insertFinantialDocument(req: Request, res: Response): Promise<Response> {
         const client: PoolClient = await pool.connect();
-        const insert = `SELECT createprojectform($1,$2,$3,$4);`;
+        const insert = `SELECT createfinancialdocument($1,$2,$3);`;
         try {
             const url = `${req.body.tabla}/${req.file.filename}`;
-            const today = new Date().toISOString().slice(0, 10);
-            const values = [req.body.id_project, today, req.file.filename, url];
+            const values = [req.body.id_financial_item, req.file.filename, url];
             await Queries.simpleTransaction(insert, values, client);
             return res.status(200).json(
                 {
-                    msg: 'Project Form inserted'
+                    msg: 'Financial Document inserted'
                 }
             );
         } catch (error) {
 
             await Queries.simpleError(client, error);
+
             return res.status(500).json({
                 msg: 'Internal Server Error'
             });
@@ -36,16 +36,16 @@ export class ProjectFormController {
     }
 
     /**
-     * Delete a Project Form from a project.
-     * path: /project_form/:id
+     * Delete a financial document from a financial item.
+     * path: /finantial_document/:id
      * method: delete
      */
 
-    async deleteProjectForm(req: Request, res: Response): Promise<Response> {
+    async deleteFinancialDocument(req: Request, res: Response): Promise<Response> {
         const client: PoolClient = await pool.connect();
-        const deleteD = `SELECT deleteprojectform($1);`;
-        const query = `SELECT getprojectform($1,'pfCursor');`;
-        const fetch = `FETCH ALL IN "pfCursor";`;
+        const deleteD = `SELECT deletefinancialdocument($1);`;
+        const query = `SELECT getfinancialdocument($1,'fdCursor');`;
+        const fetch = `FETCH ALL IN "fdCursor";`;
         try {
             const id = [req.params.id];
             await Queries.begin(client);
@@ -57,7 +57,7 @@ export class ProjectFormController {
                 let fullPath = path.join(__dirname + '../../../..' + '/public/' + p);
                 fs.unlinkSync(fullPath);
                 await Queries.simpleTransaction(deleteD, id, client);
-                message = "Project Form deleted";
+                message = "Financial Document deleted";
             }
             return res.status(200).json(
                 {
@@ -73,18 +73,18 @@ export class ProjectFormController {
     }
 
     /**
-     * Get Project Form.
-     * path: /project_form/:id
+     * Get financial document.
+     * path: /finantial_document/:id
      * method: get
      */
 
-    async getProjectForm(req: Request, res: Response): Promise<Response> {
-        const query = `select getprojectform($1,'pfCursor');`;
-        const fetch = `FETCH ALL IN "pfCursor";`;
+    async getFinancialDocument(req: Request, res: Response): Promise<Response> {
+        const query = `select getfinancialdocument($1,'fdCursor');`;
+        const fetch = `FETCH ALL IN "fdCursor";`;
         const client = await pool.connect();
         try {
-            const dni = [req.params.id];
-            const response = await Queries.simpleSelectWithParameter(query, dni, fetch, client);
+            const id = [req.params.id];
+            const response = await Queries.simpleSelectWithParameter(query, id, fetch, client);
             const rows = response.rows[0];
             if (rows === undefined) {
                 return res.status(200).json({
@@ -100,7 +100,30 @@ export class ProjectFormController {
         }
     }
 
+    /**
+     * Get financial documents from a financial item.
+     * path: /finantial_document/item/:id
+     * method: get
+     */
+
+    async getFinancialDocumentItem(req: Request, res: Response): Promise<Response> {
+        const query = `select getfinancialdocumentfromfinancialitem($1,'fdCursor');`;
+        const fetch = `FETCH ALL IN "fdCursor";`;
+        const client = await pool.connect();
+        try {
+            const dni = [req.params.id];
+            const response = await Queries.simpleSelectWithParameter(query, dni, fetch, client);
+            const rows = response.rows;
+            return res.status(200).json(rows);
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
 }
 
-const projectFormController = new ProjectFormController();
-export default projectFormController;
+const financialDocumentController = new FinancialDocumentController();
+export default financialDocumentController;

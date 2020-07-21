@@ -27,7 +27,7 @@ export class ActivityController {
                 await Queries.simpleTransactionContinous(assign, [p.dni, response.rows[0].id_activity], client);
             });
             await Queries.commit(client);
-            return res.json(response.rows[0]);
+            return res.status(200).json(response.rows[0]);
         } catch (error) {
 
             await Queries.simpleError(client, error);
@@ -59,7 +59,7 @@ export class ActivityController {
             });
 
             await Queries.commit(client);
-            return res.json({
+            return res.status(200).json({
                 msg: `Activity modified succesfully`
             });
         } catch (error) {
@@ -165,7 +165,7 @@ export class ActivityController {
 
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: "Person Assigned to activity Succesfully"
             });
         } catch (error) {
@@ -211,7 +211,7 @@ export class ActivityController {
             const values = [req.body.name];
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: "Activity Type created Succesfully"
             });
         } catch (error) {
@@ -281,8 +281,60 @@ export class ActivityController {
 
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: `Activity Type modified succesfully`
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+
+    /**
+     * Disable specific Activity Type.
+     * path: /investigation_unit/:id/disable
+     * method: put
+     */
+    async disableActivityType(req: Request, res: Response): Promise<Response> {
+        const disable = `SELECT disableactivitytype($1);`;
+        const client = await pool.connect();
+        try {
+            const values = [req.params.id];
+
+            await Queries.simpleTransaction(disable, values, client);
+
+            return res.status(200).json({
+                msg: 'Activity Type disabled'
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Enable specific Activity Type.
+     * path: /investigation_unit/:id/enable
+     * method: put
+     */
+    async enableActivityType(req: Request, res: Response): Promise<Response> {
+        const enable = `SELECT enableactivitytype($1);`;
+        const client = await pool.connect();
+        try {
+            const values = [req.params.id];
+            await Queries.simpleTransaction(enable, values, client);
+
+            return res.status(200).json({
+                msg: 'Activity Type enabled'
             });
         } catch (error) {
 

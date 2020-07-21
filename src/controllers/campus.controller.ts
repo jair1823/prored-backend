@@ -91,7 +91,7 @@ export class CampusController {
 
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: "Campus created Succesfully"
             });
         } catch (error) {
@@ -118,7 +118,7 @@ export class CampusController {
 
             await Queries.simpleTransaction(query, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: `Campus modified succesfully`
             });
         } catch (error) {
@@ -144,7 +144,7 @@ export class CampusController {
 
             await Queries.simpleTransaction(query, id, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: `Campus deleted succesfuly`
             });
         } catch (error) {
@@ -156,8 +156,6 @@ export class CampusController {
             });
         }
     }
-
-
 
     /**
      * Disable specific campus.
@@ -172,7 +170,7 @@ export class CampusController {
 
             await Queries.simpleTransaction(disable, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: 'Campus disable'
             });
         } catch (error) {
@@ -197,7 +195,7 @@ export class CampusController {
             const values = [req.params.id];
             await Queries.simpleTransaction(enable, values, client);
 
-            return res.json({
+            return res.status(200).json({
                 msg: 'Campus enable'
             });
         } catch (error) {

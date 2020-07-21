@@ -27,7 +27,7 @@ export class ProjectController {
             });
 
             await Queries.commit(client);
-            return res.json(
+            return res.status(200).json(
                 response.rows[0]
             );
         } catch (error) {
@@ -103,7 +103,7 @@ export class ProjectController {
                 await Queries.simpleTransactionContinous(assign, [p.dni, parseInt(req.params.id), p.role], client);
             });
             await Queries.commit(client);
-            return res.json({
+            return res.status(200).json({
                 msg: `Projecupdateprojectt modified succesfully`
             });
         } catch (error) {
@@ -127,7 +127,7 @@ export class ProjectController {
         try {
             const values = [req.body.dni, req.body.id_project, req.body.role];
             await Queries.simpleTransaction(query, values, client);
-            return res.json({
+            return res.status(200).json({
                 msg: "Person assigned to project Succesfully"
             });
         } catch (error) {

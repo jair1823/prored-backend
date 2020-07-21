@@ -50,7 +50,8 @@ BEGIN
   OPEN ref FOR select 
 p.dni, p.name, p.lastname1, p.lastname2, p.status
 from public.person p
-inner join public.researcher s on s.dni = p.dni;
+inner join public.researcher s on s.dni = p.dni
+order by p.status desc;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
@@ -81,7 +82,8 @@ TO_CHAR(p.born_dates,'YYYY-mm-dd') AS born_dates, p.status,
 s.id_inv_unit, d.name  as name_Inv_Unit ,  d.description 
 from public.person p
 inner join public.researcher s on s.dni = p.dni
-inner join public.investigation_unit d on d.id_inv_unit = s.id_inv_unit;
+inner join public.investigation_unit d on d.id_inv_unit = s.id_inv_unit
+order by p.status desc;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;

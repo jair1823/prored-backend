@@ -21,11 +21,6 @@ router.put('/student/:dni/enable', Student_Controller.enableStudent);
 router.get('/student/profile/:profile', Student_Controller.getstudentbyprofile);
 router.get('/student/:dni/status', Student_Controller.getStudentStatus);
 
-router.post('/studentcv/', upload, Student_Controller.insertCV);
-router.put('/studentcv/', upload, Student_Controller.updateCV);
-router.delete('/studentcv/:dni', Student_Controller.deleteCV);
-router.get('/studentcv/:dni', Student_Controller.getStudentCV);
-
 router.put('/student/:dni/careers', Student_Controller.updateCareersForStudent);
 router.put('/student/:dni/languages', Student_Controller.updateLanguagesForStudent);
 router.put('/student/:dni/networks', Student_Controller.updateNetworksForStudent);

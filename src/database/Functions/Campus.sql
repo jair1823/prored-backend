@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION createcampus(ccode VARCHAR(30), n VARCHAR(50)) 
+CREATE OR REPLACE FUNCTION createcampus(ccode VARCHAR(30), n VARCHAR(100)) 
 RETURNS void AS $$
 BEGIN
   INSERT INTO public.campus (campus_code, name, status) VALUES (ccode,n,true);
@@ -7,7 +7,7 @@ $$ LANGUAGE plpgsql;
 
 --########################################################################################
 
-CREATE OR REPLACE FUNCTION updatecampus(n VARCHAR(50),ccodeo VARCHAR(30)) 
+CREATE OR REPLACE FUNCTION updatecampus(n VARCHAR(50),ccodeo VARCHAR(100)) 
 RETURNS void AS $$
 BEGIN
   UPDATE public.campus SET name = n WHERE campus_code = ccodeo;
@@ -28,7 +28,8 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION getcampuses(ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR 
-    SELECT * FROM campus;
+    SELECT * FROM campus
+    order by status desc;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
