@@ -148,7 +148,7 @@ INSERT INTO public.financial_item(date_created, amount, type, id_project, id_act
                 ('2020-07-02', 123123.5, 'Proyecto', 2, null, '411111111', 10102, 2),
                 ('2020-04-02', 34234.5, 'Actividad', null, 1, '116920331', 10102, 2);
 
-INSERT INTO public.user (name,lastname1,lastname2,email,password,status,reset_password_token,reset_password_expiration) 
+INSERT INTO public.user (name,lastname1,lastname2,email,password,status) 
         VALUES 
-                ('Jair','Cordero','Barona','corderojair@hotmail.com','$2b$10$lr9S9h9EKeU5Em6bcxVJD.8My6zEyIGqXH.SgDzhqN3LZKFYxzSy.',true,NULL,NULL),
-                ('ProRed','ProRed','ProRed','prored@uned.ac.cr','$2b$10$4zGIZUxqY6RCXHr.WqTpnuVjK2yI0kNdCIhUHPa/W7AnM6BsSwMXW',true,NULL,NULL); --Prored2020
+                ('Jair','Cordero','Barona','corderojair@hotmail.com','$2b$10$lr9S9h9EKeU5Em6bcxVJD.8My6zEyIGqXH.SgDzhqN3LZKFYxzSy.',true),
+                ('ProRed','ProRed','ProRed','prored@uned.ac.cr','$2b$10$4zGIZUxqY6RCXHr.WqTpnuVjK2yI0kNdCIhUHPa/W7AnM6BsSwMXW',true); --Prored2020
