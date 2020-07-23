@@ -96,6 +96,13 @@ class Queries {
     /**
      * 
      */
+    async  insertLog(values: any, client: PoolClient) {
+        await client.query(`SELECT insertlog($1,$2,$3);`, values);
+    }
+
+    /**
+     * 
+     */
     async begin(client: PoolClient) {
         await client.query('BEGIN');
     }

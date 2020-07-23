@@ -7,8 +7,8 @@ CREATE OR REPLACE FUNCTION createuser(
     )
     RETURNS void AS $$
     BEGIN
-        INSERT INTO public.user(name, lastname1, lastname2,email,password,status,reset_password_token,reset_password_expiration)
-            VALUES (pname, plastname1, plastname2, pmail,ppass,true,null,null);
+        INSERT INTO public.user(name, lastname1, lastname2,email,password,status)
+            VALUES (pname, plastname1, plastname2, pmail,ppass,true);
     END;
 $$ LANGUAGE plpgsql;
 
@@ -80,3 +80,15 @@ END;
 $$ LANGUAGE plpgsql;
 
 --########################################################################################
+
+CREATE OR REPLACE FUNCTION insertlog(
+    pid integer,
+    pname varchar(100),
+    paction varchar(100)
+    )
+    RETURNS void AS $$
+    BEGIN
+        INSERT INTO public.log(id_user, table_name, action)
+            VALUES (pid, pname, paction);
+    END;
+$$ LANGUAGE plpgsql;

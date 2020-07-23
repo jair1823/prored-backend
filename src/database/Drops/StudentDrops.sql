@@ -15,8 +15,6 @@ DROP FUNCTION IF EXISTS deletestudentxcareer;
 DROP FUNCTION IF EXISTS deletestudentxlanguage;
 DROP FUNCTION IF EXISTS deletestudentxassociatedcareer;
 DROP FUNCTION IF EXISTS deletestudentxnetwork;
-DROP FUNCTION IF EXISTS disablestudent;
-DROP FUNCTION IF EXISTS enablestudent;
 DROP FUNCTION IF EXISTS getstudentbyprofile;
 DROP FUNCTION IF EXISTS getdirectionbydni;
 DROP FUNCTION IF EXISTS getstudentstatus;

@@ -26,3 +26,25 @@ BEGIN
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION disableperson(pdni varchar(50))
+    RETURNS void AS $$
+    BEGIN
+    UPDATE public.person
+        SET status=false
+    WHERE dni = pdni;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION enableperson(pdni varchar(50))
+    RETURNS void AS $$
+    BEGIN
+    UPDATE public.person
+        SET status=true
+    WHERE dni = pdni;
+    END;
+$$ LANGUAGE plpgsql;
