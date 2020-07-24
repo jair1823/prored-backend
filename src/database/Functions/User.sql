@@ -88,7 +88,7 @@ CREATE OR REPLACE FUNCTION insertlog(
     )
     RETURNS void AS $$
     BEGIN
-        INSERT INTO public.log(id_user, table_name, action)
-            VALUES (pid, pname, paction);
+        INSERT INTO public.log(id_user, date_made, table_name, action)
+            VALUES (pid,now(), pname, paction);
     END;
 $$ LANGUAGE plpgsql;
