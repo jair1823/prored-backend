@@ -208,10 +208,10 @@ BEGIN
       inner join person p on p.dni = f.dni
       inner join budget_unit bu on bu.code_budget_unit = f.code_unit 
       inner join budget_sub_unit bsu on bsu.code_budget_subunit = f.code_subunit
-      where f.dni = coalesce(null,f.dni)
-      and f.code_unit = coalesce(null,f.code_unit)
-      and f.code_subunit = coalesce(null,f.code_subunit)
-      and (date_created between coalesce(null,f.date_created) and coalesce(null,f.date_created))) as a
+      where f.dni = coalesce(pdni,f.dni)
+      and f.code_unit = coalesce(pcode,f.code_unit)
+      and f.code_subunit = coalesce(psubcode,f.code_subunit)
+      and (date_created between coalesce(pstartdate,f.date_created) and coalesce(penddate,f.date_created))) as a
     left join 
       (select id_activity,name as activity_name from activity) as act on act.id_activity = a.id_activity
     left join 
