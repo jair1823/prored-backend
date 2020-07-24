@@ -113,7 +113,7 @@ CREATE OR REPLACE FUNCTION financialItemFilterIndependent(
   ) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR
-  select f.id_financial_item,TO_CHAR(f.date_created,'YYYY-mm-dd') AS date_created, f."type",p."name" ,p.lastname1 ,p.lastname2 ,bu."name" as budgetName,bsu."name" as subUnitName
+  select f.id_financial_item,TO_CHAR(f.date_created,'YYYY-mm-dd') AS date_created, f."type",f.amount,p."name" ,p.lastname1 ,p.lastname2 ,bu."name" as budgetName,bsu."name" as subUnitName
       from financial_item f
       inner join person p on p.dni = f.dni
       inner join budget_unit bu on bu.code_budget_unit = f.code_unit 
@@ -143,7 +143,7 @@ CREATE OR REPLACE FUNCTION financialItemFilterActivity(
   ) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR
-  select f.id_financial_item,TO_CHAR(f.date_created,'YYYY-mm-dd') AS date_created, f."type", acti."name" as activityName,p."name" ,p.lastname1 ,p.lastname2 ,bu."name" as budgetName,bsu."name" as subUnitName
+  select f.id_financial_item,TO_CHAR(f.date_created,'YYYY-mm-dd') AS date_created, f."type",f.amount, acti."name" as activityName,p."name" ,p.lastname1 ,p.lastname2 ,bu."name" as budgetName,bsu."name" as subUnitName
       from financial_item f
       inner join person p on p.dni = f.dni
       inner join budget_unit bu on bu.code_budget_unit = f.code_unit 
@@ -173,7 +173,7 @@ CREATE OR REPLACE FUNCTION financialItemFilterProject(
   ) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR
-  select f.id_financial_item,TO_CHAR(f.date_created,'YYYY-mm-dd') AS date_created, f."type",prj."name"  as projectName,p."name" ,p.lastname1 ,p.lastname2, bu."name" as budgetName,bsu."name" as subUnitName
+  select f.id_financial_item,TO_CHAR(f.date_created,'YYYY-mm-dd') AS date_created, f."type",f.amount,prj."name"  as projectName,p."name" ,p.lastname1 ,p.lastname2, bu."name" as budgetName,bsu."name" as subUnitName
       from financial_item f
       inner join person p on p.dni = f.dni
       inner join budget_unit bu on bu.code_budget_unit = f.code_unit
@@ -201,9 +201,9 @@ CREATE OR REPLACE FUNCTION financialItemFilterAll(
   ) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR
-    select t.id_financial_item,t.date_created,t.type,t.name,t.lastname1,t.lastname2,t.budgetName,t.subUnitName,t.activity_name,t.project_name from(
+    select t.id_financial_item,t.date_created,t.amount,t.type,t.name,t.lastname1,t.lastname2,t.budgetName,t.subUnitName,t.activity_name,t.project_name from(
     select * from 
-    (select f.id_financial_item,TO_CHAR(f.date_created,'YYYY-mm-dd') AS date_created, f."type", f.id_activity,f.id_project,p."name" ,p.lastname1 ,p.lastname2 ,bu."name" as budgetName,bsu."name" as subUnitName
+    (select f.id_financial_item,TO_CHAR(f.date_created,'YYYY-mm-dd') AS date_created, f."type",f.amount, f.id_activity,f.id_project,p."name" ,p.lastname1 ,p.lastname2 ,bu."name" as budgetName,bsu."name" as subUnitName
       from financial_item f
       inner join person p on p.dni = f.dni
       inner join budget_unit bu on bu.code_budget_unit = f.code_unit 
