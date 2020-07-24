@@ -337,6 +337,7 @@ create table public.user(
 create table public.log(
     id_log SERIAL PRIMARY KEY,
     id_user integer REFERENCES public.user(id_user),
+    date_made date,
     table_name varchar(100),
     action varchar(100)
 );
