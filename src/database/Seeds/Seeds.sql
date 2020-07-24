@@ -117,7 +117,8 @@ INSERT INTO public.person_x_activity(dni, id_activity)
 INSERT INTO  public.person_x_project(dni , id_project, role )
         values 
                 ('116920331' , 1  , 'Investigador'),
-                ('402430534' , 1  , 'Investigador');
+                ('402430534' , 1  , 'Investigador'),
+                ('411111111' , 2  , 'Co Investigador');
 
 -- Period
 
