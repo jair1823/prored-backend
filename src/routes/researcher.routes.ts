@@ -10,6 +10,8 @@ router.get('/researcher_basic', Researcher_Controller.getResearchersBasic);
 router.post('/researcher', Researcher_Controller.createResearcher);
 router.put('/researcher/:dni', Researcher_Controller.updateResearcher);
 router.get('/researcher/:dni', Researcher_Controller.getResearcherByDni);
+router.put('/researcher/:dni/disable', Researcher_Controller.disableResearcher);
+router.put('/researcher/:dni/enable', Researcher_Controller.enableResearcher);
 
 export default router;
 

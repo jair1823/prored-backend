@@ -57,9 +57,12 @@ export class GanttController {
         const query = `SELECT createperiod($1)`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Periodo', 'Crear'];
             const values = [req.body.name];
-            await Queries.simpleTransaction(query, values, client);
-
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(query, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json({
                 msg: "Period created Succesfully"
             });
@@ -81,8 +84,12 @@ export class GanttController {
         const query = `SELECT updateperiod($1,$2)`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Periodo', 'Editar'];
             const values = [req.body.name, req.params.id];
-            await Queries.simpleTransaction(query, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(query, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json({
                 msg: `Period modified succesfully`
             });
@@ -147,8 +154,12 @@ export class GanttController {
     const fetch = `FETCH ALL IN "ganttCursor";`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Gantt', 'Crear'];
             const values =  [req.body.rel_code, req.body.id_period];
-            const response = await Queries.insertWithReturn(query, values, fetch, client);
+            await Queries.begin(client);
+            const response = await Queries.insertWithReturnContinous(query, values, fetch, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json(
                 response.rows[0]
             );
@@ -220,10 +231,15 @@ export class GanttController {
      */
     async updateGantt_Task(req: Request, res: Response): Promise<Response> {
         try {
+            const log = [req.body.decoded.id_user, 'Gantt', 'Editar'];
             const listaGanttLine = req.body.gantt_list;
             const id_gantt = req.params.id;
             deleteGantt_Task(id_gantt);
-            createGantt_Task_Function(listaGanttLine)
+            createGantt_Task_Function(listaGanttLine);
+            const client: PoolClient = await pool.connect();
+            await Queries.begin(client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json({
                 msg: "Gantt Tasks updated Succesfully"
             });

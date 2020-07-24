@@ -53,8 +53,12 @@ export class InvestigationUnitController {
         const query = `SELECT createinvestigation_unit($1,$2)`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Unidad de Investigación', 'Crear'];
             const values = [req.body.name, req.body.description];
-            await Queries.simpleTransaction(query, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(query, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: "Investigation Unit created Succesfully"
@@ -77,8 +81,12 @@ export class InvestigationUnitController {
         const query = `SELECT updateinvestigation_unit($1,$2,$3)`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Unidad de Investigación', 'Editar'];
             const values = [req.params.id, req.body.name, req.body.description];
-            await Queries.simpleTransaction(query, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(query, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json({
                 msg: `Investigation Unit modified succesfully`
             });
@@ -100,8 +108,11 @@ export class InvestigationUnitController {
         const client = await pool.connect();
         try {
             const values = [req.params.id];
-
-            await Queries.simpleTransaction(disable, values, client);
+            const log = [req.body.decoded.id_user, 'Unidad de Investigación', 'Inactivar'];
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(disable, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: 'Investigation Unit disable'
@@ -125,8 +136,12 @@ export class InvestigationUnitController {
         const enable = `SELECT enableinvestigationunit($1);`;
         const client = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Unidad de Investigación', 'Activar'];
             const values = [req.params.id];
-            await Queries.simpleTransaction(enable, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(enable, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: 'Investigation Unit enable'

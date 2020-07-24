@@ -77,10 +77,12 @@ export class FinancialItemController {
         const fetch = `FETCH ALL IN "financialCursor";`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Registro de Partida', 'Crear'];
             await Queries.begin(client);
             const values = [req.body.date_created, req.body.amount, req.body.type, req.body.id_project,
             req.body.id_activity, req.body.dni, req.body.code_unit, req.body.code_subunit];
             const response = await Queries.insertWithReturnContinous(query, values, fetch, client);
+            await Queries.insertLog(log,client);
             await Queries.commit(client);
             return res.status(200).json({
                 msg: "Financial Item created Succesfully",
@@ -103,9 +105,13 @@ export class FinancialItemController {
         const query = `SELECT updatefinancialitem($1,$2,$3,$4,$5,$6,$7,$8,$9)`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Registro de Partida', 'Editar'];
             const values = [req.params.id, req.body.date_created, req.body.amount, req.body.type, req.body.id_project,
             req.body.id_activity, req.body.dni, req.body.code_unit, req.body.code_subunit];
-            await Queries.simpleTransaction(query, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(query, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json({
                 msg: `Financial Item modified succesfully`
             });

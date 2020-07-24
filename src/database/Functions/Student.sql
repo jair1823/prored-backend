@@ -334,28 +334,6 @@ $$ LANGUAGE plpgsql;
 
 --###########################################################################
 
-CREATE OR REPLACE FUNCTION disablestudent(pdni varchar(50))
-    RETURNS void AS $$
-    BEGIN
-    UPDATE public.person
-        SET status=false
-    WHERE dni = pdni;
-    END;
-$$ LANGUAGE plpgsql;
-
---###########################################################################
-
-CREATE OR REPLACE FUNCTION enablestudent(pdni varchar(50))
-    RETURNS void AS $$
-    BEGIN
-    UPDATE public.person
-        SET status=true
-    WHERE dni = pdni;
-    END;
-$$ LANGUAGE plpgsql;
-
---###########################################################################
-
 CREATE OR REPLACE FUNCTION getstudentbyprofile(pprofile profile, ref refcursor)
     RETURNS refcursor AS $$
     BEGIN

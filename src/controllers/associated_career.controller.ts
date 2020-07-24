@@ -62,10 +62,12 @@ export class AssociatedCareerController {
         const query = `SELECT createassociated_career($1,$2)`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Carrera Asociada', 'Crear'];
             const values = [req.body.name, req.body.id_center]
-
-            await Queries.simpleTransaction(query, values, client);
-
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(query, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json({
                 msg: "Associated Career created Succesfully"
             });
@@ -88,10 +90,12 @@ export class AssociatedCareerController {
         const query = `SELECT updateassociated_career($1,$2)`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Carrera Asociada', 'Editar'];
             const values = [req.body.name, parseInt(req.params.id)];
-
-            await Queries.simpleTransaction(query, values, client);
-
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(query, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json({
                 msg: "Associated Career modified Succesfully"
             });
@@ -213,10 +217,12 @@ export class AssociatedCareerController {
         const disable = `SELECT disableassocareer($1);`;
         const client = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Carrera Asociada', 'Inactivar'];
             const values = [req.params.id];
-
-            await Queries.simpleTransaction(disable, values, client);
-
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(disable, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json({
                 msg: 'Associated Career disabled'
             });
@@ -239,9 +245,12 @@ export class AssociatedCareerController {
         const enable = `SELECT enableassocareer($1);`;
         const client = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Carrera Asociada', 'Inactivar'];
             const values = [req.params.id];
-            await Queries.simpleTransaction(enable, values, client);
-
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(enable, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json({
                 msg: 'Associated Career enabled'
             });

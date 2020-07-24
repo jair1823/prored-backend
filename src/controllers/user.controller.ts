@@ -17,10 +17,14 @@ export class UserController {
         const query = `SELECT createuser($1,$2,$3,$4,$5);`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Usuario', 'Crear'];
             let randPassword = Array(10).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
             const hash = bcrypt.hashSync(randPassword, 10);
             const values = [req.body.name, req.body.lastname1, req.body.lastname2, req.body.email, hash];
-            await Queries.simpleTransaction(query, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(query, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json({
                 password: randPassword,
             });
@@ -100,12 +104,13 @@ export class UserController {
         const fetch = `FETCH ALL IN "passCursor";`;
         const client: PoolClient = await pool.connect();
         try {
-            const decoded = req.body.decoded;
+            const log = [req.body.decoded.id_user, 'Usuario', 'Reestablecimiento de Contraseña para usuario'];
             await Queries.begin(client);
             let randPassword = Array(10).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
             const hash = bcrypt.hashSync(randPassword, 10);
-            const values = [decoded.id_user, hash];
+            const values = [req.body.id_user, hash];
             await Queries.simpleTransactionContinous(update, values, client);
+            await Queries.insertLog(log,client);
             await Queries.commit(client);
             return res.status(200).json({
                 password: randPassword,

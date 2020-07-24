@@ -333,3 +333,10 @@ create table public.user(
     password varchar(300),
     status boolean
 );
+
+create table public.log(
+    id_log SERIAL PRIMARY KEY,
+    id_user integer REFERENCES public.user(id_user),
+    table_name varchar(100),
+    action varchar(100)
+);

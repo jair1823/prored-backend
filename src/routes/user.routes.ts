@@ -10,6 +10,6 @@ router.post('/user/authenticate', User_Controller.authenticateUser);
 router.get('/user', User_Controller.getUsers);
 router.put('/updatePassword',TokenValidator, User_Controller.updatePassword);
 router.get('/validateToken',TokenValidator, User_Controller.validateToken);
-router.post('/restorePassword', User_Controller.restorePassword);
+router.post('/restorePassword',TokenValidator, User_Controller.restorePassword);
 
 export default router;

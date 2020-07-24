@@ -121,13 +121,14 @@ export class ResearcherController {
         const createPerson = `SELECT createperson($1,$2,$3,$4,$5,$6,$7,$8);`;
         const createResearcher = `SELECT createresearcher($1,$2);`;
         try {
-
+            const log = [req.body.decoded.id_user, 'Investigador', 'Crear'];
             const personValues = [req.body.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates, req.body.phone_number, req.body.email, 'Investigador'];
             const researcherValues = [req.body.dni, req.body.id_inv_unit];
 
             await Queries.begin(client);
             await Queries.simpleTransactionContinous(createPerson, personValues, client);
             await Queries.simpleTransactionContinous(createResearcher, researcherValues, client);
+            await Queries.insertLog(log,client);
             await Queries.commit(client);
 
             return res.status(200).json(
@@ -154,18 +155,79 @@ export class ResearcherController {
         const updateResearcher = `SELECT updateresearcher($1,$2,$3,$4,$5,$6,$7,$8);`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Investigador', 'Editar'];
             const values = [
                 req.body.dni, req.body.name, req.body.lastname1, req.body.lastname2,
                 req.body.born_dates, req.body.phone_number, req.body.email, req.body.id_inv_unit
             ];
-
-            await Queries.simpleTransaction(updateResearcher, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(updateResearcher, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
 
             return res.status(200).json(
                 {
                     msg: 'Researcher updated'
                 }
             );
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Disable specific researcher.
+     * path: /researcher/:dni/disable
+     * method: put
+     */
+    async disableResearcher(req: Request, res: Response): Promise<Response> {
+        const disable = `SELECT disableperson($1);`;
+        const client = await pool.connect();
+        try {
+            const log = [req.body.decoded.id_user, 'Investigador', 'Inactivar'];
+            const values = [req.params.dni];
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(disable, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
+
+            return res.status(200).json({
+                msg: 'Studend disable'
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Enable specific student researcher.
+     * path: /researcher/:dni/enable
+     * method: put
+     */
+    async enableResearcher(req: Request, res: Response): Promise<Response> {
+        const enable = `SELECT enableperson($1);`;
+        const client = await pool.connect();
+        try {
+            const log = [req.body.decoded.id_user, 'Investigador', 'Activar'];
+            const values = [req.params.dni];
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(enable, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
+
+            return res.status(200).json({
+                msg: 'Studend enable'
+            });
         } catch (error) {
 
             await Queries.simpleError(client, error);

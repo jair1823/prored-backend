@@ -75,8 +75,12 @@ export class BudgetUnitController {
         const query = `SELECT createbudgetunit($1,$2)`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Partida', 'Crear'];
             const values = [req.body.id, req.body.name];
-            await Queries.simpleTransaction(query, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(query, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json({
                 msg: "Budget Unit created Succesfully"
             });
@@ -97,9 +101,12 @@ export class BudgetUnitController {
         const query = `SELECT updatebudgetunit($1,$2)`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Partida', 'Editar'];
             const values = [req.body.name, req.params.id];
-            await Queries.simpleTransaction(query, values, client);
-
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(query, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json({
                 msg: `Budget Unit modified succesfully`
             });
@@ -123,8 +130,12 @@ export class BudgetUnitController {
         const disable = `SELECT disablebudgetunit($1);`;
         const client = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Partida', 'Inactivar'];
             const values = [req.params.id];
-            await Queries.simpleTransaction(disable, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(disable, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json({
                 msg: 'Budget Unit disabled'
             });
@@ -145,8 +156,12 @@ export class BudgetUnitController {
         const enable = `SELECT enablebudgetunit($1);`;
         const client = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Partida', 'Activar'];
             const values = [req.params.id];
-            await Queries.simpleTransaction(enable, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(enable, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json({
                 msg: 'Budget Unit enabled'
             });
