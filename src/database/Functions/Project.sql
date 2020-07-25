@@ -97,3 +97,17 @@ BEGIN
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
+
+
+--########################################################################################
+
+CREATE OR REPLACE FUNCTION getprojectstudent(pidp varchar(50), ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR 
+    select proj.id_project, pro.name
+    from public.person_x_project proj
+    inner join public.project pro on proj.id_project = pro.id_project
+    where proj.dni = pidp;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
