@@ -1,11 +1,35 @@
 CREATE OR REPLACE FUNCTION projectfilter(pid_inv_unit INTEGER,ptype project_type, ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR
-    SELECT p.id_project, p.code_manage, p.name, p.project_type, iv.name as inv_name
+    select b.id_project,
+    string_agg(
+    case WHEN b.studentName is null THEN ''
+    ELSE concat( b.studentName,' ',b.studentLastname1,' ',b.studentLastname2) END,
+    case WHEN b.studentName is null THEN ''
+    ELSE '; ' END) as studentNames,
+    string_agg(
+    case WHEN b.researcherName is null THEN ''
+    ELSE concat( b.researcherName,' ',b.researcherLastname1,' ',b.researcherLastname2) END,
+    case WHEN b.studentName is null THEN ''
+    ELSE '; ' END) as researcherNames, 
+    b.code_manage,b.name,b.project_type,b.inv_name 
+    from (select * from (SELECT p.id_project as idp, p.code_manage, 
+    p.name, p.project_type, iv.name as inv_name
     FROM public.project p
     inner join investigation_unit iv on iv.id_inv_unit = p.id_inv_unit
-    where p.id_inv_unit = coalesce(pid_inv_unit,p.id_inv_unit)
-        AND project_type = coalesce(ptype,p.project_type);
+    where p.id_inv_unit = coalesce(null,p.id_inv_unit)
+        AND project_type = coalesce(null,p.project_type)) as a
+    inner join 
+    (select id_project, dni from person_x_project) as pxp on pxp.id_project = a.idp
+    left join (
+    	select dni, name as studentName, lastname1 as studentLastname1, lastname2 as studentLastname2
+    	from person where person_type = 'Estudiante') as p2
+    on p2.dni = pxp.dni
+    left join (
+    	select dni, name as researcherName, lastname1 as researcherLastname1, lastname2 as researcherLastname2
+    	from person where person_type = 'Investigador') as p3 
+    on p3.dni = pxp.dni) as b
+    group by b.id_project,b.code_manage,b.name,b.project_type,b.inv_name;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
