@@ -42,10 +42,36 @@ $$ LANGUAGE plpgsql;
 
 --########################################################################################
 
+CREATE OR REPLACE FUNCTION getprojectsstudentstring(pid varchar, ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR
+    select string_agg(a.name , '; ') as names from
+    (select * from person_x_project pxp
+    inner join project p on p.id_project = pxp.id_project
+    where pxp.dni = pid) as a;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--########################################################################################
+
+CREATE OR REPLACE FUNCTION getactivitiesstudentstring(pid varchar, ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR
+    select string_agg(a.name , '; ') as names from
+    (select * from person_x_activity pxp
+    inner join activity p on p.id_activity = pxp.id_activity
+    where pxp.dni = pid) as a;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--########################################################################################
+
 CREATE OR REPLACE FUNCTION studentfilter(pcampus varchar(30), pcareer integer,pstatus boolean, ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR
-    SELECT p.dni,p.name,p.lastname1,p.lastname2,p.status,c.name as campus_name
+    SELECT p.dni,p.name,p.lastname1,p.lastname2,p.status,c.name as campus_name,s.nationality
     FROM public.person p
     inner join student s on s.dni = p.dni
     inner join campus c on s.campus_code = c.campus_code
@@ -62,7 +88,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION studentfilternocareer(pcampus varchar(30),pstatus boolean, ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR
-    SELECT p.dni,p.name,p.lastname1,p.lastname2,p.status,c.name as campus_name
+    SELECT p.dni,p.name,p.lastname1,p.lastname2,TO_CHAR(p.born_dates,'YYYY-mm-dd') AS born_dates,s.nationality,p.phone_number,p.email,p.status,c.name as campus_name,s.address
     FROM public.person p
     inner join student s on s.dni = p.dni
     inner join campus c on s.campus_code = c.campus_code
