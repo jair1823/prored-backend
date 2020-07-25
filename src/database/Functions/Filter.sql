@@ -17,8 +17,8 @@ BEGIN
     p.name, p.project_type, iv.name as inv_name
     FROM public.project p
     inner join investigation_unit iv on iv.id_inv_unit = p.id_inv_unit
-    where p.id_inv_unit = coalesce(null,p.id_inv_unit)
-        AND project_type = coalesce(null,p.project_type)) as a
+    where p.id_inv_unit = coalesce(pid_inv_unit,p.id_inv_unit)
+        AND project_type = coalesce(ptype,p.project_type)) as a
     inner join 
     (select id_project, dni from person_x_project) as pxp on pxp.id_project = a.idp
     left join (
@@ -102,11 +102,34 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION activityfilterproject(pid_acti_type INTEGER, ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR
-    SELECT a.id_activity,a.name, acti.name as acti_type_name, p.name as project_name
-    FROM public.activity a
-    inner join project p on a.id_project = p.id_project
-    inner join acti_type acti on a.id_acti_type = acti.id_acti_type
-    where a.id_acti_type = coalesce(pid_acti_type,a.id_acti_type) AND a.id_project IS NOT NULL;
+    select b.id_activity,
+    string_agg(
+    case WHEN b.studentName is null THEN ''
+    ELSE concat( b.studentName,' ',b.studentLastname1,' ',b.studentLastname2) END,
+    case WHEN b.studentName is null THEN ''
+    ELSE '; ' END) as studentNames,
+    string_agg(
+    case WHEN b.researcherName is null THEN ''
+    ELSE concat( b.researcherName,' ',b.researcherLastname1,' ',b.researcherLastname2) END,
+    case WHEN b.studentName is null THEN ''
+    ELSE '; ' END) as researcherNames, 
+    b.name,b.acti_type_name,b.project_name 
+    from (select * from (SELECT a.id_activity as idp,a.name, acti.name as acti_type_name, p.name as project_name
+	FROM public.activity a
+	inner join project p on a.id_project = p.id_project
+	inner join acti_type acti on a.id_acti_type = acti.id_acti_type
+	where a.id_acti_type = coalesce(pid_acti_type,a.id_acti_type) AND a.id_project IS NOT NULL) as a
+    inner join 
+    (select id_activity, dni from person_x_activity) as pxp on pxp.id_activity = a.idp
+    left join (
+    	select dni, name as studentName, lastname1 as studentLastname1, lastname2 as studentLastname2
+    	from person where person_type = 'Estudiante') as p2
+    on p2.dni = pxp.dni
+    left join (
+    	select dni, name as researcherName, lastname1 as researcherLastname1, lastname2 as researcherLastname2
+    	from person where person_type = 'Investigador') as p3 
+    on p3.dni = pxp.dni) as b
+    group by b.id_activity,b.name,b.acti_type_name,b.project_name;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
