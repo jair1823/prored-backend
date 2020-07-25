@@ -10,6 +10,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+--########################################################################################
+
 CREATE OR REPLACE FUNCTION getresearchersprojectstring(pid INTEGER, ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR
@@ -22,6 +24,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+--########################################################################################
+
 CREATE OR REPLACE FUNCTION projectfilter(pid_inv_unit INTEGER,ptype project_type, ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR
@@ -30,8 +34,8 @@ BEGIN
     FROM public.project p
     inner join investigation_unit iv on iv.id_inv_unit = p.id_inv_unit
     where p.id_inv_unit = coalesce(pid_inv_unit,p.id_inv_unit)
-        AND project_type = coalesce(ptype,p.project_type)
-        order by p.id_project;
+      AND project_type = coalesce(ptype,p.project_type)
+    order by p.id_project;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
@@ -101,37 +105,42 @@ $$ LANGUAGE plpgsql;
 
 --########################################################################################
 
+CREATE OR REPLACE FUNCTION getstudentsactivitystring(pid INTEGER, ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR
+    select string_agg(concat( a.name,' ',a.lastname1,' ',a.lastname2), '; ') as names from
+    (select * from person_x_activity pxp
+    inner join person p on p.dni = pxp.dni
+    where p.person_type = 'Estudiante'
+    and id_activity = pid) as a;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--########################################################################################
+
+CREATE OR REPLACE FUNCTION getresearchersactivitystring(pid INTEGER, ref refcursor) RETURNS refcursor AS $$
+BEGIN
+  OPEN ref FOR
+    select string_agg(concat( a.name,' ',a.lastname1,' ',a.lastname2), '; ') as names from
+    (select * from person_x_activity pxp
+    inner join person p on p.dni = pxp.dni
+    where p.person_type = 'Investigador'
+    and id_activity = pid) as a;
+  RETURN ref;
+END;
+$$ LANGUAGE plpgsql;
+
+--########################################################################################
+
 CREATE OR REPLACE FUNCTION activityfilterproject(pid_acti_type INTEGER, ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR
-    select b.idp,
-    string_agg(
-    case WHEN b.studentName is null THEN ''
-    ELSE concat( b.studentName,' ',b.studentLastname1,' ',b.studentLastname2) END,
-    case WHEN b.studentName is null THEN ''
-    ELSE '; ' END) as studentNames,
-    string_agg(
-    case WHEN b.researcherName is null THEN ''
-    ELSE concat( b.researcherName,' ',b.researcherLastname1,' ',b.researcherLastname2) END,
-    case WHEN b.studentName is null THEN ''
-    ELSE '; ' END) as researcherNames, 
-    b.name,b.acti_type_name,b.project_name 
-    from (select * from (SELECT a.id_activity as idp,a.name, acti.name as acti_type_name, p.name as project_name
-	FROM public.activity a
-	inner join project p on a.id_project = p.id_project
-	inner join acti_type acti on a.id_acti_type = acti.id_acti_type
-	where a.id_acti_type = coalesce(pid_acti_type,a.id_acti_type) AND a.id_project IS NOT NULL) as a
-    left join 
-    (select id_activity, dni from person_x_activity) as pxp on pxp.id_activity = a.idp
-    left join (
-    	select dni, name as studentName, lastname1 as studentLastname1, lastname2 as studentLastname2
-    	from person where person_type = 'Estudiante') as p2
-    on p2.dni = pxp.dni
-    left join (
-    	select dni, name as researcherName, lastname1 as researcherLastname1, lastname2 as researcherLastname2
-    	from person where person_type = 'Investigador') as p3 
-    on p3.dni = pxp.dni) as b
-    group by b.idp,b.name,b.acti_type_name,b.project_name;
+    SELECT a.id_activity,a.name, acti.name as acti_type_name, p.name as project_name
+    FROM public.activity a
+    inner join project p on a.id_project = p.id_project
+    inner join acti_type acti on a.id_acti_type = acti.id_acti_type
+    where a.id_acti_type = coalesce(pid_acti_type,a.id_acti_type) AND a.id_project IS NOT null;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
@@ -141,33 +150,10 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION activityfilternoproject(pid_acti_type INTEGER, ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR
-    select b.idp,
-    string_agg(
-    case WHEN b.studentName is null THEN ''
-    ELSE concat( b.studentName,' ',b.studentLastname1,' ',b.studentLastname2) END,
-    case WHEN b.studentName is null THEN ''
-    ELSE '; ' END) as studentNames,
-    string_agg(
-    case WHEN b.researcherName is null THEN ''
-    ELSE concat( b.researcherName,' ',b.researcherLastname1,' ',b.researcherLastname2) END,
-    case WHEN b.studentName is null THEN ''
-    ELSE '; ' END) as researcherNames, 
-    b.name,b.acti_type_name
-    from (select * from (SELECT a.id_activity as idp,a.name, acti.name as acti_type_name
+    SELECT a.id_activity,a.name, acti.name as acti_type_name
     FROM public.activity a
     inner join acti_type acti on a.id_acti_type = acti.id_acti_type
-    where a.id_acti_type = coalesce(null,a.id_acti_type) AND a.id_project IS NULL) as a
-    left join 
-    (select id_activity, dni from person_x_activity) as pxp on pxp.id_activity = a.idp
-    left join (
-      select dni, name as studentName, lastname1 as studentLastname1, lastname2 as studentLastname2
-      from person where person_type = 'Estudiante') as p2
-    on p2.dni = pxp.dni
-    left join (
-      select dni, name as researcherName, lastname1 as researcherLastname1, lastname2 as researcherLastname2
-      from person where person_type = 'Investigador') as p3 
-    on p3.dni = pxp.dni) as b
-    group by b.idp,b.name,b.acti_type_name;
+    where a.id_acti_type = coalesce(null,a.id_acti_type) AND a.id_project IS NULL;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
