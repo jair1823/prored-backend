@@ -10,3 +10,5 @@ DROP FUNCTION IF EXISTS financialItemFilterProject;
 DROP FUNCTION IF EXISTS financialItemFilterAll;
 DROP FUNCTION IF EXISTS getstudentsprojectstring;
 DROP FUNCTION IF EXISTS getresearchersprojectstring;
+DROP FUNCTION IF EXISTS getstudentsactivitystring;
+DROP FUNCTION IF EXISTS getresearchersactivitystring;
