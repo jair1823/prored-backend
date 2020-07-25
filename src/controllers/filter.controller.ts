@@ -16,9 +16,22 @@ export class FilterController {
         const client: PoolClient = await pool.connect();
         try {
             const values = [req.body.id_inv_unit, req.body.project_type];
+            await Queries.begin(client);
+            const response = await Queries.simpleSelectWithParameterContinous(query, values, fetch, client);
 
-            const response = await Queries.simpleSelectWithParameter(query, values, fetch, client);
+            for(let i = 0; i< response.rowCount; i++){
+                let getStudents = `select getstudentsprojectstring($1,'studentCursor${response.rows[i].id_project}');`;
+                let fetchStudents = `FETCH ALL IN "studentCursor${response.rows[i].id_project}";`;
+                let resultadoStudents = await Queries.simpleSelectWithParameterContinous(getStudents, [response.rows[i].id_project], fetchStudents, client);
+                response.rows[i]["studentNames"] = resultadoStudents.rows[0].names;
+                let getResearchers = `select getresearchersprojectstring($1,'researcherCursor${response.rows[i].id_project}');`;
+                let fetchResearchers = `FETCH ALL IN "researcherCursor${response.rows[i].id_project}";`;
+                let resultadoResearchers = await Queries.simpleSelectWithParameterContinous(getResearchers, [response.rows[i].id_project], fetchResearchers, client);
+                response.rows[i]["researcherNames"] = resultadoResearchers.rows[0].names
+            }
 
+            await Queries.rollback(client);
+            console.log(response.rows)
             return res.status(200).json(response.rows);
         } catch (error) {
 
