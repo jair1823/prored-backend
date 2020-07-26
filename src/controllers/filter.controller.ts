@@ -74,6 +74,16 @@ export class FilterController {
                     result.rows[i]["province"] = resultadoDirections.rows[0].name;
                     result.rows[i]["canton"] = resultadoDirections.rows[0].canton_name;
                     result.rows[i]["district"] = resultadoDirections.rows[0].district_name;
+
+                    let getProjects = `select getprojectsstudentstring($1,'projectsCursor${result.rows[i].dni}');`;
+                    let fetchProjects = `FETCH ALL IN "projectsCursor${result.rows[i].dni}";`;
+                    let resultadoProjects = await Queries.simpleSelectWithParameterContinous(getProjects, [result.rows[i].dni], fetchProjects, client);
+                    result.rows[i]["projects"] = resultadoProjects.rows[0].names
+
+                    let getActivities = `select getactivitiesstudentstring($1,'activitiesCursor${result.rows[i].dni}');`;
+                    let fetchActivities = `FETCH ALL IN "activitiesCursor${result.rows[i].dni}";`;
+                    let resultadoActivities = await Queries.simpleSelectWithParameterContinous(getActivities, [result.rows[i].dni], fetchActivities, client);
+                    result.rows[i]["activities"] = resultadoActivities.rows[0].names
                 }
                 await Queries.rollback(client);
                 response = result;
