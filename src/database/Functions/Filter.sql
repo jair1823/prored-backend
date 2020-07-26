@@ -119,7 +119,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION researcherfilter(pid_inv_unit INTEGER,pstatus boolean, ref refcursor) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR
-    SELECT p.dni,p.name,p.lastname1,p.lastname2,p.status,iv.name as inv_name
+    SELECT p.dni,p.name,p.lastname1,p.lastname2,TO_CHAR(p.born_dates,'YYYY-mm-dd') AS born_dates, p.phone_number,p.email, p.status,iv.name as inv_name
     FROM public.person p
     inner join researcher r on r.dni = p.dni
     inner join investigation_unit iv on iv.id_inv_unit = r.id_inv_unit
