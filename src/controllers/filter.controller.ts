@@ -146,10 +146,24 @@ export class FilterController {
         const fetch = `FETCH ALL IN "researcherCursor";`;
         const client: PoolClient = await pool.connect();
         try {
+            let response: any;
             const values = [req.body.id_inv_unit, req.body.status];
+            await Queries.begin(client);
+            const result = await Queries.simpleSelectWithParameterContinous(query, values, fetch, client);
+            for (let i = 0; i < result.rowCount; i++) {
+                let getProjects = `select getprojectsstudentstring($1,'projectsCursor${result.rows[i].dni}');`;
+                let fetchProjects = `FETCH ALL IN "projectsCursor${result.rows[i].dni}";`;
+                let resultadoProjects = await Queries.simpleSelectWithParameterContinous(getProjects, [result.rows[i].dni], fetchProjects, client);
+                result.rows[i]["projects"] = resultadoProjects.rows[0].names
 
-            const response = await Queries.simpleSelectWithParameter(query, values, fetch, client);
-
+                let getActivities = `select getactivitiesstudentstring($1,'activitiesCursor${result.rows[i].dni}');`;
+                let fetchActivities = `FETCH ALL IN "activitiesCursor${result.rows[i].dni}";`;
+                let resultadoActivities = await Queries.simpleSelectWithParameterContinous(getActivities, [result.rows[i].dni], fetchActivities, client);
+                result.rows[i]["activities"] = resultadoActivities.rows[0].names
+            }
+            response = result;
+            console.log(response.rows)
+            await Queries.rollback(client);
             return res.status(200).json(response.rows);
         } catch (error) {
 
