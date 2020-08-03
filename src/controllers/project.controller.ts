@@ -193,6 +193,28 @@ export class ProjectController {
         const fetch = `FETCH ALL IN "projectCursor";`;
         const client: PoolClient = await pool.connect();
         try {
+            const id = [req.params.id];
+            const response = await Queries.simpleSelectWithParameter(query, id, fetch, client);
+            return res.status(200).json(response.rows);
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+
+        /**
+     * Get all students assigned to project.
+     * path: /projectstudents/:id
+     * method: get
+    */
+    async getProjectStudents(req: Request, res: Response): Promise<Response> {
+        const query = `select getprojectstudent($1,'projectCursor');`;
+        const fetch = `FETCH ALL IN "projectCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
             const id = [parseInt(req.params.id)];
             const response = await Queries.simpleSelectWithParameter(query, id, fetch, client);
             return res.status(200).json(response.rows);
