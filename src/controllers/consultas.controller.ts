@@ -70,6 +70,25 @@ export class ConsultasController {
             return res.status(500).json("Internal Server Error");
         }
     }
+
+    /**
+     * Generate a financial report for a set of dates.
+     * path: /financial/report
+     * method: post
+    */
+    async financialReport(req: Request, res: Response): Promise<Response> {
+        const query = `select financialReport($1,$2,'reportCursor'); `;
+        const fetch = `FETCH ALL IN "reportCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const values = [req.body.startDate, req.body.endDate];
+            const response = await Queries.simpleSelectWithParameter(query, values, fetch, client);
+            return res.status(200).json(response.rows);
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json("Internal Server Error");
+        }
+    }
 }
 
 const consultaController = new ConsultasController();
