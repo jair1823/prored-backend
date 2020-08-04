@@ -144,10 +144,18 @@ INSERT INTO public.gantt_task(id_gantt, task_name, description, start_date, end_
 
 INSERT INTO public.financial_item(date_created, amount, type, id_project, id_activity, dni, code_unit, code_subunit)
         values 
-                ('2020-02-02', 72000.5, 'Independiente', null, null, '116920331', 10102, 2),
-                ('2020-03-02', 2222.5, 'Proyecto', 1, null, '116920331', 10102, 2),
-                ('2020-07-02', 123123.5, 'Proyecto', 2, null, '411111111', 10102, 2),
-                ('2020-04-02', 34234.5, 'Actividad', null, 1, '116920331', 10102, 2);
+                ('2020-02-02', 72000.5, 'Independiente', null, null, '116920331', 60109, 1),
+                ('2020-03-02', 2222.5, 'Proyecto', 1, null, '116920331', 60109, 1),
+                ('2020-07-02', 123123.5, 'Proyecto', 2, null, '411111111', 60109, 2),
+                ('2020-04-02', 34234.5, 'Actividad', null, 1, '116920331', 60109, 2),
+                ('2020-07-02', 12123.5, 'Proyecto', 2, null, '411111111', 60109, 3),
+                ('2020-04-02', 666666.5, 'Actividad', 2, null, '116920331', 60109, 3),
+                ('2020-04-02', 666666.5, 'Actividad', null, 1, '116920331', 60109, 3),
+                ('2020-04-02', 666666.5, 'Actividad', null, 1, '116920331', 60109, 3),
+                ('2020-04-02', 666666.5, 'Actividad', null, 1, '116920331', 60109, 3),
+                ('2020-04-02', 666666.5, 'Actividad', 2, null, '116920331', 60109, 3),
+                ('2020-04-02', 666666.5, 'Actividad', 1, null, '116920331', 60109, 3),
+                ('2020-04-02', 34334.5, 'Actividad', null, 1, '116920331', 60109, 4);
 
 INSERT INTO public.user (name,lastname1,lastname2,email,password,status) 
         VALUES 
