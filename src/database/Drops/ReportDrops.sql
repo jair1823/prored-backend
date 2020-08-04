@@ -1,1 +1,2 @@
-DROP FUNCTION IF EXISTS financialReport;
+DROP FUNCTION IF EXISTS financialStudentsReport;
+DROP FUNCTION IF EXISTS financialProjectsReport;

@@ -52,7 +52,6 @@ export class ConsultasController {
         }
     }
 
-
     /**
      * Get all logs.
      * path: /logs/
@@ -73,11 +72,30 @@ export class ConsultasController {
 
     /**
      * Generate a financial report for a set of dates.
-     * path: /financial/report
+     * path: /report/students
      * method: post
     */
-    async financialReport(req: Request, res: Response): Promise<Response> {
-        const query = `select financialReport($1,$2,'reportCursor'); `;
+    async studentsReport(req: Request, res: Response): Promise<Response> {
+        const query = `select financialStudentsReport($1,$2,'reportCursor'); `;
+        const fetch = `FETCH ALL IN "reportCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const values = [req.body.startDate, req.body.endDate];
+            const response = await Queries.simpleSelectWithParameter(query, values, fetch, client);
+            return res.status(200).json(response.rows);
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json("Internal Server Error");
+        }
+    }
+
+    /**
+     * Generate a financial for students report for a set of dates.
+     * path: /report/projects
+     * method: post
+    */
+    async projectsReport(req: Request, res: Response): Promise<Response> {
+        const query = `select financialProjectsReport($1,$2,'reportCursor'); `;
         const fetch = `FETCH ALL IN "reportCursor";`;
         const client: PoolClient = await pool.connect();
         try {
