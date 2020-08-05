@@ -25,7 +25,7 @@ CREATE OR REPLACE FUNCTION financialProjectsReport(
   ) RETURNS refcursor AS $$
 BEGIN
   OPEN ref FOR
-    select bsu."name",prj."name" as subUnitName,sum(fi.amount ) from financial_item fi
+    select bsu."name" as subUnitName ,prj."name" as projectName,sum(fi.amount ) from financial_item fi
     inner join person p on p.dni = fi.dni
     inner join budget_sub_unit bsu on bsu.code_budget_subunit = fi.code_subunit
     inner join project prj on prj.id_project = fi.id_project 
