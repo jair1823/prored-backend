@@ -30,7 +30,7 @@ BEGIN
     inner join budget_sub_unit bsu on bsu.code_budget_subunit = fi.code_subunit
     inner join project prj on prj.id_project = fi.id_project 
     where fi.code_unit = 60109 and fi.id_project is not null
-    and (fi.date_created between coalesce(null,fi.date_created) and coalesce(null,fi.date_created))
+    and (fi.date_created between coalesce(pstartdate,fi.date_created) and coalesce(penddate,fi.date_created))
     group by bsu."name", prj."name" 
     order by bsu."name";
   RETURN ref;
