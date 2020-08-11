@@ -19,7 +19,7 @@ BEGIN
     OPEN ref FOR
         select id_user, password 
         from public.user 
-        where email = pemail;
+        where email = pemail and status = true;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
@@ -41,7 +41,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION getusers(ref refcursor)  RETURNS refcursor AS $$
 BEGIN
     OPEN ref FOR
-        select id_user, name, lastname1, lastname2, email 
+        select id_user, name, lastname1, lastname2, email, status
         from public.user
         where status = true;
   RETURN ref;
@@ -104,4 +104,26 @@ BEGIN
     on l.id_user  = u.id_user;
   RETURN ref;
 END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION disableuser(id integer)
+    RETURNS void AS $$
+    BEGIN
+    UPDATE public.user
+        SET status=false
+    WHERE id_user = id;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION enableuser(id integer)
+    RETURNS void AS $$
+    BEGIN
+    UPDATE public.user
+        SET status=true
+    WHERE id_user = id;
+    END;
 $$ LANGUAGE plpgsql;
