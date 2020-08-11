@@ -169,6 +169,65 @@ export class UserController {
             return res.status(500).json("Internal Server Error");
         }
     }
+
+    /**
+     * Disable specific user.
+     * path: /user/:id/disable
+     * method: put
+     */
+    async disableUser(req: Request, res: Response): Promise<Response> {
+        const disable = `SELECT disableuser($1);`;
+        const client = await pool.connect();
+        try {
+            const log = [req.body.decoded.id_user, 'Usuario', 'Inactivar usuario'];
+            const values = [req.params.id];
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(disable, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
+
+            return res.status(200).json({
+                msg: 'User disabled'
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    /**
+     * Enable specific user.
+     * path: /user/:id/enable
+     * method: put
+     */
+    async enableUser(req: Request, res: Response): Promise<Response> {
+        const enable = `SELECT enableuser($1);`;
+        const client = await pool.connect();
+        try {
+            const log = [req.body.decoded.id_user, 'Usuario', 'Activar usuario'];
+            const values = [req.params.id];
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(enable, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
+
+            return res.status(200).json({
+                msg: 'User enabled'
+            });
+        } catch (error) {
+
+            await Queries.simpleError(client, error);
+
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
 }
 
 const userController = new UserController();

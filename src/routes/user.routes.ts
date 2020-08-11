@@ -11,5 +11,7 @@ router.get('/user', User_Controller.getUsers);
 router.put('/updatePassword',TokenValidator, User_Controller.updatePassword);
 router.get('/validateToken',TokenValidator, User_Controller.validateToken);
 router.post('/restorePassword',TokenValidator, User_Controller.restorePassword);
+router.put('/user/:id/disable',TokenValidator, User_Controller.disableUser);
+router.put('/user/:id/enable',TokenValidator, User_Controller.enableUser);
 
 export default router;
