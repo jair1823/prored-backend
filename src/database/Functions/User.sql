@@ -42,8 +42,7 @@ CREATE OR REPLACE FUNCTION getusers(ref refcursor)  RETURNS refcursor AS $$
 BEGIN
     OPEN ref FOR
         select id_user, name, lastname1, lastname2, email, status
-        from public.user
-        where status = true;
+        from public.user;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
