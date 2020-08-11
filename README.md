@@ -412,6 +412,10 @@ Cada una de las rutas para los documentos, se encuentran asociadas al controlado
 | document.controller@getList                | /list/:id                | GET          | Función encargada de obtener lista de asistencia               |
 | document.controller@deleteList             | /list/:id                | DELETE       | Función encargada de eliminar lista de asistencia              |
 | document.controller@getListActivity        | /list/ativity/:id        | GET          | Función encargada de obtener lista de asistencia por actividad |
+| document.controller@insertForm             | /evaluation_form/                   | POST         | Función encargada de insertar un formulario de evaluación              |
+| document.controller@getForm               | /evaluation_form/:id                | GET          | Función encargada de obtener una lista de formularios de evaluación          |
+| document.controller@deleteForm             | /evaluation_form/:id               | DELETE       | Función encargada de eliminar un formulario de evaluación              |
+| document.controller@getForms        | /evaluation_form/person/:id        | GET          | Función encargada de obtener lista de formularios de evaluación para una persona |
 | document.controller@insertFinantialDocument             | /finantial_document                   | POST         | Función encargada de insertar un item financiero              |
 | document.controller@deleteFinancialDocument                | /finantial_document/:id                | DELETE          | Función encargada de eliminar el documento financiero               |
 | document.controller@getFinancialDocument             | /finantial_document/:id                | GET       | Función encargada de obtener un documento financiero   | 
