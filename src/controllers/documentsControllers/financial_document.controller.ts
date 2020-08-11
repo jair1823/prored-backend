@@ -17,13 +17,9 @@ export class FinancialDocumentController {
         const client: PoolClient = await pool.connect();
         const insert = `SELECT createfinancialdocument($1,$2,$3);`;
         try {
-            const log = [req.body.decoded.id_user, 'Documento Financiero', 'Crear'];
             const url = `${req.body.tabla}/${req.file.filename}`;
             const values = [req.body.id_financial_item, req.file.filename, url];
-            await Queries.begin(client);
-            await Queries.simpleTransactionContinous(insert, values, client);
-            await Queries.insertLog(log,client);
-            await Queries.commit(client);
+            await Queries.simpleTransaction(insert, values, client);
             return res.status(200).json(
                 {
                     msg: 'Financial Document inserted'
@@ -51,7 +47,6 @@ export class FinancialDocumentController {
         const query = `SELECT getfinancialdocument($1,'fdCursor');`;
         const fetch = `FETCH ALL IN "fdCursor";`;
         try {
-            const log = [req.body.decoded.id_user, 'Documento Financiero', 'Borrar'];
             const id = [req.params.id];
             await Queries.begin(client);
             const response = await Queries.simpleSelectWithParameterContinous(query, id, fetch, client);
@@ -61,11 +56,9 @@ export class FinancialDocumentController {
                 const p = resultado.file_path;
                 let fullPath = path.join(__dirname + '../../../..' + '/public/' + p);
                 fs.unlinkSync(fullPath);
-                await Queries.simpleTransactionContinous(deleteD, id, client);
+                await Queries.simpleTransaction(deleteD, id, client);
                 message = "Financial Document deleted";
             }
-            await Queries.insertLog(log,client);
-            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: message

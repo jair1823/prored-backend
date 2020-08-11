@@ -17,14 +17,10 @@ export class PaperController {
         const client: PoolClient = await pool.connect();
         const insert = `SELECT createpaper($1,$2,$3,$4,$5,$6,$7,$8,$9);`;
         try {
-            const log = [req.body.decoded.id_user, 'Ponencia', 'Crear'];
             const url = `${req.body.tabla}/${req.file.filename}`;
             const values = [req.body.id_project, req.body.paper_name,req.body.speaker,req.body.place,
                             req.body.type,req.body.country,req.body.date_assisted,req.file.filename, url];
-            await Queries.begin(client);
-            await Queries.simpleTransactionContinous(insert, values, client);
-            await Queries.insertLog(log,client);
-            await Queries.commit(client);
+            await Queries.simpleTransaction(insert, values, client);
             return res.status(200).json(
                 {
                     msg: 'Paper inserted'
@@ -50,13 +46,9 @@ export class PaperController {
         const client: PoolClient = await pool.connect();
         const insert = `SELECT createpaper($1,$2,$3,$4,$5,$6,$7,$8,$9);`;
         try {
-            const log = [req.body.decoded.id_user, 'Ponencia', 'Crear'];
             const values = [req.body.id_project, req.body.paper_name,req.body.speaker,req.body.place,
                 req.body.type,req.body.country,req.body.date_assisted,null, null];
-            await Queries.begin(client);
-            await Queries.simpleTransactionContinous(insert, values, client);
-            await Queries.insertLog(log,client);
-            await Queries.commit(client);
+            await Queries.simpleTransaction(insert, values, client);
             return res.status(200).json(
                 {
                     msg: 'Paper inserted'
@@ -82,13 +74,9 @@ export class PaperController {
         const client: PoolClient = await pool.connect();
         const update = `SELECT updatepaper($1,$2,$3,$4,$5,$6,$7);`;
         try {
-            const log = [req.body.decoded.id_user, 'Ponencia', 'Actualizar'];
             const values = [req.params.id, req.body.paper_name,req.body.speaker,req.body.place,
                 req.body.type,req.body.country,req.body.date_assisted];
-            await Queries.begin(client);
-            await Queries.simpleTransactionContinous(update, values, client);
-            await Queries.insertLog(log,client);
-            await Queries.commit(client);
+            await Queries.simpleTransaction(update, values, client);
             return res.status(200).json(
                 {
                     msg: 'Paper updated'
@@ -116,7 +104,6 @@ export class PaperController {
         const query = `select getpaperfile($1,'paperCursor');`;
         const fetch = `FETCH ALL IN "paperCursor";`;
         try {
-            const log = [req.body.decoded.id_user, 'Ponencia', 'Borrar'];
             const id = [req.params.id];
             await Queries.begin(client);
             const response = await Queries.simpleSelectWithParameterContinous(query, id, fetch, client);
@@ -127,11 +114,9 @@ export class PaperController {
                 console.log(p)
                 let fullPath = path.join(__dirname + '../../../..' + '/public/' + p);
                 fs.unlinkSync(fullPath);
-                await Queries.simpleTransactionContinous(deleteD, id, client);
+                await Queries.simpleTransaction(deleteD, id, client);
                 message = "Paper file deleted";
             }
-            await Queries.insertLog(log,client);
-            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: message
@@ -157,13 +142,9 @@ export class PaperController {
         const client: PoolClient = await pool.connect();
         const insert = `SELECT insertpaperfile($1,$2,$3);`;
         try {
-            const log = [req.body.decoded.id_user, 'Ponencia', 'Crear'];
             let url = `${req.body.tabla}/${req.file.filename}`;
             const values = [req.params.id, req.file.filename, url];
-            await Queries.begin(client);
-            await Queries.simpleTransactionContinous(insert, values, client);
-            await Queries.insertLog(log,client);
-            await Queries.commit(client);
+            await Queries.simpleTransaction(insert, values, client);
             return res.status(200).json(
                 {
                     msg: 'Paper file inserted'
@@ -191,7 +172,6 @@ export class PaperController {
         const query = `SELECT getpaper($1,'paperCursor');`;
         const fetch = `FETCH ALL IN "paperCursor";`;
         try {
-            const log = [req.body.decoded.id_user, 'Ponencia', 'Borrar'];
             const id = [req.params.id];
             await Queries.begin(client);
             const response = await Queries.simpleSelectWithParameterContinous(query, id, fetch, client);
@@ -203,11 +183,9 @@ export class PaperController {
                     let fullPath = path.join(__dirname + '../../../..' + '/public/' + p);
                     fs.unlinkSync(fullPath);
                 }
-                await Queries.simpleTransactionContinous(deleteD, id, client);
+                await Queries.simpleTransaction(deleteD, id, client);
                 message = "Paper deleted";
             }
-            await Queries.insertLog(log,client);
-            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: message
