@@ -17,10 +17,14 @@ export class ProjectFormController {
         const client: PoolClient = await pool.connect();
         const insert = `SELECT createprojectform($1,$2,$3,$4);`;
         try {
+            const log = [req.body.decoded.id_user, 'Formulario de Proyecto', 'Crear'];
             const url = `${req.body.tabla}/${req.file.filename}`;
             const today = new Date().toISOString().slice(0, 10);
             const values = [req.body.id_project, today, req.file.filename, url];
-            await Queries.simpleTransaction(insert, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(insert, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: 'Project Form inserted'
@@ -47,6 +51,7 @@ export class ProjectFormController {
         const query = `SELECT getprojectform($1,'pfCursor');`;
         const fetch = `FETCH ALL IN "pfCursor";`;
         try {
+            const log = [req.body.decoded.id_user, 'Formulario de Proyecto', 'Borrar'];
             const id = [req.params.id];
             await Queries.begin(client);
             const response = await Queries.simpleSelectWithParameterContinous(query, id, fetch, client);
@@ -56,9 +61,11 @@ export class ProjectFormController {
                 const p = resultado.file_path;
                 let fullPath = path.join(__dirname + '../../../..' + '/public/' + p);
                 fs.unlinkSync(fullPath);
-                await Queries.simpleTransaction(deleteD, id, client);
+                await Queries.simpleTransactionContinous(deleteD, id, client);
                 message = "Project Form deleted";
             }
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: message

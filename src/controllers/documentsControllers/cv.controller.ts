@@ -18,9 +18,13 @@ export class CVController {
         const client: PoolClient = await pool.connect();
         const insert = `SELECT insertCV($1,$2,$3);`;
         try {
+            const log = [req.body.decoded.id_user, 'Currículum', 'Crear'];
             let url = `${req.body.tabla}/${req.file.filename}`;
             const values = [req.body.dni, url, req.file.filename];
-            await Queries.simpleTransaction(insert, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(insert, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: 'CV inserted'
@@ -48,6 +52,7 @@ export class CVController {
         // const insert = `SELECT insertCV($1,$2,$3);`;
         const update = `SELECT updateCV($1,$2,$3);`
         try {
+            const log = [req.body.decoded.id_user, 'Currículum', 'Actualizar'];
             const p = req.body.path;
             let fullPath = path.join(__dirname + '../../..' + '/public/' + p);
             fs.unlinkSync(fullPath);
@@ -56,9 +61,12 @@ export class CVController {
             // await Queries.simpleTransactionContinous(deleteD, valuesD, client);
             let url = `${req.body.tabla}/${req.file.filename}`;
             const values = [req.body.dni, url, req.file.filename];
-            await Queries.simpleTransaction(update, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(update, values, client);
             // await Queries.simpleTransactionContinous(insert, values, client);
             // await Queries.commit(client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: 'CV updated'
@@ -86,6 +94,7 @@ export class CVController {
         const query = `select getcv($1,'studentCursor');`;
         const fetch = `FETCH ALL IN "studentCursor";`;
         try {
+            const log = [req.body.decoded.id_user, 'Currículum', 'Borrar'];
             const dni = [req.params.dni];
             await Queries.begin(client);
             const response = await Queries.simpleSelectWithParameterContinous(query, dni, fetch, client);
@@ -95,9 +104,11 @@ export class CVController {
                 const p = resultado.file_path;
                 let fullPath = path.join(__dirname + '../../../..' + '/public/' + p);
                 fs.unlinkSync(fullPath);
-                await Queries.simpleTransaction(deleteD, dni, client);
+                await Queries.simpleTransactionContinous(deleteD, dni, client);
                 message = "CV deleted";
             }
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: message

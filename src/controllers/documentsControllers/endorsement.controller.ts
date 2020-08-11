@@ -17,9 +17,13 @@ export class EndorsementController {
         const client: PoolClient = await pool.connect();
         const insert = `SELECT createendorsement($1,$2,$3,$4);`;
         try {
+            const log = [req.body.decoded.id_user, 'Aval', 'Crear'];
             const url = `${req.body.tabla}/${req.file.filename}`;
             const values = [req.body.id_project, req.body.endorsement_type, req.file.filename, url];
-            await Queries.simpleTransaction(insert, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(insert, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: 'Endorsement inserted'
@@ -47,6 +51,7 @@ export class EndorsementController {
         const query = `SELECT getendorsement($1,'endCursor');`;
         const fetch = `FETCH ALL IN "endCursor";`;
         try {
+            const log = [req.body.decoded.id_user, 'Aval', 'Crear'];
             const id = [req.params.id];
             await Queries.begin(client);
             const response = await Queries.simpleSelectWithParameterContinous(query, id, fetch, client);
@@ -56,9 +61,11 @@ export class EndorsementController {
                 const p = resultado.file_path;
                 let fullPath = path.join(__dirname + '../../../..' + '/public/' + p);
                 fs.unlinkSync(fullPath);
-                await Queries.simpleTransaction(deleteD, id, client);
+                await Queries.simpleTransactionContinous(deleteD, id, client);
                 message = "Endorsement deleted";
             }
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: message

@@ -17,6 +17,7 @@ export class PhotoController {
         const client: PoolClient = await pool.connect();
         const insert = `SELECT createphoto($1,$2,$3,$4,$5);`;
         try {
+            const log = [req.body.decoded.id_user, 'Fotografía', 'Crear'];
             const files = JSON.stringify(req.files);
             const filesParsed = JSON.parse(files);
             const bodies = JSON.parse(req.body.data);
@@ -26,6 +27,7 @@ export class PhotoController {
                 let values = [req.body.id_activity, bodies[i].date_taken, bodies[i].comment, filesParsed[i].filename, url];
                 await Queries.simpleTransactionContinous(insert, values, client);
             }
+            await Queries.insertLog(log,client);
             await Queries.commit(client);
             return res.status(200).json(
                 {
@@ -52,9 +54,13 @@ export class PhotoController {
         const client: PoolClient = await pool.connect();
         const insert = `SELECT createphoto($1,$2,$3,$4,$5);`;
         try {
+            const log = [req.body.decoded.id_user, 'Fotografía', 'Crear'];
             const url = `${req.body.tabla}/${req.file.filename}`;
             let values = [req.body.id_activity, req.body.date_taken, req.body.comment, req.file.filename, url];
-            await Queries.simpleTransaction(insert, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(insert, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: 'Photo inserted'
@@ -82,6 +88,7 @@ export class PhotoController {
         const query = `SELECT getphoto($1,'photoCursor');`;
         const fetch = `FETCH ALL IN "photoCursor";`;
         try {
+            const log = [req.body.decoded.id_user, 'Fotografía', 'Borrar'];
             const id = [req.params.id];
             await Queries.begin(client);
             const response = await Queries.simpleSelectWithParameterContinous(query, id, fetch, client);
@@ -91,9 +98,11 @@ export class PhotoController {
                 const p = resultado.file_path;
                 let fullPath = path.join(__dirname + '../../../..' + '/public/' + p);
                 fs.unlinkSync(fullPath);
-                await Queries.simpleTransaction(deleteD, id, client);
+                await Queries.simpleTransactionContinous(deleteD, id, client);
                 message = "Photo deleted";
             }
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: message

@@ -17,10 +17,14 @@ export class ArticleController {
         const client: PoolClient = await pool.connect();
         const insert = `SELECT createarticle($1,$2,$3,$4,$5,$6,$7,$8,$9);`;
         try {
+            const log = [req.body.decoded.id_user, 'Artículo', 'Crear'];
             const url = `${req.body.tabla}/${req.file.filename}`;
             const values = [req.body.id_project, req.body.title,req.body.key_words,req.body.abstract,
                             req.body.authors,req.body.magazine,req.body.url,req.file.filename, url];
-            await Queries.simpleTransaction(insert, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(insert, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: 'Article inserted'
@@ -46,9 +50,13 @@ export class ArticleController {
         const client: PoolClient = await pool.connect();
         const insert = `SELECT createarticle($1,$2,$3,$4,$5,$6,$7,$8,$9);`;
         try {
+            const log = [req.body.decoded.id_user, 'Artículo', 'Crear'];
             const values = [req.body.id_project, req.body.title,req.body.key_words,req.body.abstract,
                             req.body.authors,req.body.magazine,req.body.url,null, null];
-            await Queries.simpleTransaction(insert, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(insert, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: 'Article inserted'
@@ -74,9 +82,13 @@ export class ArticleController {
         const client: PoolClient = await pool.connect();
         const update = `SELECT updatearticle($1,$2,$3,$4,$5,$6,$7);`;
         try {
+            const log = [req.body.decoded.id_user, 'Artículo', 'Actualizar'];
             const values = [req.params.id, req.body.title,req.body.key_words,req.body.abstract,
                             req.body.authors,req.body.magazine,req.body.url];
-            await Queries.simpleTransaction(update, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(update, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: 'Article updated'
@@ -104,6 +116,7 @@ export class ArticleController {
         const query = `select getarticlefile($1,'articleCursor');`;
         const fetch = `FETCH ALL IN "articleCursor";`;
         try {
+            const log = [req.body.decoded.id_user, 'Artículo', 'Borrar'];
             const id = [req.params.id];
             await Queries.begin(client);
             const response = await Queries.simpleSelectWithParameterContinous(query, id, fetch, client);
@@ -114,9 +127,11 @@ export class ArticleController {
                 console.log(p)
                 let fullPath = path.join(__dirname + '../../../..' + '/public/' + p);
                 fs.unlinkSync(fullPath);
-                await Queries.simpleTransaction(deleteD, id, client);
+                await Queries.simpleTransactionContinous(deleteD, id, client);
                 message = "Article file deleted";
             }
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: message
@@ -142,9 +157,13 @@ export class ArticleController {
         const client: PoolClient = await pool.connect();
         const insert = `SELECT insertarticlefile($1,$2,$3);`;
         try {
+            const log = [req.body.decoded.id_user, 'Artículo', 'Crear'];
             let url = `${req.body.tabla}/${req.file.filename}`;
             const values = [req.params.id, req.file.filename, url];
-            await Queries.simpleTransaction(insert, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(insert, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: 'Article file inserted'
@@ -172,6 +191,7 @@ export class ArticleController {
         const query = `SELECT getarticle($1,'articleCursor');`;
         const fetch = `FETCH ALL IN "articleCursor";`;
         try {
+            const log = [req.body.decoded.id_user, 'Artículo', 'Borrar'];
             const id = [req.params.id];
             await Queries.begin(client);
             const response = await Queries.simpleSelectWithParameterContinous(query, id, fetch, client);
@@ -183,9 +203,11 @@ export class ArticleController {
                     let fullPath = path.join(__dirname + '../../../..' + '/public/' + p);
                     fs.unlinkSync(fullPath);
                 }
-                await Queries.simpleTransaction(deleteD, id, client);
+                await Queries.simpleTransactionContinous(deleteD, id, client);
                 message = "Article deleted";
             }
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: message

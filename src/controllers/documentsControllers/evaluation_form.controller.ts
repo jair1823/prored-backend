@@ -64,9 +64,9 @@ export class EvaluationFormController {
                 fs.unlinkSync(fullPath);
                 await Queries.simpleTransactionContinous(deleteD, id, client);
                 await Queries.insertLog(log,client);
-                await Queries.commit(client);
                 message = "Evaluation Form deleted";
             }
+            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: message

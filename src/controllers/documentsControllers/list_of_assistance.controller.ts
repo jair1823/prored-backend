@@ -17,9 +17,13 @@ export class ListOfAssistanceController {
         const client: PoolClient = await pool.connect();
         const insert = `SELECT createlistofassistance($1,$2,$3,$4);`;
         try {
+            const log = [req.body.decoded.id_user, 'Lista de Asistencia', 'Crear'];
             const url = `${req.body.tabla}/${req.file.filename}`;
             const values = [req.body.id_activity, req.body.date_passed, req.file.filename, url];
-            await Queries.simpleTransaction(insert, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(insert, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: 'List of Assistance inserted'
@@ -47,6 +51,7 @@ export class ListOfAssistanceController {
         const query = `SELECT getlistofassistance($1,'listCursor');`;
         const fetch = `FETCH ALL IN "listCursor";`;
         try {
+            const log = [req.body.decoded.id_user, 'Lista de Asistencia', 'Borrar'];
             const id = [req.params.id];
             await Queries.begin(client);
             const response = await Queries.simpleSelectWithParameterContinous(query, id, fetch, client);
@@ -56,9 +61,11 @@ export class ListOfAssistanceController {
                 const p = resultado.file_path;
                 let fullPath = path.join(__dirname + '../../../..' + '/public/' + p);
                 fs.unlinkSync(fullPath);
-                await Queries.simpleTransaction(deleteD, id, client);
+                await Queries.simpleTransactionContinous(deleteD, id, client);
                 message = "List of Assitance deleted";
             }
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json(
                 {
                     msg: message
