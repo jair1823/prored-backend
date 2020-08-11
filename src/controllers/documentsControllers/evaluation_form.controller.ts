@@ -17,14 +17,10 @@ export class EvaluationFormController {
         const client: PoolClient = await pool.connect();
         const insert = `SELECT createevaluationform($1,$2,$3,$4);`;
         try {
-            const log = [req.body.decoded.id_user, 'Formulario de Evaluación', 'Crear'];
             const url = `${req.body.tabla}/${req.file.filename}`;
             const today = new Date().toISOString().slice(0, 10);
             const values = [req.body.dni, today, req.file.filename, url];
-            await Queries.begin(client);
-            await Queries.simpleTransactionContinous(insert, values, client);
-            await Queries.insertLog(log,client);
-            await Queries.commit(client);
+            await Queries.simpleTransaction(insert, values, client);
             return res.status(200).json(
                 {
                     msg: 'Evaluation Form inserted'
@@ -52,7 +48,6 @@ export class EvaluationFormController {
         const query = `SELECT getevaluationform($1,'formCursor');`;
         const fetch = `FETCH ALL IN "formCursor";`;
         try {
-            const log = [req.body.decoded.id_user, 'Formulario de Evaluación', 'Borrar'];
             const id = [req.params.id];
             await Queries.begin(client);
             const response = await Queries.simpleSelectWithParameterContinous(query, id, fetch, client);
@@ -62,9 +57,7 @@ export class EvaluationFormController {
                 const p = resultado.file_path;
                 let fullPath = path.join(__dirname + '../../../..' + '/public/' + p);
                 fs.unlinkSync(fullPath);
-                await Queries.simpleTransactionContinous(deleteD, id, client);
-                await Queries.insertLog(log,client);
-                await Queries.commit(client);
+                await Queries.simpleTransaction(deleteD, id, client);
                 message = "Evaluation Form deleted";
             }
             return res.status(200).json(
