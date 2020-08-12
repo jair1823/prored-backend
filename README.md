@@ -102,9 +102,15 @@ Para poder comenzar a utilizar el sistema debemos de tener todas las tablas y fu
 
 ``` npm run migrate ```
 
-Al terminar de ejecutarse, todas las tablas y funciones se encontraran creadas en nuestro sistema. En estos momentos todas las tablas se encuentran vacías, por lo que para inicializar con algunos datos las tablas se debe de correr el siguiente comando:
+Al terminar de ejecutarse, todas las tablas y funciones se encontraran creadas en nuestro sistema. En estos momentos todas las tablas se encuentran vacías, por lo que para inicializar con algunos datos las tablas se debe de correr las semillas.
+
+En caso de encontrarse en desarrollo, puede utilizar las semillas de desarrollo, las cuales incluyen datos de prueba para poder visualizar y utilizar el sistema. Para esto se usa el siguiente comando:
 
 ``` npm run seeds ```
+
+En caso de estar en producción, puede utilizar las semillas de producción las cuales solo incluyen los datos mas importantes como lenguajes, nacionalidades, universidades públicas entre otros. Para esto debe correr el siguinete comando:
+
+``` npm run seeds-production ```
 
 Una vez realizados todos los pasos anteriores se tendrá listo el API para su entrada en funcionamiento.
 
@@ -412,10 +418,6 @@ Cada una de las rutas para los documentos, se encuentran asociadas al controlado
 | document.controller@getList                | /list/:id                | GET          | Función encargada de obtener lista de asistencia               |
 | document.controller@deleteList             | /list/:id                | DELETE       | Función encargada de eliminar lista de asistencia              |
 | document.controller@getListActivity        | /list/ativity/:id        | GET          | Función encargada de obtener lista de asistencia por actividad |
-| document.controller@insertForm             | /evaluation_form/                   | POST         | Función encargada de insertar un formulario de evaluación              |
-| document.controller@getForm               | /evaluation_form/:id                | GET          | Función encargada de obtener una lista de formularios de evaluación          |
-| document.controller@deleteForm             | /evaluation_form/:id               | DELETE       | Función encargada de eliminar un formulario de evaluación              |
-| document.controller@getForms        | /evaluation_form/person/:id        | GET          | Función encargada de obtener lista de formularios de evaluación para una persona |
 | document.controller@insertFinantialDocument             | /finantial_document                   | POST         | Función encargada de insertar un item financiero              |
 | document.controller@deleteFinancialDocument                | /finantial_document/:id                | DELETE          | Función encargada de eliminar el documento financiero               |
 | document.controller@getFinancialDocument             | /finantial_document/:id                | GET       | Función encargada de obtener un documento financiero   | 
@@ -498,14 +500,3 @@ Cada una de las rutas para los usuarios, se encuentran asociadas al controlador 
 | user.controller@resetPassword         | /resetPassword         | POST         | Función encargada de reiniciar la contraseña                  |
 | user.controller@updatePassword        | /updatePassword        | PUT          | Función encargada de actualizar la contraseña                 |
 | user.controller@validateToken         | /validateToken         | GET          | Función encargada de validar el token                         |
-
-
-
-
-
-
-
-
-
-
-
