@@ -100,7 +100,8 @@ BEGIN
     select id_log, u.name , u.lastname1, u.lastname2, u.email, TO_CHAR(l.date_made,'YYYY-mm-dd') as date_made, l.table_name, l.action
     from public.log l
     inner join public.user u
-    on l.id_user  = u.id_user;
+    on l.id_user  = u.id_user
+    order by id_log DESC;
   RETURN ref;
 END;
 $$ LANGUAGE plpgsql;
