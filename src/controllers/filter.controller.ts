@@ -124,7 +124,6 @@ export class FilterController {
                 await Queries.rollback(client);
                 response = result;
             }
-            console.log(response.rows);
             return res.status(200).json(response.rows);
         } catch (error) {
 
@@ -162,7 +161,6 @@ export class FilterController {
                 result.rows[i]["activities"] = resultadoActivities.rows[0].names
             }
             response = result;
-            console.log(response.rows)
             await Queries.rollback(client);
             return res.status(200).json(response.rows);
         } catch (error) {

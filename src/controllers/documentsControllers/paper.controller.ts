@@ -111,7 +111,6 @@ export class PaperController {
             let resultado = response.rows[0];
             if (resultado.file_path != null) {
                 const p = resultado.file_path;
-                console.log(p)
                 let fullPath = path.join(__dirname + '../../../..' + '/public/' + p);
                 fs.unlinkSync(fullPath);
                 await Queries.simpleTransaction(deleteD, id, client);

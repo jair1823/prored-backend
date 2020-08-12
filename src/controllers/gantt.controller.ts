@@ -38,7 +38,6 @@ async function createGantt_Task_Function(gantt_list: any) {
             await Queries.simpleTransactionContinous(query, values, client);
         }
         await Queries.commit(client);
-        console.log("Gantt Tasks created Succesfully")
         return true;
     } catch (error) {
         await Queries.simpleError(client, error);
