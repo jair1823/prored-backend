@@ -159,5 +159,5 @@ INSERT INTO public.financial_item(date_created, amount, type, id_project, id_act
 
 INSERT INTO public.user (name,lastname1,lastname2,email,password,status) 
         VALUES 
-                ('Jair','Cordero','Barona','corderojair@hotmail.com','$2b$10$lr9S9h9EKeU5Em6bcxVJD.8My6zEyIGqXH.SgDzhqN3LZKFYxzSy.',true),
-                ('ProRed','ProRed','ProRed','prored@uned.ac.cr','$2b$10$4zGIZUxqY6RCXHr.WqTpnuVjK2yI0kNdCIhUHPa/W7AnM6BsSwMXW',true); --Prored2020
+                ('ProRed','ProRed','ProRed','prored@uned.ac.cr','$2b$10$4zGIZUxqY6RCXHr.WqTpnuVjK2yI0kNdCIhUHPa/W7AnM6BsSwMXW',true), --Prored2020
+                ('Jair','Cordero','Barona','corderojair@hotmail.com','$2b$10$lr9S9h9EKeU5Em6bcxVJD.8My6zEyIGqXH.SgDzhqN3LZKFYxzSy.',true);
