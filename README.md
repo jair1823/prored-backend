@@ -102,9 +102,15 @@ Para poder comenzar a utilizar el sistema debemos de tener todas las tablas y fu
 
 ``` npm run migrate ```
 
-Al terminar de ejecutarse, todas las tablas y funciones se encontraran creadas en nuestro sistema. En estos momentos todas las tablas se encuentran vacías, por lo que para inicializar con algunos datos las tablas se debe de correr el siguiente comando:
+Al terminar de ejecutarse, todas las tablas y funciones se encontraran creadas en nuestro sistema. En estos momentos todas las tablas se encuentran vacías, por lo que para inicializar con algunos datos las tablas se debe de correr las semillas.
+
+En caso de encontrarse en desarrollo, puede utilizar las semillas de desarrollo, las cuales incluyen datos de prueba para poder visualizar y utilizar el sistema. Para esto se usa el siguiente comando:
 
 ``` npm run seeds ```
+
+En caso de estar en producción, puede utilizar las semillas de producción las cuales solo incluyen los datos mas importantes como lenguajes, nacionalidades, universidades públicas entre otros. Para esto debe correr el siguinete comando:
+
+``` npm run seeds-production ```
 
 Una vez realizados todos los pasos anteriores se tendrá listo el API para su entrada en funcionamiento.
 
