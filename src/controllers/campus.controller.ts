@@ -87,7 +87,7 @@ export class CampusController {
         const query = `SELECT createcampus($1,$2)`;
         const client: PoolClient = await pool.connect();
         try {
-            const log = [req.body.decoded.id_user, 'Campus', 'Crear'];
+            const log = [req.body.decoded.id_user, 'Centro Universitario', 'Crear'];
             const values = [req.body.code, req.body.name];
             await Queries.begin(client);
             await Queries.simpleTransactionContinous(query, values, client);
@@ -117,7 +117,7 @@ export class CampusController {
         const query = `SELECT updatecampus($1,$2)`;
         const client: PoolClient = await pool.connect();
         try {
-            const log = [req.body.decoded.id_user, 'Campus', 'Editar'];
+            const log = [req.body.decoded.id_user, 'Centro Universitario', 'Editar'];
             const values = [req.body.name, req.params.id];
             await Queries.begin(client);
             await Queries.simpleTransactionContinous(query, values, client);
@@ -146,7 +146,7 @@ export class CampusController {
         const query = `SELECT deletecampus($1)`;
         const client: PoolClient = await pool.connect();
         try {
-            const log = [req.body.decoded.id_user, 'Campus', 'Borrar'];
+            const log = [req.body.decoded.id_user, 'Centro Universitario', 'Borrar'];
             const id = [req.params.id]
             await Queries.begin(client);
             await Queries.simpleTransactionContinous(query, id, client);
@@ -175,7 +175,7 @@ export class CampusController {
         const disable = `SELECT disablecampus($1);`;
         const client = await pool.connect();
         try {
-            const log = [req.body.decoded.id_user, 'Campus', 'Inactivar'];
+            const log = [req.body.decoded.id_user, 'Centro Universitario', 'Inactivar'];
             const values = [req.params.id];
             await Queries.begin(client);
             await Queries.simpleTransactionContinous(disable, values, client);
@@ -204,7 +204,7 @@ export class CampusController {
         const enable = `SELECT enablecampus($1);`;
         const client = await pool.connect();
         try {
-            const log = [req.body.decoded.id_user, 'Campus', 'Activar'];
+            const log = [req.body.decoded.id_user, 'Centro Universitario', 'Activar'];
             const values = [req.params.id];
             await Queries.begin(client);
             await Queries.simpleTransactionContinous(enable, values, client);
