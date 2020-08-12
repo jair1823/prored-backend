@@ -5,7 +5,8 @@
   "scripts": {
     "start": "concurrently \"tsc --watch\" \"nodemon dist/index.js\"",
     "build": "tsc",
-    "seeds": "node dist/seeds/index.js",
+    "seeds": "node dist/seeds/development.js",
+    "seeds-production": "node dist/seeds/production.js",
     "migrate": "node dist/migrations/index.js"
   },
   "repository": {

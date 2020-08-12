@@ -7,7 +7,6 @@ const storage = multer.diskStorage({
         let url = path.join("public/" + req.body.tabla);
         if (!fs.existsSync(url)){
             let dirpath = path.join(__dirname+"../../../public/" + req.body.tabla);
-            console.log(dirpath);
             fs.mkdirSync(dirpath, { recursive: true });
         }
         cb(null, url);
