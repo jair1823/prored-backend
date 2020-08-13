@@ -87,9 +87,12 @@ export class CareerController {
         const query = `SELECT createcareer($1,$2);`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Carrera Universitaria', 'Crear'];
             const values = [req.body.name, req.body.degree];
-
-            await Queries.simpleTransaction(query, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(query, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: "Career created Succesfully"
@@ -113,11 +116,12 @@ export class CareerController {
         const query = `SELECT updatecareer($1,$2,$3);`;
         const client: PoolClient = await pool.connect();
         try {
-
+            const log = [req.body.decoded.id_user, 'Carrera Universitaria', 'Editar'];
             const values = [req.body.name, req.body.degree, req.params.id]
-
-            await Queries.simpleTransaction(query, values, client);
-
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(query, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
             return res.status(200).json({
                 msg: `Career modified succesfully`
             });
@@ -140,9 +144,12 @@ export class CareerController {
         const query = `SELECT deletecareer($1);`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Carrera Universitaria', 'Borrar'];
             const id = [parseInt(req.params.id)];
-
-            await Queries.simpleTransaction(query, id, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(query, id, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: `Career deleted succesfuly`
@@ -167,9 +174,12 @@ export class CareerController {
         const disable = `SELECT disablecareer($1);`;
         const client = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Carrera Universitaria', 'Inactivar'];
             const values = [req.params.id];
-
+            await Queries.begin(client);
             await Queries.simpleTransaction(disable, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: 'Career disabled'
@@ -193,8 +203,12 @@ export class CareerController {
         const enable = `SELECT enablecareer($1);`;
         const client = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Carrera Universitaria', 'Inactivar'];
             const values = [req.params.id];
-            await Queries.simpleTransaction(enable, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(enable, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: 'Career enabled'

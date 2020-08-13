@@ -1,12 +1,13 @@
 import { Router } from 'express';
-import Article_Controller from '../controllers/documentsControllers/article.controller'
-import Endorsement_Controller from '../controllers/documentsControllers/endorsement.controller'
-import Project_Form_Controller from '../controllers/documentsControllers/project_form.controller'
-import Paper_Controller from '../controllers/documentsControllers/paper.controller'
-import List_Of_Assistance from '../controllers/documentsControllers/list_of_assistance.controller'
+import Article_Controller from '../controllers/documentsControllers/article.controller';
+import Endorsement_Controller from '../controllers/documentsControllers/endorsement.controller';
+import Project_Form_Controller from '../controllers/documentsControllers/project_form.controller';
+import Paper_Controller from '../controllers/documentsControllers/paper.controller';
+import List_Of_Assistance from '../controllers/documentsControllers/list_of_assistance.controller';
 import Photos_Controller from "../controllers/documentsControllers/photos.controller";
 import Financial_Document_Controller from "../controllers/documentsControllers/financial_document.controller";
 import CV_Controller from "../controllers/documentsControllers/cv.controller";
+import Evaluation_Form from '../controllers/documentsControllers/evaluation_form.controller'
 import upload from "../lib/saveFile";
 
 const router = Router();
@@ -57,5 +58,10 @@ router.post('/studentcv/', upload, CV_Controller.insertCV);
 router.put('/studentcv/', upload, CV_Controller.updateCV);
 router.delete('/studentcv/:dni', CV_Controller.deleteCV);
 router.get('/studentcv/:dni', CV_Controller.getStudentCV);
+
+router.post('/evaluation_form',upload, Evaluation_Form.insertForm);
+router.delete('/evaluation_form/:id', Evaluation_Form.deleteForm);
+router.get('/evaluation_form/:id', Evaluation_Form.getForm);
+router.get('/evaluation_form/person/:id', Evaluation_Form.getForms);
 
 export default router;

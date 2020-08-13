@@ -16,6 +16,7 @@ export class ActivityController {
         const assign = `SELECT assignpersontoactivity($1,$2)`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Actividad', 'Crear'];
             await Queries.begin(client);
             const values = [req.body.name, req.body.id_acti_type, req.body.id_project];
 
@@ -26,6 +27,7 @@ export class ActivityController {
             persons.map(async (p: any) => {
                 await Queries.simpleTransactionContinous(assign, [p.dni, response.rows[0].id_activity], client);
             });
+            await Queries.insertLog(log,client);
             await Queries.commit(client);
             return res.status(200).json(response.rows[0]);
         } catch (error) {
@@ -48,6 +50,7 @@ export class ActivityController {
         const assign = `SELECT assignpersontoactivity($1,$2)`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Actividad', 'Editar'];
             const values = [parseInt(req.params.id), req.body.name, req.body.id_acti_type, req.body.id_project];
             await Queries.begin(client);
             await Queries.simpleTransactionContinous(query, values, client);
@@ -57,7 +60,7 @@ export class ActivityController {
             persons.map(async (p: any) => {
                 await Queries.simpleTransactionContinous(assign, [p.dni, parseInt(req.params.id)], client);
             });
-
+            await Queries.insertLog(log,client);
             await Queries.commit(client);
             return res.status(200).json({
                 msg: `Activity modified succesfully`
@@ -208,8 +211,12 @@ export class ActivityController {
         const query = `SELECT createactivitytype($1)`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Tipo de Actividad', 'Crear'];
             const values = [req.body.name];
-            await Queries.simpleTransaction(query, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(query, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: "Activity Type created Succesfully"
@@ -277,9 +284,12 @@ export class ActivityController {
         const query = `SELECT updateactivitytype($1,$2)`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Tipo de Actividad', 'Editar'];
             const values = [req.params.id,req.body.name];
-
-            await Queries.simpleTransaction(query, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(query, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: `Activity Type modified succesfully`
@@ -304,9 +314,12 @@ export class ActivityController {
         const disable = `SELECT disableactivitytype($1);`;
         const client = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Tipo de Actividad', 'Inactivar'];
             const values = [req.params.id];
-
-            await Queries.simpleTransaction(disable, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(disable, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: 'Activity Type disabled'
@@ -330,8 +343,12 @@ export class ActivityController {
         const enable = `SELECT enableactivitytype($1);`;
         const client = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Tipo de Actividad', 'Activar'];
             const values = [req.params.id];
-            await Queries.simpleTransaction(enable, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(enable, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: 'Activity Type enabled'

@@ -16,6 +16,7 @@ export class ProjectController {
         const assign = `SELECT assignpersonproject($1,$2,$3)`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Proyecto', 'Crear'];
             await Queries.begin(client);
             const values = [req.body.inv_unit, req.body.name, req.body.code_manage, req.body.project_type];
             const response = await Queries.insertWithReturnContinous(query, values, fetch, client);
@@ -25,7 +26,7 @@ export class ProjectController {
             persons.map(async (p: any) => {
                 await Queries.simpleTransactionContinous(assign, [p.dni, response.rows[0].id_project, p.role], client);
             });
-
+            await Queries.insertLog(log,client);
             await Queries.commit(client);
             return res.status(200).json(
                 response.rows[0]
@@ -93,6 +94,7 @@ export class ProjectController {
         const assign = `SELECT assignpersonproject($1,$2,$3)`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Proyecto', 'Editar'];
             await Queries.begin(client);
             const values = [parseInt(req.params.id), req.body.inv_unit, req.body.name, req.body.code_manage, req.body.project_type];
 
@@ -102,6 +104,7 @@ export class ProjectController {
             persons.map(async (p: any) => {
                 await Queries.simpleTransactionContinous(assign, [p.dni, parseInt(req.params.id), p.role], client);
             });
+            await Queries.insertLog(log,client);
             await Queries.commit(client);
             return res.status(200).json({
                 msg: `Projecupdateprojectt modified succesfully`
@@ -187,6 +190,28 @@ export class ProjectController {
     */
     async getStudentsProject(req: Request, res: Response): Promise<Response> {
         const query = `select getstudentsproject($1,'projectCursor');`;
+        const fetch = `FETCH ALL IN "projectCursor";`;
+        const client: PoolClient = await pool.connect();
+        try {
+            const id = [req.params.id];
+            const response = await Queries.simpleSelectWithParameter(query, id, fetch, client);
+            return res.status(200).json(response.rows);
+        } catch (error) {
+            await Queries.simpleError(client, error);
+            return res.status(500).json({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+
+        /**
+     * Get all students assigned to project.
+     * path: /projectstudents/:id
+     * method: get
+    */
+    async getProjectStudents(req: Request, res: Response): Promise<Response> {
+        const query = `select getprojectstudent($1,'projectCursor');`;
         const fetch = `FETCH ALL IN "projectCursor";`;
         const client: PoolClient = await pool.connect();
         try {

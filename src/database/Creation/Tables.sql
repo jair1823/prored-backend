@@ -152,6 +152,14 @@ create table public.list_of_assitance(
     file_path varchar (200)
 );
 
+create table public.evaluation_form(
+    id_evaluation SERIAL PRIMARY KEY,
+    dni varchar(50) REFERENCES public.person(dni),
+    date_made date,
+    filename varchar (100),
+    file_path varchar (200)
+);
+
 CREATE TYPE public.degree AS ENUM (
     'Diplomado',
     'Bachillerato',
@@ -331,7 +339,13 @@ create table public.user(
     lastname2 varchar(50),
     email varchar(100) UNIQUE,
     password varchar(300),
-    status boolean,
-    reset_password_token text,
-    reset_password_expiration bigint
+    status boolean
+);
+
+create table public.log(
+    id_log SERIAL PRIMARY KEY,
+    id_user integer REFERENCES public.user(id_user),
+    date_made date,
+    table_name varchar(100),
+    action varchar(100)
 );

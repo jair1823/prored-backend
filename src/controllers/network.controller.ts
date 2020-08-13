@@ -87,9 +87,12 @@ export class NetworkController {
         const query = `SELECT createnetwork($1,$2)`;
         const client: PoolClient = await pool.connect();
         try {
-
+            const log = [req.body.decoded.id_user, 'Redes Asociadas', 'Crear'];
             const values = [req.body.name, req.body.type];
-            await Queries.simpleTransaction(query, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(query, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: "Network created Succesfully"
@@ -113,10 +116,12 @@ export class NetworkController {
         const query = `SELECT updatenetwork($1,$2,$3)`;
         const client: PoolClient = await pool.connect();
         try {
-
+            const log = [req.body.decoded.id_user, 'Redes Asociadas', 'Editar'];
             const values = [req.body.name, req.body.type, parseInt(req.params.id)];
-
-            await Queries.simpleTransaction(query, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(query, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: `Network modified succesfully`
@@ -140,9 +145,12 @@ export class NetworkController {
         const query = `SELECT deletenetwork($1)`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Redes Asociadas', 'Borrar'];
             const id = [parseInt(req.params.id)];
-
-            await Queries.simpleTransaction(query, id, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(query, id, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: `Network deleted succesfuly`
@@ -169,9 +177,12 @@ export class NetworkController {
         const disable = `SELECT disablenetwork($1);`;
         const client = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Redes Asociadas', 'Inactivar'];
             const values = [req.params.id];
-
-            await Queries.simpleTransaction(disable, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(disable, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: 'Network disabled'
@@ -195,8 +206,12 @@ export class NetworkController {
         const enable = `SELECT enablenetwork($1);`;
         const client = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Redes Asociadas', 'Activar'];
             const values = [req.params.id];
-            await Queries.simpleTransaction(enable, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(enable, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: 'Network enabled'

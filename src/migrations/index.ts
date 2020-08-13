@@ -21,6 +21,7 @@ const TableDrops = readFileSync('src/database/Drops/TableDrops.sql').toString();
 const BudgetDrops  = readFileSync('src/database/Drops/BudgetUnitDrops.sql').toString();
 const FinancialItemDrops = readFileSync('src/database/Drops/FinancialItemDrops.sql').toString();
 const UserDrops = readFileSync('src/database/Drops/UserDrops.sql').toString();
+const ReportDrops = readFileSync('src/database/Drops/ReportDrops.sql').toString();
 
 const EnumNationality = readFileSync('src/database/Creation/EnumNationality.sql').toString();
 const Tables = readFileSync('src/database/Creation/Tables.sql').toString();
@@ -44,6 +45,7 @@ const Filter = readFileSync('src/database/Functions/Filter.sql').toString();
 const Budget  = readFileSync('src/database/Functions/BudgetUnit.sql').toString();
 const FinancialItem  = readFileSync('src/database/Functions/FinancialItem.sql').toString();
 const User  = readFileSync('src/database/Functions/User.sql').toString();
+const Reports  = readFileSync('src/database/Functions/Reports.sql').toString();
 
 /**
  * Secuencia en la que se ejecutan los drops de toda la base 
@@ -71,6 +73,7 @@ async function migration() {
         await pool.query(BudgetDrops);
         await pool.query(FinancialItemDrops);
         await pool.query(UserDrops);
+        await pool.query(ReportDrops);
         await pool.query(TableDrops); // Siempre debe ir al final
 
 
@@ -98,6 +101,7 @@ async function migration() {
         await pool.query(Filter);
         await pool.query(Budget);
         await pool.query(FinancialItem);
+        await pool.query(Reports);
         await pool.query(User);
 
         return;

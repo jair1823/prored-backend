@@ -117,7 +117,8 @@ INSERT INTO public.person_x_activity(dni, id_activity)
 INSERT INTO  public.person_x_project(dni , id_project, role )
         values 
                 ('116920331' , 1  , 'Investigador'),
-                ('402430534' , 1  , 'Investigador');
+                ('402430534' , 1  , 'Investigador'),
+                ('411111111' , 2  , 'Co Investigador');
 
 -- Period
 
@@ -143,12 +144,20 @@ INSERT INTO public.gantt_task(id_gantt, task_name, description, start_date, end_
 
 INSERT INTO public.financial_item(date_created, amount, type, id_project, id_activity, dni, code_unit, code_subunit)
         values 
-                ('2020-02-02', 72000.5, 'Independiente', null, null, '116920331', 10102, 2),
-                ('2020-03-02', 2222.5, 'Proyecto', 1, null, '116920331', 10102, 2),
-                ('2020-07-02', 123123.5, 'Proyecto', 2, null, '411111111', 10102, 2),
-                ('2020-04-02', 34234.5, 'Actividad', null, 1, '116920331', 10102, 2);
+                ('2020-02-02', 72000.5, 'Independiente', null, null, '116920331', 60109, 1),
+                ('2020-03-02', 2222.5, 'Proyecto', 1, null, '116920331', 60109, 1),
+                ('2020-07-02', 123123.5, 'Proyecto', 2, null, '411111111', 60109, 2),
+                ('2020-04-02', 34234.5, 'Actividad', null, 1, '116920331', 60109, 2),
+                ('2020-07-02', 12123.5, 'Proyecto', 2, null, '411111111', 60109, 3),
+                ('2020-04-02', 666666.5, 'Actividad', 2, null, '116920331', 60109, 3),
+                ('2020-04-02', 666666.5, 'Actividad', null, 1, '116920331', 60109, 3),
+                ('2020-04-02', 666666.5, 'Actividad', null, 1, '116920331', 60109, 3),
+                ('2020-04-02', 666666.5, 'Actividad', null, 1, '116920331', 60109, 3),
+                ('2020-04-02', 666666.5, 'Actividad', 2, null, '116920331', 60109, 3),
+                ('2020-04-02', 666666.5, 'Actividad', 1, null, '116920331', 60109, 3),
+                ('2020-04-02', 34334.5, 'Actividad', null, 1, '116920331', 60109, 4);
 
-INSERT INTO public.user (name,lastname1,lastname2,email,password,status,reset_password_token,reset_password_expiration) 
+INSERT INTO public.user (name,lastname1,lastname2,email,password,status) 
         VALUES 
-                ('Jair','Cordero','Barona','corderojair@hotmail.com','$2b$10$lr9S9h9EKeU5Em6bcxVJD.8My6zEyIGqXH.SgDzhqN3LZKFYxzSy.',true,NULL,NULL),
-                ('ProRed','ProRed','ProRed','prored@uned.ac.cr','$2b$10$4zGIZUxqY6RCXHr.WqTpnuVjK2yI0kNdCIhUHPa/W7AnM6BsSwMXW',true,NULL,NULL); --Prored2020
+                ('ProRed','ProRed','ProRed','prored@uned.ac.cr','$2b$10$4zGIZUxqY6RCXHr.WqTpnuVjK2yI0kNdCIhUHPa/W7AnM6BsSwMXW',true), --Prored2020
+                ('Jair','Cordero','Barona','corderojair@hotmail.com','$2b$10$lr9S9h9EKeU5Em6bcxVJD.8My6zEyIGqXH.SgDzhqN3LZKFYxzSy.',true);

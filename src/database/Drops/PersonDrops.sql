@@ -1,2 +1,4 @@
 DROP FUNCTION IF EXISTS personexists;
 DROP FUNCTION IF EXISTS getPersons;
+DROP FUNCTION IF EXISTS disableperson;
+DROP FUNCTION IF EXISTS enableperson;

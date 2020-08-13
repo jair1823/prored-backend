@@ -500,14 +500,3 @@ Cada una de las rutas para los usuarios, se encuentran asociadas al controlador 
 | user.controller@resetPassword         | /resetPassword         | POST         | Función encargada de reiniciar la contraseña                  |
 | user.controller@updatePassword        | /updatePassword        | PUT          | Función encargada de actualizar la contraseña                 |
 | user.controller@validateToken         | /validateToken         | GET          | Función encargada de validar el token                         |
-
-
-
-
-
-
-
-
-
-
-

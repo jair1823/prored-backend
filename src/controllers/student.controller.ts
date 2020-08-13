@@ -206,7 +206,7 @@ export class StudentController {
         const createStudentXassociated_career = `SELECT createstudentxassociatedcareer($1,$2);`;
         const createStudentXnetworks = `SELECT createstudentxnetwork($1,$2);`;
         try {
-
+            const log = [req.body.decoded.id_user, 'Estudiante', 'Crear'];
             const personValues = [req.body.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates, req.body.phone_number, req.body.email,'Estudiante'];
             const studentValues = [req.body.dni, req.body.id_district, req.body.marital_status,
             req.body.campus_code, req.body.profile, req.body.address, req.body.nationality, req.body.emergency_contact];
@@ -235,7 +235,7 @@ export class StudentController {
             associated_careers.map(async (a) => {
                 await Queries.simpleTransactionContinous(createStudentXassociated_career, [personValues[0], a], client);
             });
-
+            await Queries.insertLog(log,client);
             await Queries.commit(client);
 
             return res.status(200).json(
@@ -262,13 +262,16 @@ export class StudentController {
         const updateStudent = `SELECT updatestudent($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14);`;
         const client: PoolClient = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Estudiante', 'Editar'];
             const values = [
                 req.params.dni, req.body.name, req.body.lastname1, req.body.lastname2, req.body.born_dates,
                 req.body.id_district, req.body.marital_status, req.body.campus_code,
                 req.body.profile, req.body.address, req.body.nationality, req.body.phone_number, req.body.email, req.body.emergency_contact
             ];
-
-            await Queries.simpleTransaction(updateStudent, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(updateStudent, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
 
             return res.status(200).json(
                 {
@@ -459,12 +462,15 @@ export class StudentController {
      * method: put
      */
     async disableStudent(req: Request, res: Response): Promise<Response> {
-        const disable = `SELECT disablestudent($1);`;
+        const disable = `SELECT disableperson($1);`;
         const client = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Estudiante', 'Inactivar'];
             const values = [req.params.dni];
-
-            await Queries.simpleTransaction(disable, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(disable, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: 'Studend disable'
@@ -485,11 +491,15 @@ export class StudentController {
      * method: put
      */
     async enableStudent(req: Request, res: Response): Promise<Response> {
-        const enable = `SELECT enablestudent($1);`;
+        const enable = `SELECT enableperson($1);`;
         const client = await pool.connect();
         try {
+            const log = [req.body.decoded.id_user, 'Estudiante', 'Activar'];
             const values = [req.params.dni];
-            await Queries.simpleTransaction(enable, values, client);
+            await Queries.begin(client);
+            await Queries.simpleTransactionContinous(enable, values, client);
+            await Queries.insertLog(log,client);
+            await Queries.commit(client);
 
             return res.status(200).json({
                 msg: 'Studend enable'

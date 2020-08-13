@@ -131,7 +131,7 @@ $$ LANGUAGE plpgsql;
 
 --###########################################################################
 
-CREATE OR REPLACE FUNCTION disableactivitytype(pid varchar(50))
+CREATE OR REPLACE FUNCTION disableactivitytype(pid INTEGER)
     RETURNS void AS $$
     BEGIN
     UPDATE public.acti_type
@@ -142,7 +142,7 @@ $$ LANGUAGE plpgsql;
 
 --###########################################################################
 
-CREATE OR REPLACE FUNCTION enableactivitytype(pid varchar(50))
+CREATE OR REPLACE FUNCTION enableactivitytype(pid INTEGER)
     RETURNS void AS $$
     BEGIN
     UPDATE public.acti_type

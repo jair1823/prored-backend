@@ -469,3 +469,45 @@ CREATE OR REPLACE FUNCTION getcv(pdni varchar(50), ref refcursor)
         RETURN ref;
     END;
 $$ LANGUAGE plpgsql;
+
+--Evaluation Form ########################################################################################################
+
+CREATE OR REPLACE FUNCTION createevaluationform(pdni varchar(50), pdate date, pfile varchar(100),ppath varchar(200)) 
+RETURNS void AS $$
+BEGIN
+  INSERT INTO public.evaluation_form(dni, date_made, filename, file_path) values (pdni,pdate,pfile,ppath);
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION deleteevaluationform(id integer) 
+RETURNS void AS $$
+BEGIN
+  DELETE FROM public.evaluation_form WHERE id_evaluation = id;
+END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getevaluationform(pid integer, ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+        OPEN ref FOR select id_evaluation, dni, TO_CHAR(date_made,'YYYY-mm-dd') as date_made, filename, file_path 
+            from public.evaluation_form
+        where id_evaluation = pid;
+        RETURN ref;
+    END;
+$$ LANGUAGE plpgsql;
+
+--###########################################################################
+
+CREATE OR REPLACE FUNCTION getevaluationformperson(pdni varchar(50), ref refcursor)
+    RETURNS refcursor AS $$
+    BEGIN
+        OPEN ref FOR select id_evaluation, dni, TO_CHAR(date_made,'YYYY-mm-dd') as date_made, filename, file_path 
+            from public.evaluation_form
+        where dni = pdni;
+        RETURN ref;
+    END;
+$$ LANGUAGE plpgsql;
